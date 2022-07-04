@@ -156,134 +156,35 @@ PRINT_LOOP:
         SUBI.B      #$1,            D1
         
         MOVE.B      D3,             D2
+        * Bit shifting to isolate the right most digit
+        * 1234 5678 => 8000 0000 => 0000 0008
         MOVE.B      #28,            D0    
         LSL.L       D0,             D2     
         ROL.L       #4,             D2 
         
-        
+        * Bit shifting to prep the next digit
+        * 1234 4567 => 0123 4567
         ASR.L       #4, D3
         
+        *Assuming D4 is empty
         
-        CMP.B       #0,             D2
-        BEQ         PRINT_0
-        CMP.B       #1,             D2
-        BEQ         PRINT_1
-        CMP.B       #2,             D2
-        BEQ         PRINT_2
-        CMP.B       #3,             D2
-        BEQ         PRINT_3
-        CMP.B       #4,             D2
-        BEQ         PRINT_4
-        CMP.B       #5,             D2
-        BEQ         PRINT_5
-        CMP.B       #6,             D2
-        BEQ         PRINT_6
-        CMP.B       #7,             D2
-        BEQ         PRINT_7
-        CMP.B       #8,             D2
-        BEQ         PRINT_8
-        CMP.B       #9,             D2
-        BEQ         PRINT_9
-        CMP.B       #$A,            D2
-        BEQ         PRINT_A
-        CMP.B       #$B,            D2
-        BEQ         PRINT_B
-        CMP.B       #$C,            D2
-        BEQ         PRINT_C
-        CMP.B       #$D,            D2
-        BEQ         PRINT_D
-        CMP.B       #$E,            D2
-        BEQ         PRINT_E
-        CMP.B       #$F,            D2
-        BEQ         PRINT_F
-
-        * This should never be called
+        MOVE.B       D2,            D4
+        LEA          ZERO_MSG,      A1
+        * load the address of Zero_msg
+        * because all of the msgs are stored next to each other in order
+        * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+        * and then add it to the address starting at zero_msg
+        MULU         #2,            D4
+        ADDA.L       D4,            A1
+        
+        * trap command 14 reads whatever address is in A1, and then spits out the data to the console
+        MOVE.B       #14,           D0
+        TRAP         #15
         BRA         PRINT_LOOP
         
 PRINT_DONE:
         RTS
         
-PRINT_0:
-        LEA         ZERO_MSG,       A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_1:
-        LEA         ONE_MSG,        A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_2:
-        LEA         TWO_MSG,        A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_3:
-        LEA         THREE_MSG,      A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_4:
-        LEA         FOUR_MSG,       A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_5:
-        LEA         FIVE_MSG,       A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_6:
-        LEA         SIX_MSG,        A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_7:
-        LEA         SEVEN_MSG,      A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_8:
-        LEA         EIGHT_MSG,      A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_9:
-        LEA         NINE_MSG,       A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_A:
-        LEA         A_MSG,          A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_B:
-        LEA         B_MSG,          A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_C:
-        LEA         C_MSG,          A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_D:
-        LEA         D_MSG,          A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_E:
-        LEA         E_MSG,          A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-PRINT_F:
-        LEA         F_MSG,          A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        BRA         PRINT_LOOP
-
     *   Reversing the address
 *---------------------------------------
 
@@ -371,6 +272,7 @@ LF              EQU          $0A
 NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
+
 
 *~Font name~Courier New~
 *~Font size~10~
