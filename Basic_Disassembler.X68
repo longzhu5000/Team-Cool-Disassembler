@@ -180,7 +180,7 @@ PRINT_LOOP:
         * trap command 14 reads whatever address is in A1, and then spits out the data to the console
         MOVE.B       #14,           D0
         TRAP         #15
-        BRA         PRINT_LOOP
+        BRA          PRINT_LOOP
         
 PRINT_DONE:
         RTS
@@ -272,6 +272,7 @@ LF              EQU          $0A
 NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
+
 
 
 *~Font name~Courier New~
