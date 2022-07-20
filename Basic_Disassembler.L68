@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 7/3/2022 11:03:14 PM
+Created On: 7/20/2022 4:35:17 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Basic Dissassembler
@@ -16,11 +16,11 @@ Created On: 7/3/2022 11:03:14 PM
 00001000                            12  *------LEA = Load effective address
 00001000                            13  *------Running Trap #15 while the number 14 is in D0 will print out whatever data is in the address stored in A1
 00001000                            14  
-00001000  43F9 0000116C             15          LEA         INTRO_MSG,      A1
+00001000  43F9 000011AC             15          LEA         INTRO_MSG,      A1
 00001006  103C 000E                 16          MOVE.B      #14,            D0    
 0000100A  4E4F                      17          TRAP        #15
 0000100C                            18          
-0000100C  43F9 00001192             19          LEA         STARTING_MSG,   A1
+0000100C  43F9 000011D2             19          LEA         STARTING_MSG,   A1
 00001012  103C 000E                 20          MOVE.B      #14,            D0   
 00001016  4E4F                      21          TRAP        #15
 00001018                            22          
@@ -32,7 +32,7 @@ Created On: 7/3/2022 11:03:14 PM
 00001018                            28  *       IE 31 = 1, 32 = 2 etc etc
 00001018                            29  *       If I store the number 1200, it will appear in memory as 31 32 30 30
 00001018                            30  
-00001018  43F9 000011EC             31          LEA         STA_ADDR,       A1
+00001018  43F9 0000122C             31          LEA         STA_ADDR,       A1
 0000101E  103C 0002                 32          MOVE.B      #2,             D0
 00001022  4E4F                      33          TRAP        #15
 00001024                            34          
@@ -44,11 +44,11 @@ Created On: 7/3/2022 11:03:14 PM
 0000102C  4282                      40          CLR.L       D2
 0000102E  4287                      41          CLR.L       D7
 00001030                            42          
-00001030  43F9 000011B6             43          LEA         ENDING_MSG,     A1
+00001030  43F9 000011F6             43          LEA         ENDING_MSG,     A1
 00001036  103C 000E                 44          MOVE.B      #14,            D0
 0000103A  4E4F                      45          TRAP        #15
 0000103C                            46          
-0000103C  43F9 00001214             47          LEA         END_ADDR,       A1
+0000103C  43F9 00001254             47          LEA         END_ADDR,       A1
 00001042  103C 0002                 48          MOVE.B      #2,             D0
 00001046  4E4F                      49          TRAP        #15
 00001048                            50          
@@ -106,8 +106,8 @@ Created On: 7/3/2022 11:03:14 PM
 00001098                           102          * if equal to, or further than ending address jump to DONE
 00001098                           103          * SIMHALT
 00001098  B9CB                     104          CMP.L       A3,             A4
-0000109A  6700 00BE                105          BEQ         DONE
-0000109E  6F00 00BA                106          BLE         DONE
+0000109A  6700 00FE                105          BEQ         DONE
+0000109E  6F00 00FA                106          BLE         DONE
 000010A2                           107          
 000010A2                           108          * We are goiong to keep track of the number of byts we have examined using D1
 000010A2                           109          * Before printing the address we have to reverse the order
@@ -115,159 +115,229 @@ Created On: 7/3/2022 11:03:14 PM
 000010A4  4282                     111          CLR.L       D2
 000010A6  123C 0008                112          MOVE.B      #$8,            D1
 000010AA  260B                     113          MOVE.L      A3,             D3
-000010AC  4EB9 0000112A            114          JSR         REVERSE_START
+000010AC  4EB9 00001130            114          JSR         REVERSE_START
 000010B2                           115          
 000010B2  2607                     116          MOVE.L      D7,             D3
 000010B4  4281                     117          CLR.L       D1
 000010B6  4282                     118          CLR.L       D2
 000010B8  123C 0008                119          MOVE.B      #$8,            D1
-000010BC  4EB9 000010FC            120          JSR         PRINT_LOOP
+000010BC  4EB9 00001102            120          JSR         PRINT_LOOP
 000010C2                           121          
 000010C2                           122          
 000010C2                           123          * space between address and data
-000010C2  43F9 0000123C            124          LEA         SPACE_MSG,      A1
+000010C2  43F9 0000127C            124          LEA         SPACE_MSG,      A1
 000010C8  103C 000E                125          MOVE.B      #14,            D0    
 000010CC  4E4F                     126          TRAP        #15
 000010CE                           127          
 000010CE  4281                     128          CLR.L       D1
 000010D0  4282                     129          CLR.L       D2
 000010D2  123C 0008                130          MOVE.B      #$8,            D1
-000010D6  261B                     131          MOVE.L      (A3)+,          D3
-000010D8  4EB9 0000112A            132          JSR         REVERSE_START
-000010DE                           133          
-000010DE  2607                     134          MOVE.L      D7,             D3
-000010E0  4281                     135          CLR.L       D1
-000010E2  4282                     136          CLR.L       D2
-000010E4  123C 0008                137          MOVE.B      #$8,            D1
-000010E8  4EB9 000010FC            138          JSR         PRINT_LOOP
-000010EE                           139          
-000010EE                           140          * new line
-000010EE  43F9 0000125F            141          LEA         NEW_LINE,       A1
-000010F4  103C 000E                142          MOVE.B      #14,            D0    
-000010F8  4E4F                     143          TRAP        #15
-000010FA                           144  *        SIMHALT
-000010FA                           145  *        RTS
-000010FA                           146          * branch to the start of this method
-000010FA  609C                     147          BRA         PRINT_MEMORY_LOOP
-000010FC                           148  
-000010FC                           149  
-000010FC                           150  PRINT_LOOP:
-000010FC                           151  
-000010FC                           152          
-000010FC                           153          * When D1 == 0, we are done and exit this loop
-000010FC  0C01 0000                154          CMPI.B      #$0,            D1
-00001100  6700 0026                155          BEQ         PRINT_DONE
-00001104  5301                     156          SUBI.B      #$1,            D1
-00001106                           157          
-00001106  1403                     158          MOVE.B      D3,             D2
-00001108  103C 001C                159          MOVE.B      #28,            D0    
-0000110C  E1AA                     160          LSL.L       D0,             D2     
-0000110E  E99A                     161          ROL.L       #4,             D2 
-00001110                           162          
-00001110                           163          
-00001110  E883                     164          ASR.L       #4, D3
-00001112                           165          
-00001112                           166          *Assuming D4 is empty
-00001112                           167          
-00001112  1802                     168          MOVE.B       D2,            D4
-00001114  43F9 0000123F            169          LEA          ZERO_MSG,      A1
-0000111A  C8FC 0002                170          MULU         #2,            D4
-0000111E  D3C4                     171          ADDA.L       D4,            A1
-00001120                           172          
-00001120  103C 000E                173          MOVE.B       #14,           D0
-00001124  4E4F                     174          TRAP         #15
-00001126  60D4                     175          BRA         PRINT_LOOP
-00001128                           176          
-00001128                           177  PRINT_DONE:
-00001128  4E75                     178          RTS
-0000112A                           179          
-0000112A                           180      *   Reversing the address
-0000112A                           181  *---------------------------------------
-0000112A                           182  
-0000112A                           183  REVERSE_START:        
-0000112A  4281                     184          CLR.L       D1
-0000112C  4287                     185          CLR.L       D7
-0000112E  123C 0008                186          MOVE.B      #8,             D1
-00001132  4EB9 0000113A            187          JSR         REVERSE_LOOP
-00001138  4E75                     188          RTS
-0000113A                           189          
-0000113A                           190  REVERSE_LOOP:
-0000113A                           191  
-0000113A                           192          
-0000113A  0C01 0000                193          CMPI.B      #$0,            D1
-0000113E  6700 0018                194          BEQ         REVERSE_DONE
-00001142  5301                     195          SUBI.B      #$1,            D1
-00001144  E987                     196          ASL.L       #4,             D7
-00001146                           197          
-00001146  4285                     198          CLR.L       D5
-00001148                           199          
-00001148  1A03                     200          MOVE.B      D3,             D5
-0000114A                           201          
-0000114A  103C 001C                202          MOVE.B      #28,            D0    
-0000114E  E1AD                     203          LSL.L       D0,             D5     
-00001150  E99D                     204          ROL.L       #4,             D5
-00001152                           205          
-00001152  DE05                     206          ADD.B       D5,             D7
-00001154                           207          
-00001154                           208          
-00001154  E883                     209          ASR.L       #4,             D3
-00001156                           210          
-00001156  60E2                     211          BRA         REVERSE_LOOP
-00001158                           212  
-00001158                           213  REVERSE_DONE:
-00001158  4E75                     214          RTS
-0000115A                           215  DONE:
-0000115A                           216  
-0000115A  43F9 000011D8            217          LEA         GOODBYE_MSG,    A1
-00001160  103C 000E                218          MOVE.B      #14,            D0
-00001164  4E4F                     219          TRAP        #15
-00001166  103C 0009                220          MOVE.B      #9,             D0
-0000116A  4E4F                     221          TRAP        #15        
-0000116C                           222          
-0000116C                           223  
-0000116C                           224      *SIMHALT             ; halt simulator
-0000116C                           225  
-0000116C                           226  * Put variables and constants here
-0000116C                           227  
-0000116C= 57 65 6C 63 6F 6D ...    228  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
-00001192= 50 6C 65 61 73 65 ...    229  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
-000011B6= 50 6C 65 61 73 65 ...    230  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
-000011D8= 44 6F 6E 65 20 52 ...    231  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
-000011EC                           232  * CR and LF for strings above because we want to go to next line after printing message
-000011EC                           233  
-000011EC                           234  STA_ADDR         DS.B        40
-00001214                           235  END_ADDR         DS.B        40
-0000123C                           236  
-0000123C                           237  * no CR and LF for strings below because we want to print each number and letter
-0000123C                           238  
-0000123C= 20 20 00                 239  SPACE_MSG:       DC.B        '  ',0
-0000123F                           240  
-0000123F= 30 00                    241  ZERO_MSG:        DC.B        '0',0
-00001241= 31 00                    242  ONE_MSG:         DC.B        '1',0
-00001243= 32 00                    243  TWO_MSG:         DC.B        '2',0
-00001245= 33 00                    244  THREE_MSG:       DC.B        '3',0
-00001247= 34 00                    245  FOUR_MSG:        DC.B        '4',0
-00001249= 35 00                    246  FIVE_MSG:        DC.B        '5',0
-0000124B= 36 00                    247  SIX_MSG:         DC.B        '6',0
-0000124D= 37 00                    248  SEVEN_MSG:       DC.B        '7',0
-0000124F= 38 00                    249  EIGHT_MSG:       DC.B        '8',0
-00001251= 39 00                    250  NINE_MSG:        DC.B        '9',0
-00001253= 41 00                    251  A_MSG:           DC.B        'A',0
-00001255= 42 00                    252  B_MSG:           DC.B        'B',0
-00001257= 43 00                    253  C_MSG:           DC.B        'C',0
-00001259= 44 00                    254  D_MSG:           DC.B        'D',0
-0000125B= 45 00                    255  E_MSG:           DC.B        'E',0
-0000125D= 46 00                    256  F_MSG:           DC.B        'F',0 
-0000125F                           257  
-0000125F                           258  
-0000125F                           259  *-----Carriage Return
-0000125F  =0000000D                260  CR              EQU          $0D
-0000125F                           261  *-----------Line Feed
-0000125F  =0000000A                262  LF              EQU          $0A
-0000125F                           263  
-0000125F= 0D 0A 00                 264  NEW_LINE:       DC.B         '',CR,LF,0
-00001262                           265  
-00001262                           266      END    START        ; last line of source
+000010D6  2613                     131          MOVE.L      (A3),          D3
+000010D8                           132          
+000010D8                           133          *START OF OPCODE RECOGNITION
+000010D8                           134          
+000010D8  4EB9 00001160            135          JSR         OPCODE_DETECT
+000010DE                           136          
+000010DE  4EB9 00001130            137          JSR         REVERSE_START
+000010E4                           138          
+000010E4  2607                     139          MOVE.L      D7,             D3
+000010E6  4281                     140          CLR.L       D1
+000010E8  4282                     141          CLR.L       D2
+000010EA  123C 0008                142          MOVE.B      #$8,            D1
+000010EE  4EB9 00001102            143          JSR         PRINT_LOOP
+000010F4                           144          
+000010F4                           145          * new line
+000010F4  43F9 000012A4            146          LEA         NEW_LINE,       A1
+000010FA  103C 000E                147          MOVE.B      #14,            D0    
+000010FE  4E4F                     148          TRAP        #15
+00001100                           149  *        SIMHALT
+00001100                           150  *        RTS
+00001100                           151          * branch to the start of this method
+00001100  6096                     152          BRA         PRINT_MEMORY_LOOP
+00001102                           153  
+00001102                           154  
+00001102                           155  PRINT_LOOP:
+00001102                           156  
+00001102                           157          
+00001102                           158          * When D1 == 0, we are done and exit this loop
+00001102  0C01 0000                159          CMPI.B      #$0,            D1
+00001106  6700 0026                160          BEQ         PRINT_DONE
+0000110A  5301                     161          SUBI.B      #$1,            D1
+0000110C                           162          
+0000110C  1403                     163          MOVE.B      D3,             D2
+0000110E                           164          * Bit shifting to isolate the right most digit
+0000110E                           165          * 1234 5678 => 8000 0000 => 0000 0008
+0000110E  103C 001C                166          MOVE.B      #28,            D0    
+00001112  E1AA                     167          LSL.L       D0,             D2     
+00001114  E99A                     168          ROL.L       #4,             D2 
+00001116                           169          
+00001116                           170          * Bit shifting to prep the next digit
+00001116                           171          * 1234 4567 => 0123 4567
+00001116  E883                     172          ASR.L       #4, D3
+00001118                           173          
+00001118                           174          *Assuming D4 is empty
+00001118                           175          
+00001118  1802                     176          MOVE.B       D2,            D4
+0000111A  43F9 0000127F            177          LEA          ZERO_MSG,      A1
+00001120                           178          * load the address of Zero_msg
+00001120                           179          * because all of the msgs are stored next to each other in order
+00001120                           180          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+00001120                           181          * and then add it to the address starting at zero_msg
+00001120  C8FC 0002                182          MULU         #2,            D4
+00001124  D3C4                     183          ADDA.L       D4,            A1
+00001126                           184          
+00001126                           185          * trap command 14 reads whatever address is in A1, and then spits out the data to the console
+00001126  103C 000E                186          MOVE.B       #14,           D0
+0000112A  4E4F                     187          TRAP         #15
+0000112C  60D4                     188          BRA          PRINT_LOOP
+0000112E                           189          
+0000112E                           190  PRINT_DONE:
+0000112E  4E75                     191          RTS
+00001130                           192          
+00001130                           193      *   Reversing the address
+00001130                           194  *---------------------------------------
+00001130                           195  
+00001130                           196  REVERSE_START:        
+00001130  4281                     197          CLR.L       D1
+00001132  4287                     198          CLR.L       D7
+00001134  123C 0008                199          MOVE.B      #8,             D1
+00001138  4EB9 00001140            200          JSR         REVERSE_LOOP
+0000113E  4E75                     201          RTS
+00001140                           202          
+00001140                           203  REVERSE_LOOP:
+00001140                           204  
+00001140                           205          
+00001140  0C01 0000                206          CMPI.B      #$0,            D1
+00001144  6700 0018                207          BEQ         REVERSE_DONE
+00001148  5301                     208          SUBI.B      #$1,            D1
+0000114A  E987                     209          ASL.L       #4,             D7
+0000114C                           210          
+0000114C  4285                     211          CLR.L       D5
+0000114E                           212          
+0000114E  1A03                     213          MOVE.B      D3,             D5
+00001150                           214          
+00001150  103C 001C                215          MOVE.B      #28,            D0    
+00001154  E1AD                     216          LSL.L       D0,             D5     
+00001156  E99D                     217          ROL.L       #4,             D5
+00001158                           218          
+00001158  DE05                     219          ADD.B       D5,             D7
+0000115A                           220          
+0000115A                           221          
+0000115A  E883                     222          ASR.L       #4,             D3
+0000115C                           223          
+0000115C  60E2                     224          BRA         REVERSE_LOOP
+0000115E                           225  
+0000115E                           226  REVERSE_DONE:
+0000115E  4E75                     227          RTS
+00001160                           228          
+00001160                           229          *   opcode detection
+00001160                           230  *-----------------------------------------
+00001160                           231  OPCODE_DETECT:
+00001160                           232          *START WITH A LONG IN (A3)
+00001160                           233          *MAKE COPY IN D7
+00001160                           234          *MAKE COPY OF D7 (MOVE.W) IN D6 TO STORE FIRST WORD
+00001160                           235          *SHIFT BY 16 RIGHT
+00001160                           236          *MAKE COPY OF D7 (MOVE.W) IN D5 TO STORE SECOND WORD
+00001160                           237          *FOR EACH WORD
+00001160                           238              *SHIFT RIGHT 6 BITS (TO ISOLATE STATIC BITS)
+00001160                           239              *IF D3 == $13A JSR DETECTED, PRINT JSR MSG, THEN RTS (PREPARE FOR ADDRESSING MODE)
+00001160                           240          *RTS (OR GO TO HIGHER OPCODE DETECTER FOR MORE THAN JSR)
+00001160                           241          *BEFORE RTS, CLEAR D7, D6, D5
+00001160  2E1B                     242          MOVE.L      (A3)+,           D7
+00001162  3C07                     243          MOVE.W      D7,             D6
+00001164                           244          
+00001164                           245          *move 16 to register instead
+00001164  E08F                     246          LSR.L       #8,             D7
+00001166  E08F                     247          LSR.L       #8,             D7
+00001168                           248          
+00001168  3A07                     249          MOVE.W      D7,             D5
+0000116A                           250          
+0000116A                           251          *first word (D6)
+0000116A                           252          
+0000116A  EC4E                     253          LSR.W       #6,              D6
+0000116C  BC7C 013A                254          CMP.W       #$13A,          D6
+00001170  6700 0014                255          BEQ         JSR_DETECTED
+00001174                           256          
+00001174                           257          *second word (D5)
+00001174                           258         
+00001174  EC4D                     259          LSR.W       #6,              D5
+00001176  BA7C 013A                260          CMP.W       #$13A,          D5
+0000117A  6700 000A                261          BEQ         JSR_DETECTED
+0000117E                           262          
+0000117E  4285                     263          CLR.L       D5
+00001180  4286                     264          CLR.L       D6
+00001182  4287                     265          CLR.L       D7
+00001184                           266          
+00001184  4E75                     267          RTS
+00001186                           268          
+00001186                           269  JSR_DETECTED:
+00001186  43F9 0000129F            270          LEA         JSRMSG,         A1
+0000118C  103C 000E                271          MOVE.B      #14,            D0
+00001190  4E4F                     272          TRAP        #15
+00001192                           273          
+00001192  4285                     274          CLR.L       D5
+00001194  4286                     275          CLR.L       D6
+00001196  4287                     276          CLR.L       D7
+00001198                           277          
+00001198  4E75                     278          RTS
+0000119A                           279          
+0000119A                           280          
+0000119A                           281  
+0000119A                           282  DONE:
+0000119A                           283  
+0000119A  43F9 00001218            284          LEA         GOODBYE_MSG,    A1
+000011A0  103C 000E                285          MOVE.B      #14,            D0
+000011A4  4E4F                     286          TRAP        #15
+000011A6  103C 0009                287          MOVE.B      #9,             D0
+000011AA  4E4F                     288          TRAP        #15        
+000011AC                           289          
+000011AC                           290  
+000011AC                           291      *SIMHALT             ; halt simulator
+000011AC                           292  
+000011AC                           293  * Put variables and constants here
+000011AC                           294  
+000011AC= 57 65 6C 63 6F 6D ...    295  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
+000011D2= 50 6C 65 61 73 65 ...    296  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
+000011F6= 50 6C 65 61 73 65 ...    297  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
+00001218= 44 6F 6E 65 20 52 ...    298  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
+0000122C                           299  * CR and LF for strings above because we want to go to next line after printing message
+0000122C                           300  
+0000122C                           301  STA_ADDR         DS.B        40
+00001254                           302  END_ADDR         DS.B        40
+0000127C                           303  
+0000127C                           304  * no CR and LF for strings below because we want to print each number and letter
+0000127C                           305  
+0000127C= 20 20 00                 306  SPACE_MSG:       DC.B        '  ',0
+0000127F                           307  
+0000127F= 30 00                    308  ZERO_MSG:        DC.B        '0',0
+00001281= 31 00                    309  ONE_MSG:         DC.B        '1',0
+00001283= 32 00                    310  TWO_MSG:         DC.B        '2',0
+00001285= 33 00                    311  THREE_MSG:       DC.B        '3',0
+00001287= 34 00                    312  FOUR_MSG:        DC.B        '4',0
+00001289= 35 00                    313  FIVE_MSG:        DC.B        '5',0
+0000128B= 36 00                    314  SIX_MSG:         DC.B        '6',0
+0000128D= 37 00                    315  SEVEN_MSG:       DC.B        '7',0
+0000128F= 38 00                    316  EIGHT_MSG:       DC.B        '8',0
+00001291= 39 00                    317  NINE_MSG:        DC.B        '9',0
+00001293= 41 00                    318  A_MSG:           DC.B        'A',0
+00001295= 42 00                    319  B_MSG:           DC.B        'B',0
+00001297= 43 00                    320  C_MSG:           DC.B        'C',0
+00001299= 44 00                    321  D_MSG:           DC.B        'D',0
+0000129B= 45 00                    322  E_MSG:           DC.B        'E',0
+0000129D= 46 00                    323  F_MSG:           DC.B        'F',0 
+0000129F                           324  
+0000129F                           325  * opcodes
+0000129F= 4A 53 52 20 00           326  JSRMSG:             DC.B        'JSR ',0
+000012A4                           327  
+000012A4                           328  
+000012A4                           329  *-----Carriage Return
+000012A4  =0000000D                330  CR              EQU          $0D
+000012A4                           331  *-----------Line Feed
+000012A4  =0000000A                332  LF              EQU          $0A
+000012A4                           333  
+000012A4= 0D 0A 00                 334  NEW_LINE:       DC.B         '',CR,LF,0
+000012A7                           335  
+000012A7                           336      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -277,40 +347,43 @@ SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
 ASCII_DONE          106E
-A_MSG               1253
-B_MSG               1255
+A_MSG               1293
+B_MSG               1295
 CONVERT_TO_ASCII    1056
 CR                  D
-C_MSG               1257
-DONE                115A
-D_MSG               1259
-EIGHT_MSG           124F
-ENDING_MSG          11B6
-END_ADDR            1214
-E_MSG               125B
-FIVE_MSG            1249
-FOUR_MSG            1247
-F_MSG               125D
-GOODBYE_MSG         11D8
-INTRO_MSG           116C
+C_MSG               1297
+DONE                119A
+D_MSG               1299
+EIGHT_MSG           128F
+ENDING_MSG          11F6
+END_ADDR            1254
+E_MSG               129B
+FIVE_MSG            1289
+FOUR_MSG            1287
+F_MSG               129D
+GOODBYE_MSG         1218
+INTRO_MSG           11AC
+JSRMSG              129F
+JSR_DETECTED        1186
 LETTER_ASCII        1084
 LF                  A
-NEW_LINE            125F
-NINE_MSG            1251
+NEW_LINE            12A4
+NINE_MSG            1291
 NUMBER_ASCII        1070
-ONE_MSG             1241
-PRINT_DONE          1128
-PRINT_LOOP          10FC
+ONE_MSG             1281
+OPCODE_DETECT       1160
+PRINT_DONE          112E
+PRINT_LOOP          1102
 PRINT_MEMORY_LOOP   1098
-REVERSE_DONE        1158
-REVERSE_LOOP        113A
-REVERSE_START       112A
-SEVEN_MSG           124D
-SIX_MSG             124B
-SPACE_MSG           123C
+REVERSE_DONE        115E
+REVERSE_LOOP        1140
+REVERSE_START       1130
+SEVEN_MSG           128D
+SIX_MSG             128B
+SPACE_MSG           127C
 START               1000
-STARTING_MSG        1192
-STA_ADDR            11EC
-THREE_MSG           1245
-TWO_MSG             1243
-ZERO_MSG            123F
+STARTING_MSG        11D2
+STA_ADDR            122C
+THREE_MSG           1285
+TWO_MSG             1283
+ZERO_MSG            127F

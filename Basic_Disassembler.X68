@@ -128,7 +128,12 @@ PRINT_MEMORY_LOOP:
         CLR.L       D1
         CLR.L       D2
         MOVE.B      #$8,            D1
-        MOVE.L      (A3)+,          D3
+        MOVE.L      (A3),          D3
+        
+        *START OF OPCODE RECOGNITION
+        
+        JSR         OPCODE_DETECT
+        
         JSR         REVERSE_START
         
         MOVE.L      D7,             D3
@@ -220,6 +225,64 @@ REVERSE_LOOP:
 
 REVERSE_DONE:
         RTS
+        
+        *   opcode detection
+*-----------------------------------------
+OPCODE_DETECT:
+        *START WITH A LONG IN (A3)
+        *MAKE COPY IN D7
+        *MAKE COPY OF D7 (MOVE.W) IN D6 TO STORE FIRST WORD
+        *SHIFT BY 16 RIGHT
+        *MAKE COPY OF D7 (MOVE.W) IN D5 TO STORE SECOND WORD
+        *FOR EACH WORD
+            *SHIFT RIGHT 6 BITS (TO ISOLATE STATIC BITS)
+            *IF D3 == $13A JSR DETECTED, PRINT JSR MSG, THEN RTS (PREPARE FOR ADDRESSING MODE)
+        *RTS (OR GO TO HIGHER OPCODE DETECTER FOR MORE THAN JSR)
+        *BEFORE RTS, CLEAR D7, D6, D5
+        MOVE.L      (A3)+,           D7
+        MOVE.W      D7,             D6
+        
+        *move 16 to register instead
+        LSR.L       #8,             D7
+        LSR.L       #8,             D7
+        
+        MOVE.W      D7,             D5
+        
+        *first word (D6)
+        *add more cmp for more opcodes in order that makes more sense (move is last because it has 2 static bits)
+        
+        LSR.W       #6,              D6
+        CMP.W       #$13A,          D6
+        BEQ         JSR_DETECTED
+        
+        *second word (D5)
+       
+        LSR.W       #6,              D5
+        CMP.W       #$13A,          D5
+        BEQ         JSR_DETECTED
+        
+        CLR.L       D5
+        CLR.L       D6
+        CLR.L       D7
+        
+        RTS
+        
+JSR_DETECTED:
+        LEA         JSRMSG,         A1
+        MOVE.B      #14,            D0
+        TRAP        #15
+        
+        *implement opcode detection here (create copies of previous words by using D7)
+        *increment A3 as needed when scanning through more words
+        
+        CLR.L       D5
+        CLR.L       D6
+        CLR.L       D7
+        
+        RTS
+        
+        
+
 DONE:
 
         LEA         GOODBYE_MSG,    A1
@@ -263,6 +326,9 @@ D_MSG:           DC.B        'D',0
 E_MSG:           DC.B        'E',0
 F_MSG:           DC.B        'F',0 
 
+* opcodes
+JSRMSG:             DC.B        'JSR ',0
+
 
 *-----Carriage Return
 CR              EQU          $0D
@@ -272,6 +338,8 @@ LF              EQU          $0A
 NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
+
+
 
 
 
