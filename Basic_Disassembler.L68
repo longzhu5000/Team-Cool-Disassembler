@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 7/20/2022 4:35:17 PM
+Created On: 7/21/2022 2:26:36 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Basic Dissassembler
@@ -253,91 +253,95 @@ Created On: 7/20/2022 4:35:17 PM
 00001168  3A07                     249          MOVE.W      D7,             D5
 0000116A                           250          
 0000116A                           251          *first word (D6)
-0000116A                           252          
-0000116A  EC4E                     253          LSR.W       #6,              D6
-0000116C  BC7C 013A                254          CMP.W       #$13A,          D6
-00001170  6700 0014                255          BEQ         JSR_DETECTED
-00001174                           256          
-00001174                           257          *second word (D5)
-00001174                           258         
-00001174  EC4D                     259          LSR.W       #6,              D5
-00001176  BA7C 013A                260          CMP.W       #$13A,          D5
-0000117A  6700 000A                261          BEQ         JSR_DETECTED
-0000117E                           262          
-0000117E  4285                     263          CLR.L       D5
-00001180  4286                     264          CLR.L       D6
-00001182  4287                     265          CLR.L       D7
-00001184                           266          
-00001184  4E75                     267          RTS
-00001186                           268          
-00001186                           269  JSR_DETECTED:
-00001186  43F9 0000129F            270          LEA         JSRMSG,         A1
-0000118C  103C 000E                271          MOVE.B      #14,            D0
-00001190  4E4F                     272          TRAP        #15
-00001192                           273          
-00001192  4285                     274          CLR.L       D5
-00001194  4286                     275          CLR.L       D6
-00001196  4287                     276          CLR.L       D7
-00001198                           277          
-00001198  4E75                     278          RTS
-0000119A                           279          
-0000119A                           280          
-0000119A                           281  
-0000119A                           282  DONE:
-0000119A                           283  
-0000119A  43F9 00001218            284          LEA         GOODBYE_MSG,    A1
-000011A0  103C 000E                285          MOVE.B      #14,            D0
-000011A4  4E4F                     286          TRAP        #15
-000011A6  103C 0009                287          MOVE.B      #9,             D0
-000011AA  4E4F                     288          TRAP        #15        
-000011AC                           289          
-000011AC                           290  
-000011AC                           291      *SIMHALT             ; halt simulator
-000011AC                           292  
-000011AC                           293  * Put variables and constants here
+0000116A                           252          *add more cmp for more opcodes in order that makes more sense (move is last because it has 2 static bits)
+0000116A                           253          
+0000116A  EC4E                     254          LSR.W       #6,              D6
+0000116C  BC7C 013A                255          CMP.W       #$13A,          D6
+00001170  6700 0014                256          BEQ         JSR_DETECTED
+00001174                           257          
+00001174                           258          *second word (D5)
+00001174                           259         
+00001174  EC4D                     260          LSR.W       #6,              D5
+00001176  BA7C 013A                261          CMP.W       #$13A,          D5
+0000117A  6700 000A                262          BEQ         JSR_DETECTED
+0000117E                           263          
+0000117E  4285                     264          CLR.L       D5
+00001180  4286                     265          CLR.L       D6
+00001182  4287                     266          CLR.L       D7
+00001184                           267          
+00001184  4E75                     268          RTS
+00001186                           269          
+00001186                           270  JSR_DETECTED:
+00001186  43F9 0000129F            271          LEA         JSRMSG,         A1
+0000118C  103C 000E                272          MOVE.B      #14,            D0
+00001190  4E4F                     273          TRAP        #15
+00001192                           274          
+00001192                           275          *implement opcode detection here (create copies of previous words by using D7)
+00001192                           276          *increment A3 as needed when scanning through more words
+00001192                           277          
+00001192  4285                     278          CLR.L       D5
+00001194  4286                     279          CLR.L       D6
+00001196  4287                     280          CLR.L       D7
+00001198                           281          
+00001198  4E75                     282          RTS
+0000119A                           283          
+0000119A                           284          
+0000119A                           285  
+0000119A                           286  DONE:
+0000119A                           287  
+0000119A  43F9 00001218            288          LEA         GOODBYE_MSG,    A1
+000011A0  103C 000E                289          MOVE.B      #14,            D0
+000011A4  4E4F                     290          TRAP        #15
+000011A6  103C 0009                291          MOVE.B      #9,             D0
+000011AA  4E4F                     292          TRAP        #15        
+000011AC                           293          
 000011AC                           294  
-000011AC= 57 65 6C 63 6F 6D ...    295  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
-000011D2= 50 6C 65 61 73 65 ...    296  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
-000011F6= 50 6C 65 61 73 65 ...    297  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
-00001218= 44 6F 6E 65 20 52 ...    298  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
-0000122C                           299  * CR and LF for strings above because we want to go to next line after printing message
-0000122C                           300  
-0000122C                           301  STA_ADDR         DS.B        40
-00001254                           302  END_ADDR         DS.B        40
-0000127C                           303  
-0000127C                           304  * no CR and LF for strings below because we want to print each number and letter
-0000127C                           305  
-0000127C= 20 20 00                 306  SPACE_MSG:       DC.B        '  ',0
-0000127F                           307  
-0000127F= 30 00                    308  ZERO_MSG:        DC.B        '0',0
-00001281= 31 00                    309  ONE_MSG:         DC.B        '1',0
-00001283= 32 00                    310  TWO_MSG:         DC.B        '2',0
-00001285= 33 00                    311  THREE_MSG:       DC.B        '3',0
-00001287= 34 00                    312  FOUR_MSG:        DC.B        '4',0
-00001289= 35 00                    313  FIVE_MSG:        DC.B        '5',0
-0000128B= 36 00                    314  SIX_MSG:         DC.B        '6',0
-0000128D= 37 00                    315  SEVEN_MSG:       DC.B        '7',0
-0000128F= 38 00                    316  EIGHT_MSG:       DC.B        '8',0
-00001291= 39 00                    317  NINE_MSG:        DC.B        '9',0
-00001293= 41 00                    318  A_MSG:           DC.B        'A',0
-00001295= 42 00                    319  B_MSG:           DC.B        'B',0
-00001297= 43 00                    320  C_MSG:           DC.B        'C',0
-00001299= 44 00                    321  D_MSG:           DC.B        'D',0
-0000129B= 45 00                    322  E_MSG:           DC.B        'E',0
-0000129D= 46 00                    323  F_MSG:           DC.B        'F',0 
-0000129F                           324  
-0000129F                           325  * opcodes
-0000129F= 4A 53 52 20 00           326  JSRMSG:             DC.B        'JSR ',0
-000012A4                           327  
-000012A4                           328  
-000012A4                           329  *-----Carriage Return
-000012A4  =0000000D                330  CR              EQU          $0D
-000012A4                           331  *-----------Line Feed
-000012A4  =0000000A                332  LF              EQU          $0A
-000012A4                           333  
-000012A4= 0D 0A 00                 334  NEW_LINE:       DC.B         '',CR,LF,0
-000012A7                           335  
-000012A7                           336      END    START        ; last line of source
+000011AC                           295      *SIMHALT             ; halt simulator
+000011AC                           296  
+000011AC                           297  * Put variables and constants here
+000011AC                           298  
+000011AC= 57 65 6C 63 6F 6D ...    299  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
+000011D2= 50 6C 65 61 73 65 ...    300  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
+000011F6= 50 6C 65 61 73 65 ...    301  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
+00001218= 44 6F 6E 65 20 52 ...    302  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
+0000122C                           303  * CR and LF for strings above because we want to go to next line after printing message
+0000122C                           304  
+0000122C                           305  STA_ADDR         DS.B        40
+00001254                           306  END_ADDR         DS.B        40
+0000127C                           307  
+0000127C                           308  * no CR and LF for strings below because we want to print each number and letter
+0000127C                           309  
+0000127C= 20 20 00                 310  SPACE_MSG:       DC.B        '  ',0
+0000127F                           311  
+0000127F= 30 00                    312  ZERO_MSG:        DC.B        '0',0
+00001281= 31 00                    313  ONE_MSG:         DC.B        '1',0
+00001283= 32 00                    314  TWO_MSG:         DC.B        '2',0
+00001285= 33 00                    315  THREE_MSG:       DC.B        '3',0
+00001287= 34 00                    316  FOUR_MSG:        DC.B        '4',0
+00001289= 35 00                    317  FIVE_MSG:        DC.B        '5',0
+0000128B= 36 00                    318  SIX_MSG:         DC.B        '6',0
+0000128D= 37 00                    319  SEVEN_MSG:       DC.B        '7',0
+0000128F= 38 00                    320  EIGHT_MSG:       DC.B        '8',0
+00001291= 39 00                    321  NINE_MSG:        DC.B        '9',0
+00001293= 41 00                    322  A_MSG:           DC.B        'A',0
+00001295= 42 00                    323  B_MSG:           DC.B        'B',0
+00001297= 43 00                    324  C_MSG:           DC.B        'C',0
+00001299= 44 00                    325  D_MSG:           DC.B        'D',0
+0000129B= 45 00                    326  E_MSG:           DC.B        'E',0
+0000129D= 46 00                    327  F_MSG:           DC.B        'F',0 
+0000129F                           328  
+0000129F                           329  * opcodes
+0000129F= 4A 53 52 20 00           330  JSRMSG:             DC.B        'JSR ',0
+000012A4                           331  
+000012A4                           332  
+000012A4                           333  *-----Carriage Return
+000012A4  =0000000D                334  CR              EQU          $0D
+000012A4                           335  *-----------Line Feed
+000012A4  =0000000A                336  LF              EQU          $0A
+000012A4                           337  
+000012A4= 0D 0A 00                 338  NEW_LINE:       DC.B         '',CR,LF,0
+000012A7                           339  
+000012A7                           340      END    START        ; last line of source
 
 No errors detected
 No warnings generated
