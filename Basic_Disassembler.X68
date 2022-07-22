@@ -118,8 +118,7 @@ PRINT_MEMORY_LOOP:
         CLR.L       D2
         MOVE.B      #$8,            D1
         JSR         PRINT_LOOP
-        
-        
+
         * space between address and data
         LEA         SPACE_MSG,      A1
         MOVE.B      #14,            D0    
@@ -128,6 +127,9 @@ PRINT_MEMORY_LOOP:
         CLR.L       D1
         CLR.L       D2
         MOVE.B      #$8,            D1
+        JSR         LSL_LSR_DECODE
+LSL_LSR_FAILURE
+        *Put the next instruction-for example "JSR BRA_DECODE"
         MOVE.L      (A3)+,          D3
         JSR         REVERSE_START
         
@@ -146,7 +148,90 @@ PRINT_MEMORY_LOOP:
         * branch to the start of this method
         BRA         PRINT_MEMORY_LOOP
 
+INSTRUCTIONS
 
+LSL_LSR_DECODE:
+        *Move all the registers in memory to avoid loss of data(pedantic step)
+        MOVEM.L D0-D7/A0-A2/A5-A6,  -(A7)
+        *Get the (12, 15) bits.
+        MOVE.L  #12, D3
+        MOVE.L  #15, D4
+        JSR     GET_BIT
+        *(12, 15) bit should be 1110(14 in decimal)
+        CMP.W   #14, D1
+        BNE     INSTRUCTION_DECODE_FAILURE    *TODO should be a single line, reload the registers from main memory and RTS
+        *Get the (6, 7) bits.
+        MOVE.L  #6, D3
+        MOVE.L  #7, D4
+        JSR     GET_BIT
+        *If the (6, 7) bit is "11" then it is memory shift, else it is register shift
+        CMP.L   #3, D1
+        BEQ     LSL_LSR_MEMORY_SHIFT
+        BRA     LSL_LSR_REGISTER_SHIFT
+        
+ 
+*A3 points to the currnet opcode, and A4 points to the last address, D2 holds the current opcode. Other registers can be cleared
+LSL_LSR_REGISTER_SHIFT
+        *Get the (3, 4) bits.
+        MOVE.L  #3, D3
+        MOVE.L  #4, D4
+        JSR     GET_BIT
+        *(3, 4) bit should be 01(1 in decimal)
+        CMP.L   #1, D1
+        BNE     INSTRUCTION_DECODE_FAILURE  *TODO should be a single line, reload the registers from main memory and RTS
+        *Get the 8th.
+        MOVE.L   #8, D3
+        MOVE.L   #8, D4
+        JSR GET_BIT
+        LEA     LSR_MESSAGE,   A1
+        * load the address of LSR_MESSAGE
+        *IF the 8th bit is 1, it is a LSL_MESSAGE
+        MULU         #4,            D1
+        ADDA.L       D1,            A1
+        MOVE.L       #14, D0
+        TRAP    #15
+        *Get the (6, 7) bits. 
+        MOVE.L   #6, D3
+        MOVE.L   #7, D4
+        JSR GET_BIT
+         LEA     LSL_LSR_BYTE_MESSAGE,   A1
+        * load the address of LSL_LSR_BYTE_MESSAGE
+        *(00)->Byte, (01)->Word, (10)->Long
+        MULU         #2,            D1
+        ADDA.L       D1,            A1
+        MOVE.L       #14, D0
+        TRAP    #15
+        *TODO
+        
+        
+        
+        
+        
+*Gets the (x, y) bit. Note-0th bit is assumed to be the rightmost bit
+*For example, "0101011111100101" and (3, 4) equals "00"
+*D2 holds the word of which we get the (x, y) bits of
+*D3 holds the x, D4 holds the y
+*Result returned in D1
+GET_BIT
+        CLR.L   D1
+        MOVE.W  D2, D1   
+        *Shift it to left by 15-y to get rid of all the bits to the left of yth bit 
+        *and then shift the bits such that the xth bit is the 0th bit
+        NEG.L   D4
+        ADDI.L  #15, D4
+        LSL.W   D4, D1 
+        LSR.W   D3, D1
+        RTS
+
+        
+        
+        
+
+LSL_LSR_MEMORY_SHIFT
+
+            
+
+PRINT_
 PRINT_LOOP:
 
         
@@ -227,9 +312,12 @@ DONE:
         TRAP        #15
         MOVE.B      #9,             D0
         TRAP        #15        
-        
+
 
     *SIMHALT             ; halt simulator
+
+
+
 
 * Put variables and constants here
 
@@ -263,6 +351,11 @@ D_MSG:           DC.B        'D',0
 E_MSG:           DC.B        'E',0
 F_MSG:           DC.B        'F',0 
 
+LSR_MESSAGE      DC.B        'LSR',0
+LSL_MESSAGE      DC.B        'LSL',0
+LSL_LSR_BYTE_MESSAGE DC.B    '.B',0
+LSL_LSR_WORD_MESSAGE DC.B    '.W',0
+LSL_LSR_LONG_MESSAGE DC.B    '.L',0
 
 *-----Carriage Return
 CR              EQU          $0D
@@ -279,3 +372,7 @@ NEW_LINE:       DC.B         '',CR,LF,0
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
+
+
+
+
