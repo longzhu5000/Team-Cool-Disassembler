@@ -342,10 +342,7 @@ DONE:
 * ADDA: 1101
 * ADDQ: 0101
 ****************************************************** 
-HEX_1101        MOVE.B      #'A',   (A2)+
-                MOVE.B      #'D',   (A2)+
-                MOVE.B      #'D',   (A2)+
-                MOVE.W      D7,     D6
+HEX_1101        MOVE.W      D7,     D6
                 LSR.W       #6,     D6          ;shifts right 6
                 ANDI.W      #$0003, D6          
                 CMP.B       #%11,   D6          ;determine if ADD or ADDA
@@ -424,6 +421,7 @@ LF              EQU          $0A
 NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
+
 
 
 *~Font name~Courier New~
