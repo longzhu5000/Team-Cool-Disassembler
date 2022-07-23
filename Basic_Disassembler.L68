@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 7/3/2022 11:03:14 PM
+Created On: 7/22/2022 7:42:53 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Basic Dissassembler
@@ -160,114 +160,122 @@ Created On: 7/3/2022 11:03:14 PM
 00001104  5301                     156          SUBI.B      #$1,            D1
 00001106                           157          
 00001106  1403                     158          MOVE.B      D3,             D2
-00001108  103C 001C                159          MOVE.B      #28,            D0    
-0000110C  E1AA                     160          LSL.L       D0,             D2     
-0000110E  E99A                     161          ROL.L       #4,             D2 
-00001110                           162          
-00001110                           163          
-00001110  E883                     164          ASR.L       #4, D3
-00001112                           165          
-00001112                           166          *Assuming D4 is empty
-00001112                           167          
-00001112  1802                     168          MOVE.B       D2,            D4
-00001114  43F9 0000123F            169          LEA          ZERO_MSG,      A1
-0000111A  C8FC 0002                170          MULU         #2,            D4
-0000111E  D3C4                     171          ADDA.L       D4,            A1
-00001120                           172          
-00001120  103C 000E                173          MOVE.B       #14,           D0
-00001124  4E4F                     174          TRAP         #15
-00001126  60D4                     175          BRA         PRINT_LOOP
-00001128                           176          
-00001128                           177  PRINT_DONE:
-00001128  4E75                     178          RTS
-0000112A                           179          
-0000112A                           180      *   Reversing the address
-0000112A                           181  *---------------------------------------
-0000112A                           182  
-0000112A                           183  REVERSE_START:        
-0000112A  4281                     184          CLR.L       D1
-0000112C  4287                     185          CLR.L       D7
-0000112E  123C 0008                186          MOVE.B      #8,             D1
-00001132  4EB9 0000113A            187          JSR         REVERSE_LOOP
-00001138  4E75                     188          RTS
-0000113A                           189          
-0000113A                           190  REVERSE_LOOP:
-0000113A                           191  
-0000113A                           192          
-0000113A  0C01 0000                193          CMPI.B      #$0,            D1
-0000113E  6700 0018                194          BEQ         REVERSE_DONE
-00001142  5301                     195          SUBI.B      #$1,            D1
-00001144  E987                     196          ASL.L       #4,             D7
-00001146                           197          
-00001146  4285                     198          CLR.L       D5
-00001148                           199          
-00001148  1A03                     200          MOVE.B      D3,             D5
-0000114A                           201          
-0000114A  103C 001C                202          MOVE.B      #28,            D0    
-0000114E  E1AD                     203          LSL.L       D0,             D5     
-00001150  E99D                     204          ROL.L       #4,             D5
-00001152                           205          
-00001152  DE05                     206          ADD.B       D5,             D7
-00001154                           207          
-00001154                           208          
-00001154  E883                     209          ASR.L       #4,             D3
-00001156                           210          
-00001156  60E2                     211          BRA         REVERSE_LOOP
-00001158                           212  
-00001158                           213  REVERSE_DONE:
-00001158  4E75                     214          RTS
-0000115A                           215  DONE:
-0000115A                           216  
-0000115A  43F9 000011D8            217          LEA         GOODBYE_MSG,    A1
-00001160  103C 000E                218          MOVE.B      #14,            D0
-00001164  4E4F                     219          TRAP        #15
-00001166  103C 0009                220          MOVE.B      #9,             D0
-0000116A  4E4F                     221          TRAP        #15        
-0000116C                           222          
-0000116C                           223  
-0000116C                           224      *SIMHALT             ; halt simulator
-0000116C                           225  
-0000116C                           226  * Put variables and constants here
-0000116C                           227  
-0000116C= 57 65 6C 63 6F 6D ...    228  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
-00001192= 50 6C 65 61 73 65 ...    229  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
-000011B6= 50 6C 65 61 73 65 ...    230  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
-000011D8= 44 6F 6E 65 20 52 ...    231  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
-000011EC                           232  * CR and LF for strings above because we want to go to next line after printing message
-000011EC                           233  
-000011EC                           234  STA_ADDR         DS.B        40
-00001214                           235  END_ADDR         DS.B        40
-0000123C                           236  
-0000123C                           237  * no CR and LF for strings below because we want to print each number and letter
-0000123C                           238  
-0000123C= 20 20 00                 239  SPACE_MSG:       DC.B        '  ',0
-0000123F                           240  
-0000123F= 30 00                    241  ZERO_MSG:        DC.B        '0',0
-00001241= 31 00                    242  ONE_MSG:         DC.B        '1',0
-00001243= 32 00                    243  TWO_MSG:         DC.B        '2',0
-00001245= 33 00                    244  THREE_MSG:       DC.B        '3',0
-00001247= 34 00                    245  FOUR_MSG:        DC.B        '4',0
-00001249= 35 00                    246  FIVE_MSG:        DC.B        '5',0
-0000124B= 36 00                    247  SIX_MSG:         DC.B        '6',0
-0000124D= 37 00                    248  SEVEN_MSG:       DC.B        '7',0
-0000124F= 38 00                    249  EIGHT_MSG:       DC.B        '8',0
-00001251= 39 00                    250  NINE_MSG:        DC.B        '9',0
-00001253= 41 00                    251  A_MSG:           DC.B        'A',0
-00001255= 42 00                    252  B_MSG:           DC.B        'B',0
-00001257= 43 00                    253  C_MSG:           DC.B        'C',0
-00001259= 44 00                    254  D_MSG:           DC.B        'D',0
-0000125B= 45 00                    255  E_MSG:           DC.B        'E',0
-0000125D= 46 00                    256  F_MSG:           DC.B        'F',0 
-0000125F                           257  
-0000125F                           258  
-0000125F                           259  *-----Carriage Return
-0000125F  =0000000D                260  CR              EQU          $0D
-0000125F                           261  *-----------Line Feed
-0000125F  =0000000A                262  LF              EQU          $0A
-0000125F                           263  
-0000125F= 0D 0A 00                 264  NEW_LINE:       DC.B         '',CR,LF,0
-00001262                           265  
-00001262                           266      END    START        ; last line of source
+00001108                           159          * Bit shifting to isolate the right most digit
+00001108                           160          * 1234 5678 => 8000 0000 => 0000 0008
+00001108  103C 001C                161          MOVE.B      #28,            D0    
+0000110C  E1AA                     162          LSL.L       D0,             D2     
+0000110E  E99A                     163          ROL.L       #4,             D2 
+00001110                           164          
+00001110                           165          * Bit shifting to prep the next digit
+00001110                           166          * 1234 4567 => 0123 4567
+00001110  E883                     167          ASR.L       #4, D3
+00001112                           168          
+00001112                           169          *Assuming D4 is empty
+00001112                           170          
+00001112  1802                     171          MOVE.B       D2,            D4
+00001114  43F9 0000123F            172          LEA          ZERO_MSG,      A1
+0000111A                           173          * load the address of Zero_msg
+0000111A                           174          * because all of the msgs are stored next to each other in order
+0000111A                           175          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+0000111A                           176          * and then add it to the address starting at zero_msg
+0000111A  C8FC 0002                177          MULU         #2,            D4
+0000111E  D3C4                     178          ADDA.L       D4,            A1
+00001120                           179          
+00001120                           180          * trap command 14 reads whatever address is in A1, and then spits out the data to the console
+00001120  103C 000E                181          MOVE.B       #14,           D0
+00001124  4E4F                     182          TRAP         #15
+00001126  60D4                     183          BRA          PRINT_LOOP
+00001128                           184          
+00001128                           185  PRINT_DONE:
+00001128  4E75                     186          RTS
+0000112A                           187          
+0000112A                           188      *   Reversing the address
+0000112A                           189  *---------------------------------------
+0000112A                           190  
+0000112A                           191  REVERSE_START:        
+0000112A  4281                     192          CLR.L       D1
+0000112C  4287                     193          CLR.L       D7
+0000112E  123C 0008                194          MOVE.B      #8,             D1
+00001132  4EB9 0000113A            195          JSR         REVERSE_LOOP
+00001138  4E75                     196          RTS
+0000113A                           197          
+0000113A                           198  REVERSE_LOOP:
+0000113A                           199  
+0000113A                           200          
+0000113A  0C01 0000                201          CMPI.B      #$0,            D1
+0000113E  6700 0018                202          BEQ         REVERSE_DONE
+00001142  5301                     203          SUBI.B      #$1,            D1
+00001144  E987                     204          ASL.L       #4,             D7
+00001146                           205          
+00001146  4285                     206          CLR.L       D5
+00001148                           207          
+00001148  1A03                     208          MOVE.B      D3,             D5
+0000114A                           209          
+0000114A  103C 001C                210          MOVE.B      #28,            D0    
+0000114E  E1AD                     211          LSL.L       D0,             D5     
+00001150  E99D                     212          ROL.L       #4,             D5
+00001152                           213          
+00001152  DE05                     214          ADD.B       D5,             D7
+00001154                           215          
+00001154                           216          
+00001154  E883                     217          ASR.L       #4,             D3
+00001156                           218          
+00001156  60E2                     219          BRA         REVERSE_LOOP
+00001158                           220  
+00001158                           221  REVERSE_DONE:
+00001158  4E75                     222          RTS
+0000115A                           223  DONE:
+0000115A                           224  
+0000115A  43F9 000011D8            225          LEA         GOODBYE_MSG,    A1
+00001160  103C 000E                226          MOVE.B      #14,            D0
+00001164  4E4F                     227          TRAP        #15
+00001166  103C 0009                228          MOVE.B      #9,             D0
+0000116A  4E4F                     229          TRAP        #15        
+0000116C                           230          
+0000116C                           231  
+0000116C                           232      *SIMHALT             ; halt simulator
+0000116C                           233  
+0000116C                           234  * Put variables and constants here
+0000116C                           235  
+0000116C= 57 65 6C 63 6F 6D ...    236  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
+00001192= 50 6C 65 61 73 65 ...    237  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
+000011B6= 50 6C 65 61 73 65 ...    238  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
+000011D8= 44 6F 6E 65 20 52 ...    239  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
+000011EC                           240  * CR and LF for strings above because we want to go to next line after printing message
+000011EC                           241  
+000011EC                           242  STA_ADDR         DS.B        40
+00001214                           243  END_ADDR         DS.B        40
+0000123C                           244  
+0000123C                           245  * no CR and LF for strings below because we want to print each number and letter
+0000123C                           246  
+0000123C= 20 20 00                 247  SPACE_MSG:       DC.B        '  ',0
+0000123F                           248  
+0000123F= 30 00                    249  ZERO_MSG:        DC.B        '0',0
+00001241= 31 00                    250  ONE_MSG:         DC.B        '1',0
+00001243= 32 00                    251  TWO_MSG:         DC.B        '2',0
+00001245= 33 00                    252  THREE_MSG:       DC.B        '3',0
+00001247= 34 00                    253  FOUR_MSG:        DC.B        '4',0
+00001249= 35 00                    254  FIVE_MSG:        DC.B        '5',0
+0000124B= 36 00                    255  SIX_MSG:         DC.B        '6',0
+0000124D= 37 00                    256  SEVEN_MSG:       DC.B        '7',0
+0000124F= 38 00                    257  EIGHT_MSG:       DC.B        '8',0
+00001251= 39 00                    258  NINE_MSG:        DC.B        '9',0
+00001253= 41 00                    259  A_MSG:           DC.B        'A',0
+00001255= 42 00                    260  B_MSG:           DC.B        'B',0
+00001257= 43 00                    261  C_MSG:           DC.B        'C',0
+00001259= 44 00                    262  D_MSG:           DC.B        'D',0
+0000125B= 45 00                    263  E_MSG:           DC.B        'E',0
+0000125D= 46 00                    264  F_MSG:           DC.B        'F',0 
+0000125F                           265  
+0000125F                           266  
+0000125F                           267  *-----Carriage Return
+0000125F  =0000000D                268  CR              EQU          $0D
+0000125F                           269  *-----------Line Feed
+0000125F  =0000000A                270  LF              EQU          $0A
+0000125F                           271  
+0000125F= 0D 0A 00                 272  NEW_LINE:       DC.B         '',CR,LF,0
+00001262                           273  
+00001262                           274      END    START        ; last line of source
 
 No errors detected
 No warnings generated
