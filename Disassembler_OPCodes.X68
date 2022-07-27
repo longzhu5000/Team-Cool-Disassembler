@@ -26,9 +26,9 @@ ISOLATE_15_12:
         LSR.L       D2,     D4
         
         CMP.B       #$D,   D4
-        BEQ         OP_CODE_ADD
-        CMP.W       #$D,   D4
-        BEQ         OP_CODE_ADDA
+        BEQ         ADD_ADDA            ;OP_CODE_ADD
+       ;CMP.W       #$D,   D4
+       ;BEQ         OP_CODE_ADDA
         CMP.B       #$5,   D4
         BEQ         OP_CODE_ADDQ
         CMP.B       #$9,   D4
@@ -43,7 +43,22 @@ ISOLATE_16:
         BEQ         OP_CODE_RTS
 
         RTS
-*----------------
+        
+ADD_ADDA:
+        MOVE.L      D3,     D4
+        MOVE.L      #6,     D2      
+        MOVE.L      #13,    D5
+        LSR.L       D2,     D4          
+        LSL.L       D5,     D4          ;isolates bit 3-6
+        
+        CMP.B       #%011,  D4          ;compares OP_Mode field, (ADDA: 011, 111)
+        BEQ         OP_CODE_ADDA
+        CMP.B       #%111,  D4
+        BEQ         OP_CODE_ADDA
+        BNE         OP_CODE_ADD
+        
+        RTS
+*------------------------
 OP_CODE_ADD:
         LEA         ADD_MSG, A1
         MOVE.B      #14, D0
@@ -92,6 +107,7 @@ ADDQ_MSG:       DC.B        'ADDQ',0
 SUB_MSG:        DC.B        'SUB',0
 RTS_MSG:        DC.B        'RTS',0
 NOP_MSG:        DC.B        'NOP',0
+
 
 
 

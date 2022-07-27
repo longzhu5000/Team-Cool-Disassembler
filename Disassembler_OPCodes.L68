@@ -1,6 +1,6 @@
 00000000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 7/22/2022 7:51:55 PM
+Created On: 7/27/2022 12:11:43 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -19,93 +19,108 @@ Created On: 7/22/2022 7:51:55 PM
 00000000                            15  CHECK_OPCODES:
 00000000                            16  
 00000000  4EB9 0000000E             17          JSR     ISOLATE_15_12
-00000006  4EB9 0000003A             18          JSR     ISOLATE_16
+00000006  4EB9 0000002E             18          JSR     ISOLATE_16
 0000000C                            19  
 0000000C  4E75                      20          RTS
 0000000E                            21  
 0000000E                            22  
 0000000E                            23  ISOLATE_15_12:
-0000000E  FFFF FFFF                 24          SIMHALT
-00000012  2803                      25          MOVE.L      D3,     D4
-00000014  740C                      26          MOVE.L      #12,     D2
-00000016  E4AC                      27          LSR.L       D2,     D4
-00000018                            28          
-00000018  B83C 000D                 29          CMP.B       #$D,   D4
-0000001C  6700 002E                 30          BEQ         OP_CODE_ADD
-00000020  B87C 000D                 31          CMP.W       #$D,   D4
-00000024  6700 0034                 32          BEQ         OP_CODE_ADDA
-00000028  B83C 0005                 33          CMP.B       #$5,   D4
-0000002C  6700 003A                 34          BEQ         OP_CODE_ADDQ
-00000030  B83C 0009                 35          CMP.B       #$9,   D4
-00000034  6700 0040                 36          BEQ         OP_CODE_SUB
-00000038                            37  
-00000038  4E75                      38          RTS
-0000003A                            39          
-0000003A                            40  ISOLATE_16:
-0000003A  B67C 4E71                 41          CMP.W       #$4E71, D3
-0000003E  6700 0052                 42          BEQ         OP_CODE_NOP
-00000042  B67C 4E75                 43          CMP.W       #$4E75, D3
-00000046  6700 003C                 44          BEQ         OP_CODE_RTS
-0000004A                            45  
-0000004A  4E75                      46          RTS
-0000004C                            47  *----------------
-0000004C                            48  OP_CODE_ADD:
-0000004C  43F9 000000A0             49          LEA         ADD_MSG, A1
-00000052  103C 000E                 50          MOVE.B      #14, D0
-00000056  4E4F                      51          TRAP        #15
-00000058                            52          
-00000058  4E75                      53          RTS
-0000005A                            54          
-0000005A                            55  OP_CODE_ADDA:
-0000005A  43F9 000000A4             56          LEA         ADDA_MSG, A1
-00000060  103C 000E                 57          MOVE.B      #14, D0
-00000064  4E4F                      58          TRAP        #15
-00000066                            59          
-00000066  4E75                      60          RTS
-00000068                            61          
-00000068                            62  OP_CODE_ADDQ:
-00000068  43F9 000000A9             63          LEA         ADDQ_MSG, A1
-0000006E  103C 000E                 64          MOVE.B      #14, D0
-00000072  4E4F                      65          TRAP        #15
-00000074                            66          
-00000074  4E75                      67          RTS
-00000076                            68  
-00000076                            69  OP_CODE_SUB:
-00000076  43F9 000000AE             70          LEA         SUB_MSG, A1
-0000007C  103C 000E                 71          MOVE.B      #14, D0
-00000080  4E4F                      72          TRAP        #15
-00000082                            73          
-00000082  4E75                      74          RTS
-00000084                            75          
-00000084                            76  OP_CODE_RTS:
-00000084  43F9 000000B2             77          LEA         RTS_MSG, A1
-0000008A  103C 000E                 78          MOVE.B      #14, D0
-0000008E  4E4F                      79          TRAP        #15
-00000090                            80          
-00000090  4E75                      81          RTS
-00000092                            82          
-00000092                            83  OP_CODE_NOP:
-00000092  43F9 000000B6             84          LEA         NOP_MSG, A1
-00000098  103C 000E                 85          MOVE.B      #14, D0
-0000009C  4E4F                      86          TRAP        #15
-0000009E                            87          
-0000009E  4E75                      88          RTS
-000000A0                            89  
-000000A0= 41 44 44 00               90  ADD_MSG:        DC.B        'ADD',0
-000000A4= 41 44 44 41 00            91  ADDA_MSG:       DC.B        'ADDA',0
-000000A9= 41 44 44 51 00            92  ADDQ_MSG:       DC.B        'ADDQ',0
-000000AE= 53 55 42 00               93  SUB_MSG:        DC.B        'SUB',0
-000000B2= 52 54 53 00               94  RTS_MSG:        DC.B        'RTS',0
-000000B6= 4E 4F 50 00               95  NOP_MSG:        DC.B        'NOP',0
-000000BA                            96  
-000000BA                            97  
-000000BA                            98  
-000000BA                            99  
-000000BA                           100  
-000000BA                           101  
-000000BA                           102  
-000000BA                           103  
-Line 104 WARNING: END directive missing, starting address not set
+0000000E  2803                      24          MOVE.L      D3,     D4
+00000010  740C                      25          MOVE.L      #12,     D2
+00000012  E4AC                      26          LSR.L       D2,     D4
+00000014                            27          
+00000014  B83C 000D                 28          CMP.B       #$D,   D4
+00000018  6700 0026                 29          BEQ         ADD_ADDA            ;OP_CODE_ADD
+0000001C                            30         ;CMP.W       #$D,   D4
+0000001C                            31         ;BEQ         OP_CODE_ADDA
+0000001C  B83C 0005                 32          CMP.B       #$5,   D4
+00000020  6700 005A                 33          BEQ         OP_CODE_ADDQ
+00000024  B83C 0009                 34          CMP.B       #$9,   D4
+00000028  6700 0060                 35          BEQ         OP_CODE_SUB
+0000002C                            36  
+0000002C  4E75                      37          RTS
+0000002E                            38          
+0000002E                            39  ISOLATE_16:
+0000002E  B67C 4E71                 40          CMP.W       #$4E71, D3
+00000032  6700 0072                 41          BEQ         OP_CODE_NOP
+00000036  B67C 4E75                 42          CMP.W       #$4E75, D3
+0000003A  6700 005C                 43          BEQ         OP_CODE_RTS
+0000003E                            44  
+0000003E  4E75                      45          RTS
+00000040                            46          
+00000040                            47  ADD_ADDA:
+00000040  2803                      48          MOVE.L      D3,     D4
+00000042  7406                      49          MOVE.L      #6,     D2
+00000044  7A0D                      50          MOVE.L      #13,    D5
+00000046  E4AC                      51          LSR.L       D2,     D4
+00000048  EBAC                      52          LSL.L       D5,     D4
+0000004A                            53          
+0000004A  B83C 0003                 54          CMP.B       #%011,  D4
+0000004E  6700 001E                 55          BEQ         OP_CODE_ADDA
+00000052  B83C 0007                 56          CMP.B       #%111,  D4
+00000056  6700 0016                 57          BEQ         OP_CODE_ADDA
+0000005A  6600 0004                 58          BNE         OP_CODE_ADD
+0000005E                            59          
+0000005E  4E75                      60          RTS
+00000060                            61  *------------------------
+00000060                            62  OP_CODE_ADD:
+00000060  43F9 000000B4             63          LEA         ADD_MSG, A1
+00000066  103C 000E                 64          MOVE.B      #14, D0
+0000006A  4E4F                      65          TRAP        #15
+0000006C                            66          
+0000006C  4E75                      67          RTS
+0000006E                            68          
+0000006E                            69  OP_CODE_ADDA:
+0000006E  43F9 000000B8             70          LEA         ADDA_MSG, A1
+00000074  103C 000E                 71          MOVE.B      #14, D0
+00000078  4E4F                      72          TRAP        #15
+0000007A                            73          
+0000007A  4E75                      74          RTS
+0000007C                            75          
+0000007C                            76  OP_CODE_ADDQ:
+0000007C  43F9 000000BD             77          LEA         ADDQ_MSG, A1
+00000082  103C 000E                 78          MOVE.B      #14, D0
+00000086  4E4F                      79          TRAP        #15
+00000088                            80          
+00000088  4E75                      81          RTS
+0000008A                            82  
+0000008A                            83  OP_CODE_SUB:
+0000008A  43F9 000000C2             84          LEA         SUB_MSG, A1
+00000090  103C 000E                 85          MOVE.B      #14, D0
+00000094  4E4F                      86          TRAP        #15
+00000096                            87          
+00000096  4E75                      88          RTS
+00000098                            89          
+00000098                            90  OP_CODE_RTS:
+00000098  43F9 000000C6             91          LEA         RTS_MSG, A1
+0000009E  103C 000E                 92          MOVE.B      #14, D0
+000000A2  4E4F                      93          TRAP        #15
+000000A4                            94          
+000000A4  4E75                      95          RTS
+000000A6                            96          
+000000A6                            97  OP_CODE_NOP:
+000000A6  43F9 000000CA             98          LEA         NOP_MSG, A1
+000000AC  103C 000E                 99          MOVE.B      #14, D0
+000000B0  4E4F                     100          TRAP        #15
+000000B2                           101          
+000000B2  4E75                     102          RTS
+000000B4                           103  
+000000B4= 41 44 44 00              104  ADD_MSG:        DC.B        'ADD',0
+000000B8= 41 44 44 41 00           105  ADDA_MSG:       DC.B        'ADDA',0
+000000BD= 41 44 44 51 00           106  ADDQ_MSG:       DC.B        'ADDQ',0
+000000C2= 53 55 42 00              107  SUB_MSG:        DC.B        'SUB',0
+000000C6= 52 54 53 00              108  RTS_MSG:        DC.B        'RTS',0
+000000CA= 4E 4F 50 00              109  NOP_MSG:        DC.B        'NOP',0
+000000CE                           110  
+000000CE                           111  
+000000CE                           112  
+000000CE                           113  
+000000CE                           114  
+000000CE                           115  
+000000CE                           116  
+000000CE                           117  
+000000CE                           118  
+Line 119 WARNING: END directive missing, starting address not set
 
 No errors detected
 1 warning generated
@@ -114,18 +129,19 @@ No errors detected
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-ADDA_MSG            A4
-ADDQ_MSG            A9
-ADD_MSG             A0
+ADDA_MSG            B8
+ADDQ_MSG            BD
+ADD_ADDA            40
+ADD_MSG             B4
 CHECK_OPCODES       0
 ISOLATE_15_12       E
-ISOLATE_16          3A
-NOP_MSG             B6
-OP_CODE_ADD         4C
-OP_CODE_ADDA        5A
-OP_CODE_ADDQ        68
-OP_CODE_NOP         92
-OP_CODE_RTS         84
-OP_CODE_SUB         76
-RTS_MSG             B2
-SUB_MSG             AE
+ISOLATE_16          2E
+NOP_MSG             CA
+OP_CODE_ADD         60
+OP_CODE_ADDA        6E
+OP_CODE_ADDQ        7C
+OP_CODE_NOP         A6
+OP_CODE_RTS         98
+OP_CODE_SUB         8A
+RTS_MSG             C6
+SUB_MSG             C2
