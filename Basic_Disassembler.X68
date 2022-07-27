@@ -150,6 +150,19 @@ LSL_LSR_FAILURE
 
 INSTRUCTIONS
 
+INSTRUCTION_DECODE_FAILURE
+        MOVEM.L (A7)+, D0-D7/A0-A2/A5-A6
+        RTS
+        
+INSTRUCTION_DECODED_SUCCESSFULLY
+        MOVEM.L (A7)+, D0-D7/A0-A2/A5-A6
+        RTS
+
+        
+*First label which is called for LSR/LSR disassembling. Branches to appropriate type of shift, memory or register, based on certain bits.
+*Also detects failure by comparing the first four bits.
+
+*A3 points to the currnet opcode, and A4 points to the last address, D2 holds the current opcode. Other registers can be cleared
 LSL_LSR_DECODE:
         *Move all the registers in memory to avoid loss of data(pedantic step)
         MOVEM.L D0-D7/A0-A2/A5-A6,  -(A7)
@@ -159,7 +172,7 @@ LSL_LSR_DECODE:
         JSR     GET_BIT
         *(12, 15) bit should be 1110(14 in decimal)
         CMP.W   #14, D1
-        BNE     INSTRUCTION_DECODE_FAILURE    *TODO should be a single line, reload the registers from main memory and RTS
+        BNE     INSTRUCTION_DECODE_FAILURE    
         *Get the (6, 7) bits.
         MOVE.L  #6, D3
         MOVE.L  #7, D4
@@ -170,6 +183,8 @@ LSL_LSR_DECODE:
         BRA     LSL_LSR_REGISTER_SHIFT
         
  
+*Dissassebles the LSL_LSR which are shifting a data register's content  , in other words, have a data register as the destination operand.
+
 *A3 points to the currnet opcode, and A4 points to the last address, D2 holds the current opcode. Other registers can be cleared
 LSL_LSR_REGISTER_SHIFT
         *Get the (3, 4) bits.
@@ -193,15 +208,124 @@ LSL_LSR_REGISTER_SHIFT
         *Get the (6, 7) bits. 
         MOVE.L   #6, D3
         MOVE.L   #7, D4
-        JSR GET_BIT
-         LEA     LSL_LSR_BYTE_MESSAGE,   A1
+        JSR GET_BIT     
+        LEA     LSL_LSR_BYTE_MESSAGE,   A1
         * load the address of LSL_LSR_BYTE_MESSAGE
         *(00)->Byte, (01)->Word, (10)->Long
-        MULU         #2,            D1
+        MULU         #3,            D1
         ADDA.L       D1,            A1
         MOVE.L       #14, D0
         TRAP    #15
-        *TODO
+        LEA     SPACE_MSG, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        *Get the i/r bit(5th bit)
+        MOVE.L  #5, D3
+        MOVE.L  #5, D4
+        JSR     GET_BIT
+        CMP.L   #0, D1
+        BEQ     LSL_LSR_SOURCE_IMM
+
+*Decodes the LSL_LSR instruction where the destination and source are data registers. 
+*A3 points to the currnet opcode, and A4 points to the last address, D2 holds the current opcode. Other registers can be cleared
+LSL_LSR_SOURCE_REGISTER
+        MOVE.L  #9, D3
+        MOVE.L  #11, D4
+        JSR     GET_BIT
+        MOVE.L  D1, D3
+        JSR     PRINT_DATA_REGISTER
+        LEA     COMMA_MSG, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        LEA     SPACE_MSG, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        BRA     LSL_LSR_DEST_REGISTER
+ 
+*Decodes the immediate aspect of the LSL/LSR with source as immediate value, 
+*A3 points to the currnet opcode, and A4 points to the last address, D2 holds the current opcode. Other registers can be cleared
+LSL_LSR_SOURCE_IMM
+        LEA     HASH_MSG, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        LEA     ZERO_MSG, A1
+        MOVE.L  #9, D3
+        MOVE.L  #11, D4
+        JSR     GET_BIT
+        MULU    #2, D1
+        CMP.L   #0, D1
+        BNE     NON_EIGHT_SHIFT_COUNT
+        LEA     EIGHT_MSG, A1
+NON_EIGHT_SHIFT_COUNT
+        ADDA.L  D1, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        LEA     COMMA_MSG, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        LEA     SPACE_MSG, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        BRA     LSL_LSR_DEST_REGISTER
+        LEA     SPACE_MSG, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        
+
+*       
+*A3 points to the currnet opcode, and A4 points to the last address, D2 holds the current opcode. Other registers can be cleared
+LSL_LSR_DEST_REGISTER
+        MOVE.L  #0, D3
+        MOVE.L  #2, D4
+        JSR     GET_BIT
+        MOVE.L  D1, D3
+        JSR     PRINT_DATA_REGISTER
+        BRA     INSTRUCTION_DECODED_SUCCESSFULLY
+        
+LSL_LSR_MEMORY_SHIFT
+        MOVE.L  #9, D3
+        MOVE.L  #11, D4
+        JSR     GET_BIT
+        CMP.L   #1, D1
+        BNE     INSTRUCTION_DECODE_FAILURE
+        MOVE.L   #8, D3
+        MOVE.L   #8, D4
+        JSR GET_BIT
+        LEA     LSR_MESSAGE,   A1
+        * load the address of LSR_MESSAGE
+        *IF the 8th bit is 1, it is a LSL_MESSAGE
+        MULU         #4,            D1
+        ADDA.L       D1,            A1
+        MOVE.L       #14, D0
+        TRAP    #15
+        MOVE.L  #3, D3
+        MOVE.L  #5, D4
+        JSR     GET_BIT
+        CMP.L   #2, D1
+        BMI     INSTRUCTION_DECODE_FAILURE
+        CMP.L   #5, D1
+        BEQ     INSTRUCTION_DECODE_FAILURE
+        CMP.L   #6, D1
+        BEQ     INSTRUCTION_DECODE_FAILURE
+        MOVE.L  #0, D3
+        MOVE.L  #2, D4
+        JSR     GET_BIT
+        CMP.L   #1, D1
+        BGT     INSTRUCTION_DECODE_FAILURE
+        MOVE.L  #0, D3
+        MOVE.L  #2, D4
+        JSR     GET_BIT
+        MOVE.L  D1, D5
+        MOVE.L  #3, D3
+        MOVE.L  #5, D4
+        JSR     GET_BIT
+        MOVE.L  D1, D4
+        MOVE.L  D5, D3
+        JSR     EFFECTIVE_ADDRESSING_TABLE
+        
+        
+
+
         
         
         
@@ -223,13 +347,60 @@ GET_BIT
         LSR.W   D3, D1
         RTS
 
+
+*Prints out the data register without CR, LF using the bits in D3
+*For example, D3="010" will print out D2.     
+PRINT_DATA_REGISTER
+        LEA     D_MSG, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        LEA     ZERO_MSG, A1
+        MULU    #2, D3
+        ADDA.L  D3, A1
+        MOVE.L  #14, D0
+        TRAP    #15
+        RTS
+
+
+DATA_REGISTER_ADDRESSING
+        
+        
+
+ADDRESS_REGISTER_ADDRESSING
+
+ADDRESS_REGISTER_INDIRECT_ADDRESSING
+
+
+ADDRESS_REGISTER_INCREMENT_INDIRECT_ADDRESSING
+
+
+ADDRESS_REGISTER_DECREMENT_INDIRECT_ADDRESSING
+
+DISPLACEMENT_ADDRESSING
+
+ABSOLUTE_OR_IMMEDIATE_ADDRESSING
+
+
+*Prints out the effective addressing.
+*D3 holds the mode bits, D4 holds the register bits
+*A3 points to current word in memory
+*D2 holds the current word size opcode   
+EFFECTIVE_ADDRESSING_TABLE
+        BRA     DATA_REGISTER_ADDRESSING
+        BRA     ADDRESS_REGISTER_ADDRESSING
+        BRA     ADDRESS_REGISTER_INDIRECT_ADDRESSING
+        BRA     ADDRESS_REGISTER_INCREMENT_INDIRECT_ADDRESSING
+        BRA     ADDRESS_REGISTER_DECREMENT_INDIRECT_ADDRESSING
+        BRA     DISPLACEMENT_ADDRESSING
+        BRA     DISPLACEMENT_ADDRESSING
+        BRA     ABSOLUTE_OR_IMMEDIATE_ADDRESSING
+   
+        
+
         
         
         
 
-LSL_LSR_MEMORY_SHIFT
-
-            
 
 PRINT_
 PRINT_LOOP:
@@ -265,7 +436,7 @@ PRINT_LOOP:
         * trap command 14 reads whatever address is in A1, and then spits out the data to the console
         MOVE.B       #14,           D0
         TRAP         #15
-        BRA          PRINT_LOOP
+        BRA         PRINT_LOOP
         
 PRINT_DONE:
         RTS
@@ -350,7 +521,10 @@ C_MSG:           DC.B        'C',0
 D_MSG:           DC.B        'D',0
 E_MSG:           DC.B        'E',0
 F_MSG:           DC.B        'F',0 
+COMMA_MSG        DC.B        ',',0
+HASH_MSG         DC.B        '#',0
 
+*LSL/LSR instruction message
 LSR_MESSAGE      DC.B        'LSR',0
 LSL_MESSAGE      DC.B        'LSL',0
 LSL_LSR_BYTE_MESSAGE DC.B    '.B',0
@@ -367,11 +541,11 @@ NEW_LINE:       DC.B         '',CR,LF,0
     END    START        ; last line of source
 
 
-
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
+
 
 
 
