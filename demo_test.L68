@@ -1,0 +1,66 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 7/28/2022 1:41:15 PM
+
+00000000                             1  *****************************
+00000000                             2  *
+00000000                             3  * demo_test.X68
+00000000                             4  *
+00000000                             5  * Created 12/05/2018
+00000000                             6  *
+00000000                             7  * Test program for CSS 422 Disassembler Project Demo
+00000000                             8  *
+00000000                             9  *****************************
+00000000                            10  
+00000000  =00009000                 11  start           EQU     $00009000       * ORG and END address
+00000000                            12  
+00000000                            13  * ORG the program so that it straddles the address boundary $00007FFF to $00008000
+00000000                            14  
+00009000                            15          ORG     start
+00009000                            16  
+00009000                            17  NOP
+00009000  6E0E                      18      BGT.B     label1
+00009002  6E0C                      19      BGT.B     label2
+00009004  6F0A                      20      BLE.B     label1
+00009006  6F08                      21      BLE.B     label2
+00009008  6C06                      22      BGE.B     label1
+0000900A  6704                      23      BEQ.B     label2
+0000900C  6700 0002                 24      BEQ.W     label1
+00009010                            25      
+00009010                            26  label1
+00009010                            27  
+00009010                            28  label2
+00009010                            29      
+00009010                            30  label3
+00009010                            31      
+00009010                            32  label4
+00009010                            33  
+00009010                            34  
+00009010                            35  
+00009010                            36  
+00009010                            37  
+00009010                            38  
+00009010                            39  
+00009010                            40  
+00009010                            41  
+00009010                            42  
+00009010                            43  
+00009010                            44  
+00009010                            45  
+00009010                            46  
+00009010                            47  
+Line 48 WARNING: END directive missing, starting address not set
+
+No errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+LABEL1              9010
+LABEL2              9010
+LABEL3              9010
+LABEL4              9010
+NOP                 9000
+START               9000

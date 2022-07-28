@@ -8,11 +8,11 @@
 *
 *****************************
 
-*start		EQU	$00009000	* ORG and END address
+start		EQU	$00009000	* ORG and END address
 
 * ORG the program so that it straddles the address boundary $00007FFF to $00008000
 
-*		ORG	start
+    	ORG	start
 
 NOP
     BGT.B     label1
