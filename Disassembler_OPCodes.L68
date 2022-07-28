@@ -1,6 +1,6 @@
-00001000 Starting Address
+00000000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 7/21/2022 10:09:46 PM
+Created On: 7/27/2022 10:54:19 AM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -18,66 +18,122 @@ Created On: 7/21/2022 10:09:46 PM
 00000000                            14  *------Print out OPCode message, and then return to main loop
 00000000                            15  CHECK_OPCODES:
 00000000                            16  
-00000000  4EB9 0000000E             17          JSR     ISOLATE_15_6
-00000006  4EB9 0000001E             18          JSR     ISOLATE_15_8
-0000000C                            19  
-0000000C  4E75                      20          RTS
-0000000E                            21          
-0000000E                            22  ISOLATE_15_6:
-0000000E                            23          
-0000000E  2803                      24          MOVE.L      D3,     D4
-00000010  7406                      25          MOVE.L      #6,     D2
-00000012  E4AC                      26          LSR.L       D2,     D4
-00000014                            27          
-00000014  B87C 013A                 28          CMP.W       #$13A,  D4
-00000018  6700 003C                 29          BEQ         OP_CODE_JSR
-0000001C                            30          
-0000001C  4E75                      31          RTS
-0000001E                            32  
-0000001E                            33  
-0000001E                            34  ISOLATE_15_8:
-0000001E  FFFF FFFF                 35          SIMHALT
-00000022  2803                      36          MOVE.L      D3,     D4
-00000024  7408                      37          MOVE.L      #8,     D2
-00000026  E4AC                      38          LSR.L       D2,     D4
-00000028                            39          
-00000028  B83C 0046                 40          CMP.B       #$46,   D4
-0000002C  6700 000C                 41          BEQ         OP_CODE_NOT
-00000030  B83C 0060                 42          CMP.B       #$60,   D4
-00000034  6700 0012                 43          BEQ         OP_CODE_BRA
-00000038                            44  
-00000038  4E75                      45          RTS
-0000003A                            46  
-0000003A                            47  
-0000003A                            48  
-0000003A                            49  
-0000003A                            50  *----------------
-0000003A                            51  OP_CODE_NOT:
-0000003A  43F9 00000064             52          LEA         NOT_MSG, A1
-00000040  103C 000E                 53          MOVE.B      #14, D0
-00000044  4E4F                      54          TRAP        #15
-00000046                            55          
-00000046  4E75                      56          RTS 
-00000048                            57  OP_CODE_BRA:
-00000048  43F9 00000068             58          LEA         BRA_MSG, A1
-0000004E  103C 000E                 59          MOVE.B      #14, D0
-00000052  4E4F                      60          TRAP        #15
-00000054                            61          
-00000054  4E75                      62          RTS 
-00000056                            63  OP_CODE_JSR:
-00000056  43F9 0000006C             64          LEA         JSR_MSG, A1
-0000005C  103C 000E                 65          MOVE.B      #14, D0
-00000060  4E4F                      66          TRAP        #15
-00000062                            67          
-00000062  4E75                      68          RTS
-00000064                            69  
-00000064                            70  
-00000064= 4E 4F 54 00               71  NOT_MSG:        DC.B        'NOT',0
-00000068= 42 52 41 00               72  BRA_MSG:        DC.B        'BRA',0
-0000006C= 4A 53 52 00               73  JSR_MSG:        DC.B        'JSR',0
-00000070                            74  
-00000070                            75  
-Line 76 WARNING: END directive missing, starting address not set
+00000000  4EB9 00000014             17          JSR     ISOLATE_15_6
+00000006  4EB9 00000024             18          JSR     ISOLATE_15_8
+0000000C  4EB9 0000003C             19          JSR     ISOLATE_15_12
+00000012                            20  
+00000012  4E75                      21          RTS
+00000014                            22          
+00000014                            23  ISOLATE_15_6:
+00000014                            24          
+00000014  2803                      25          MOVE.L      D3,     D4
+00000016  7406                      26          MOVE.L      #6,     D2
+00000018  E4AC                      27          LSR.L       D2,     D4
+0000001A                            28          
+0000001A  B87C 013A                 29          CMP.W       #$13A,  D4
+0000001E  6700 0058                 30          BEQ         OP_CODE_JSR
+00000022                            31          
+00000022  4E75                      32          RTS
+00000024                            33  
+00000024                            34  
+00000024                            35  ISOLATE_15_8:
+00000024                            36          *SIMHALT
+00000024  2803                      37          MOVE.L      D3,     D4
+00000026  7408                      38          MOVE.L      #8,     D2
+00000028  E4AC                      39          LSR.L       D2,     D4
+0000002A                            40          
+0000002A  B83C 0046                 41          CMP.B       #$46,   D4
+0000002E  6700 002C                 42          BEQ         OP_CODE_NOT
+00000032  B83C 0060                 43          CMP.B       #$60,   D4
+00000036  6700 0032                 44          BEQ         OP_CODE_BRA
+0000003A                            45  
+0000003A  4E75                      46          RTS
+0000003C                            47          
+0000003C                            48  ISOLATE_15_12:
+0000003C  2803                      49          MOVE.L      D3,     D4
+0000003E  740C                      50          MOVE.L      #12,    D2
+00000040  E4AC                      51          LSR.L       D2,     D4
+00000042                            52          
+00000042  B83C 0007                 53          CMP.B       #$7,    D4
+00000046  6700 003E                 54          BEQ         OP_CODE_MOVEQ
+0000004A  B83C 0008                 55          CMP.B       #$8,    D4
+0000004E  6700 0052                 56          BEQ         OP_CODE_OR      *may get confused with DIVU + any other opcodes that start with 1000 (ones that we are not required to cover)
+00000052  B83C 000C                 57          CMP.B       #$C,    D4
+00000056  6700 003C                 58          BEQ         OP_CODE_AND
+0000005A                            59          
+0000005A  4E75                      60          RTS
+0000005C                            61  
+0000005C                            62  
+0000005C                            63  
+0000005C                            64  *----------------
+0000005C                            65  OP_CODE_NOT:
+0000005C  43F9 000000D0             66          LEA         NOT_MSG, A1
+00000062  103C 000E                 67          MOVE.B      #14, D0
+00000066  4E4F                      68          TRAP        #15
+00000068                            69          
+00000068  4E75                      70          RTS 
+0000006A                            71  OP_CODE_BRA:
+0000006A  43F9 000000D4             72          LEA         BRA_MSG, A1
+00000070  103C 000E                 73          MOVE.B      #14, D0
+00000074  4E4F                      74          TRAP        #15
+00000076                            75          
+00000076  4E75                      76          RTS 
+00000078                            77  OP_CODE_JSR:
+00000078  43F9 000000D8             78          LEA         JSR_MSG, A1
+0000007E  103C 000E                 79          MOVE.B      #14, D0
+00000082  4E4F                      80          TRAP        #15
+00000084                            81          
+00000084  4E75                      82          RTS
+00000086                            83  OP_CODE_MOVEQ:
+00000086  43F9 000000DC             84          LEA         MOVEQ_MSG, A1
+0000008C  103C 000E                 85          MOVE.B      #14, D0
+00000090  4E4F                      86          TRAP        #15
+00000092                            87          
+00000092  4E75                      88          RTS
+00000094                            89  OP_CODE_AND:
+00000094  43F9 000000E2             90          LEA         AND_MSG, A1
+0000009A  103C 000E                 91          MOVE.B      #14, D0
+0000009E  4E4F                      92          TRAP        #15
+000000A0                            93          
+000000A0  4E75                      94          RTS
+000000A2                            95  OP_CODE_OR:
+000000A2                            96          *check for divu/other opcodes that start with 1000
+000000A2                            97          *isolate bits 8-6 to check for DIVU
+000000A2  2803                      98          MOVE.L      D3,     D4
+000000A4  7407                      99          MOVE.L      #7,     D2
+000000A6  E56C                     100          LSL.W       D2,     D4
+000000A8  740D                     101          MOVE.L      #13,    D2
+000000AA  E46C                     102          LSR.W       D2,     D4
+000000AC                           103          
+000000AC  B83C 0003                104          CMP.B       #$3,    D4
+000000B0  6700 0010                105          BEQ         OP_CODE_DATA
+000000B4                           106          
+000000B4  43F9 000000E6            107          LEA         OR_MSG, A1
+000000BA  103C 000E                108          MOVE.B      #14, D0
+000000BE  4E4F                     109          TRAP        #15
+000000C0                           110          
+000000C0  4E75                     111          RTS
+000000C2                           112  OP_CODE_DATA:
+000000C2  43F9 000000E9            113          LEA         DATA_MSG, A1
+000000C8  103C 000E                114          MOVE.B      #14, D0
+000000CC  4E4F                     115          TRAP        #15
+000000CE                           116          
+000000CE  4E75                     117          RTS        
+000000D0                           118  
+000000D0                           119  
+000000D0= 4E 4F 54 00              120  NOT_MSG:        DC.B        'NOT',0
+000000D4= 42 52 41 00              121  BRA_MSG:        DC.B        'BRA',0
+000000D8= 4A 53 52 00              122  JSR_MSG:        DC.B        'JSR',0
+000000DC= 4D 4F 56 45 51 00        123  MOVEQ_MSG:      DC.B        'MOVEQ',0
+000000E2= 41 4E 44 00              124  AND_MSG:        DC.B        'AND',0
+000000E6= 4F 52 00                 125  OR_MSG:         DC.B        'OR',0
+000000E9= 44 41 54 41 00           126  DATA_MSG:       DC.B        'DATA',0
+000000EE                           127  
+000000EE                           128  
+000000EE                           129  
+000000EE                           130  
+000000EE                           131  
+Line 132 WARNING: END directive missing, starting address not set
 
 No errors detected
 1 warning generated
@@ -86,12 +142,21 @@ No errors detected
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-BRA_MSG             68
+AND_MSG             E2
+BRA_MSG             D4
 CHECK_OPCODES       0
-ISOLATE_15_6        E
-ISOLATE_15_8        1E
-JSR_MSG             6C
-NOT_MSG             64
-OP_CODE_BRA         48
-OP_CODE_JSR         56
-OP_CODE_NOT         3A
+DATA_MSG            E9
+ISOLATE_15_12       3C
+ISOLATE_15_6        14
+ISOLATE_15_8        24
+JSR_MSG             D8
+MOVEQ_MSG           DC
+NOT_MSG             D0
+OP_CODE_AND         94
+OP_CODE_BRA         6A
+OP_CODE_DATA        C2
+OP_CODE_JSR         78
+OP_CODE_MOVEQ       86
+OP_CODE_NOT         5C
+OP_CODE_OR          A2
+OR_MSG              E6

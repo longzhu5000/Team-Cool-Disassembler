@@ -171,7 +171,7 @@ PRINT_LOOP:
         
         * Bit shifting to prep the next digit
         * 1234 4567 => 0123 4567
-        ASR.L       #4, D3
+        LSR.L       #4, D3
         
         *Assuming D4 is empty
         
@@ -284,6 +284,7 @@ LF              EQU          $0A
 NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
+
 
 
 
