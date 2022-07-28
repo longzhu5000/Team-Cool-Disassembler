@@ -190,8 +190,37 @@ PRINT_WORD_SIZE_ATTR
         LEA         SPACE_MSG,      A1
         MOVE.B      #14,            D0    
         TRAP        #15
-        BRA         PRINT_DISPLACEMENT
+        MOVE.W      (A3)+,  D3
+        
 
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #16, D6
+WORD_DISPLACEMENT_PRINT_LOOP
+        *Gets the most significant bit basically
+        *Could use GET_BIT subroutine but it is 
+        *costly in terms of registers used
+        MOVE.B     D4, D5
+        ANDI.B     #$80, D5
+        LSR.B      #7, D5
+        LEA        ZERO_MSG,      A1
+        * load the address of Zero_msg
+        * because all of the msgs are stored next to each other in order
+        * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+        * and then add it to the address starting at zero_msg
+        MULU         #2,            D5
+        ADDA.L       D5,            A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        SUBI.L      #1, D6
+        CMP.B       #0, D6
+        BNE         WORD_DISPLACEMENT_PRINT_LOOP
+        
+        LEA         NEW_LINE,       A1
+        MOVE.B      #14,            D0    
+        TRAP        #15
+        MOVEM.L    (A7)+, D5-D6
+        RTS
+        
 
 OP_CODE_OR:
         *check for divu/other opcodes that start with 1000
