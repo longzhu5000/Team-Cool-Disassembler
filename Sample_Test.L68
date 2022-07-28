@@ -1,6 +1,6 @@
 00000000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 7/28/2022 7:48:54 AM
+Created On: 7/28/2022 3:40:25 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -43,7 +43,8 @@ Created On: 7/28/2022 7:48:54 AM
 00000038  E33A                      39      ROL.B       D1,     D2
 0000003A  E23A                      40      ROR.B       D1,     D2
 0000003C                            41  
-Line 42 WARNING: END directive missing, starting address not set
+0000003C                            42  
+Line 43 WARNING: END directive missing, starting address not set
 
 No errors detected
 1 warning generated
