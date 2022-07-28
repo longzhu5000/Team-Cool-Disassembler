@@ -135,8 +135,8 @@ OP_CODE_BEQ
 
 PRINT_BCC_SIZE_ATTR
         MOVEM.L    D5-D6, -(A7)
-        MOVE.L     #8, D5
-        MOVE.L     #11, D6
+        MOVE.L     #0, D5
+        MOVE.L     #7, D6
         JSR        GET_BIT
         MOVEM.L    (A7)+, D5-D6
         CMP.L      #0, D4
@@ -156,14 +156,14 @@ PRINT_BYTE_SIZE_ATTR
 
 
         MOVEM.L    D5-D6, -(A7)
-        MOVE.L     #8, D6
+        MOVE.L     #2, D6
 BYTE_DISPLACEMENT_PRINT_LOOP
         *Gets the most significant bit basically
         *Could use GET_BIT subroutine but it is 
         *costly in terms of registers used
         MOVE.B     D4, D5
-        ANDI.B     #$80, D5
-        LSR.B      #7, D5
+        LSR.B      #4, D5
+        LSL.B      #4, D4
         LEA        ZERO_MSG,      A1
         * load the address of Zero_msg
         * because all of the msgs are stored next to each other in order
@@ -191,17 +191,17 @@ PRINT_WORD_SIZE_ATTR
         MOVE.B      #14,            D0    
         TRAP        #15
         MOVE.W      (A3)+,  D3
-        
+        MOVE.W      D3, D4
 
         MOVEM.L    D5-D6, -(A7)
-        MOVE.L     #16, D6
+        MOVE.L     #4, D6
 WORD_DISPLACEMENT_PRINT_LOOP
         *Gets the most significant bit basically
         *Could use GET_BIT subroutine but it is 
         *costly in terms of registers used
-        MOVE.B     D4, D5
-        ANDI.B     #$80, D5
-        LSR.B      #7, D5
+        MOVE.W     D4, D5
+        LSR.W      #4, D5
+        LSL.W      #4, D4
         LEA        ZERO_MSG,      A1
         * load the address of Zero_msg
         * because all of the msgs are stored next to each other in order
@@ -261,7 +261,8 @@ GET_BIT
         *and then shift the bits such that the xth bit is the 0th bit
         NEG.L   D6
         ADDI.L  #15, D6
-        LSL.W   D6, D4 
+        ADD.L   D6, D5
+        LSL.W   D6, D4
         LSR.W   D5, D4
         RTS
 
