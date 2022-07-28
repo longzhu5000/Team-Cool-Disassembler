@@ -276,8 +276,12 @@ AND_MSG:        DC.B        'AND',0
 OR_MSG:         DC.B        'OR',0
 DATA_MSG:       DC.B        'DATA',0
 BCC_MSG         DC.B        'B', 0
+BLE_MSG         DC.B        'BLE', 0
+BGT_MSG         DC.B        'BGT',0
+BEQ_MSG         DC.B        'BEQ',0
 BYTE_MSG        DC.B        '.B', 0
 WORD_MSG        DC.B        '.W', 0
+
 
 
 
