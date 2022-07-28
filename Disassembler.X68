@@ -240,7 +240,8 @@ DONE:
     *SIMHALT             ; halt simulator
 
     INCLUDE         'Disassembler_OPCodes.x68'
-    INCLUDE         'demo_test.x68'
+    INCLUDE         'Sample_Test.x68'
+    *INCLUDE         'demo_test.x68'
 
 
 * Put variables and constants here
@@ -284,6 +285,7 @@ LF              EQU          $0A
 NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
+
 
 
 
