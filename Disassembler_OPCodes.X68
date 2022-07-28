@@ -200,7 +200,8 @@ WORD_DISPLACEMENT_PRINT_LOOP
         *Could use GET_BIT subroutine but it is 
         *costly in terms of registers used
         MOVE.W     D4, D5
-        LSR.W      #4, D5
+        LSR.W      #6, D5
+        LSR.W      #6, D5
         LSL.W      #4, D4
         LEA        ZERO_MSG,      A1
         * load the address of Zero_msg
@@ -218,7 +219,7 @@ WORD_DISPLACEMENT_PRINT_LOOP
         LEA         NEW_LINE,       A1
         MOVE.B      #14,            D0    
         TRAP        #15
-        MOVEM.L    (A7)+, D5-D6
+        MOVEM.W    (A7)+, D5-D6
         RTS
         
 
