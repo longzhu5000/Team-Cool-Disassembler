@@ -1,0 +1,74 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 7/20/2022 10:35:36 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  
+00000000                             8  
+00000000                             9  *------Use D3 to store original data
+00000000                            10  *------Use D4 to copy and modify D3 data
+00000000                            11  
+00000000                            12  
+00000000                            13  CHECK_OPCODES:
+00000000                            14  
+00000000  4EB9 00000008             15          JSR     ISOLATE_15_8
+00000006                            16  
+00000006  4E75                      17          RTS
+00000008                            18  
+00000008                            19  
+00000008                            20  ISOLATE_15_8:
+00000008  FFFF FFFF                 21          SIMHALT
+0000000C  2803                      22          MOVE.L      D3,     D4
+0000000E  7418                      23          MOVE.L      #24,    D2
+00000010  E4AC                      24          LSR.L       D2,     D4
+00000012                            25          
+Line 26 ERROR: Invalid syntax
+00000012                            26          CMP.L       D4,     $#46
+00000012  6700 0008                 27          BEQ         OP_CODE_NOT
+Line 28 ERROR: Invalid syntax
+00000016                            28          CMP.L       D4,     $#60
+00000016  6700 0012                 29          BEQ         OP_CODE_BRA
+0000001A                            30  
+0000001A  4E75                      31          RTS
+0000001C                            32  
+0000001C                            33  
+0000001C                            34  
+0000001C                            35  
+0000001C                            36  *----------------
+0000001C                            37  OP_CODE_NOT:
+0000001C  43F9 00000038             38          LEA         NOT_MSG, A1
+00000022  103C 000E                 39          MOVE.B      #14, D0
+00000026  4E4F                      40          TRAP        #15
+00000028                            41          
+00000028  4E75                      42          RTS 
+0000002A                            43  OP_CODE_BRA:
+0000002A  43F9 0000003C             44          LEA         BRA_MSG, A1
+00000030  103C 000E                 45          MOVE.B      #14, D0
+00000034  4E4F                      46          TRAP        #15
+00000036                            47          
+00000036  4E75                      48          RTS 
+00000038                            49  
+00000038                            50  
+00000038= 4E 4F 54 00               51  NOT_MSG:        DC.B        'NOT',0
+0000003C= 42 52 41 00               52  BRA_MSG:        DC.B        'BRA',0
+00000040                            53  
+Line 54 WARNING: END directive missing, starting address not set
+
+2 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+BRA_MSG             3C
+CHECK_OPCODES       0
+ISOLATE_15_8        8
+NOT_MSG             38
+OP_CODE_BRA         2A
+OP_CODE_NOT         1C
