@@ -1,0 +1,56 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 7/28/2022 3:40:25 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  
+00000000                             8                    ; first instruction of program
+00000000                             9  
+00000000                            10  TEST
+00000000  4E75                      11      RTS
+00000002  4E71                      12      NOP
+00000004                            13      
+00000004  1401                      14      MOVE.B      D1,     D2
+00000006  3449                      15      MOVEA.W     A1,     A2
+00000008  48A1 007F                 16      MOVEM.W     A1-A7,  -(A1)
+0000000C  7000                      17      MOVEQ       #$0,    D0
+0000000E  45D1                      18      LEA         (A1),   A2
+00000010                            19      
+00000010  C401                      20      AND.B       D1,     D2
+00000012  8401                      21      OR.B        D1,     D2
+00000014                            22  
+00000014  D401                      23      ADD.B       D1,     D2
+00000016  D4C1                      24      ADDA.W      D1,     A2
+00000018  524A                      25      ADDQ.W      #$1,    A2
+0000001A  9401                      26      SUB.B       D1,     D2
+0000001C                            27      
+0000001C  4EB8 0000                 28      JSR         TEST
+00000020  6EDE                      29      BGT.B       TEST
+00000022  6F00 FFDC                 30      BLE.W       TEST
+00000026  6700 FFD8                 31      BEQ.W       TEST
+0000002A  60D4                      32      BRA         TEST
+0000002C  4678 0000                 33      NOT         TEST
+00000030                            34      
+00000030  E32A                      35      LSL.B       D1,     D2
+00000032  E22A                      36      LSR.B       D1,     D2
+00000034  E322                      37      ASL.B       D1,     D2
+00000036  E222                      38      ASR.B       D1,     D2
+00000038  E33A                      39      ROL.B       D1,     D2
+0000003A  E23A                      40      ROR.B       D1,     D2
+0000003C                            41  
+0000003C                            42  
+Line 43 WARNING: END directive missing, starting address not set
+
+No errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+TEST                0
