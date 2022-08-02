@@ -275,6 +275,22 @@ D_MSG:           DC.B        'D',0
 E_MSG:           DC.B        'E',0
 F_MSG:           DC.B        'F',0 
 
+* opcodes
+JSRMSG:             DC.B        'JSR ',0
+NOT_MSG:        DC.B        'NOT',0
+BRA_MSG:        DC.B        'BRA',0
+JSR_MSG:        DC.B        'JSR',0
+MOVEQ_MSG:      DC.B        'MOVEQ',0
+AND_MSG:        DC.B        'AND',0
+OR_MSG:         DC.B        'OR',0
+DATA_MSG:       DC.B        'DATA',0
+BCC_MSG         DC.B        'B', 0
+BLE_MSG         DC.B        'BLE', 0
+BGT_MSG         DC.B        'BGT',0
+BEQ_MSG         DC.B        'BEQ',0
+BYTE_MSG        DC.B        '.B', 0
+WORD_MSG        DC.B        '.W', 0
+
 
 *-----Carriage Return
 CR              EQU          $0D

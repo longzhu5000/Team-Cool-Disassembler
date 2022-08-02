@@ -8,7 +8,7 @@
 
 *------Use D3 to store original data
 *------Use D4 to copy and modify D3 data
-*------
+*------A3 points to current address in memory
 *------Jump to different Isolate methods
 *------keep returning and jumping untill you find the correct Method
 *------Print out OPCode message, and then return to main loop
@@ -58,6 +58,9 @@ ISOLATE_15_12:
         *If the 15-12 are 0110
         CMP.B       #6,     D4
         BEQ         OP_CODE_BCC
+        *If the 15-12 are 1110, then it is a shift(LSL, LSR, ROR, ROL, ASR, ASL)
+        CMP.B       #14,   D4
+        BEQ         OP_CODE_SHIFT_ROTATE
         RTS
 
 
@@ -219,7 +222,7 @@ WORD_DISPLACEMENT_PRINT_LOOP
         LEA         NEW_LINE,       A1
         MOVE.B      #14,            D0    
         TRAP        #15
-        MOVEM.W    (A7)+, D5-D6
+        MOVEM.L    (A7)+, D5-D6
         RTS
         
 
@@ -245,7 +248,71 @@ OP_CODE_DATA:
         MOVE.B      #14, D0
         TRAP        #15
         
-        RTS        
+        RTS   
+
+
+OP_CODE_SHIFT_ROTATE
+        *Now check whether it is register shift or memory shift
+        *If the 6-7 bit is 11, then it is a memory else register shift
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #6, D5
+        MOVE.L     #7, D6
+        JSR        GET_BIT
+        MOVEM.W    (A7)+, D5-D6
+        CMP.L      #3, D4
+        BEQ        OP_CODE_REGISTER_SHIFT_ROTATE
+        BRA        OP_CODE_MEMORY_SHIFT_ROTATE
+
+
+OP_CODE_REGISTER_SHIFT_ROTATE
+        *Check (3, 4) bit 
+        *00->ASL/ASR, 01->LSL/LSR, 11->ROR/ROL
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #6, D5
+        MOVE.L     #7, D6
+        JSR        GET_BIT
+        MOVEM.W    (A7)+, D5-D6
+        CMP.L      #0, D4
+        BEQ        OP_CODE_ASL_ASR_REGISTER_SHIFT
+        CMP.L      #1, D4
+        BEQ        OP_CODE_LSL_LSR_REGISTER_SHIFT
+        CMP.L      #3, D4
+        BEQ        OP_CODE_ROR_ROL_REGISTER_ROTATE
+        RTS
+
+
+OP_CODE_MEMORY_SHIFT_ROTATE
+        *Check (3, 4) bit 
+        *00->ASL/ASR, 01->LSL/LSR, 11->ROR/ROL
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #9, D5
+        MOVE.L     #10, D6
+        JSR        GET_BIT
+        MOVEM.W    (A7)+, D5-D6
+        CMP.L      #0, D4
+        BEQ        OP_CODE_ASL_ASR_MEMORY_SHIFT
+        CMP.L      #1, D4
+        BEQ        OP_CODE_LSL_LSR_MEMORY_SHIFT
+        CMP.L      #3, D4
+        BEQ        OP_CODE_ROR_ROL_MEMORY_ROTATE
+        RTS
+
+OP_CODE_LSL_LSR_MEMORY_SHIFT
+        
+
+OP_CODE_ASL_ASR_MEMORY_SHIFT
+
+
+OP_CODE_ROR_ROL_MEMORY_ROTATE
+
+
+OP_CODE_LSL_LSR_REGISTER_SHIFT
+
+
+OP_CODE_ASL_ASR_REGISTER_SHIFT
+
+
+OP_CODE_ROR_ROL_REGISTER_ROTATE
 
 *----------------Some helpful subroutines------------*
 
@@ -269,20 +336,6 @@ GET_BIT
 
 
 
-
-NOT_MSG:        DC.B        'NOT',0
-BRA_MSG:        DC.B        'BRA',0
-JSR_MSG:        DC.B        'JSR',0
-MOVEQ_MSG:      DC.B        'MOVEQ',0
-AND_MSG:        DC.B        'AND',0
-OR_MSG:         DC.B        'OR',0
-DATA_MSG:       DC.B        'DATA',0
-BCC_MSG         DC.B        'B', 0
-BLE_MSG         DC.B        'BLE', 0
-BGT_MSG         DC.B        'BGT',0
-BEQ_MSG         DC.B        'BEQ',0
-BYTE_MSG        DC.B        '.B', 0
-WORD_MSG        DC.B        '.W', 0
 
 
 
