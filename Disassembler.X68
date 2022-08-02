@@ -282,6 +282,14 @@ BRA_MSG:        DC.B        'BRA',0
 JSR_MSG:        DC.B        'JSR',0
 MOVEQ_MSG:      DC.B        'MOVEQ',0
 AND_MSG:        DC.B        'AND',0
+ASR_MSG         DC.B        'ASR',0
+ASL_MSG         DC.B        'ASL',0
+LSR_MSG         DC.B        'LSR',0
+LSL_MSG         DC.B        'LSL',0
+ROXR_MSG        DC.B        'ROX',0  *Unused messages but present because helps in indexing, DONT USE IT
+ROXL_MSG        DC.B        'ROX',0  *Unused messages but present because helps in indexing, DONT USE IT
+ROR_MSG         DC.B        'ROR',0
+ROL_MSG         DC.B        'ROL',0
 OR_MSG:         DC.B        'OR',0
 DATA_MSG:       DC.B        'DATA',0
 BCC_MSG         DC.B        'B', 0
@@ -290,6 +298,7 @@ BGT_MSG         DC.B        'BGT',0
 BEQ_MSG         DC.B        'BEQ',0
 BYTE_MSG        DC.B        '.B', 0
 WORD_MSG        DC.B        '.W', 0
+LONG_MSG        DC.B        '.L', 0
 
 
 *-----Carriage Return
