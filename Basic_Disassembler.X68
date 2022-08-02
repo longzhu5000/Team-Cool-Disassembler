@@ -326,8 +326,6 @@ D_MSG:           DC.B        'D',0
 E_MSG:           DC.B        'E',0
 F_MSG:           DC.B        'F',0 
 
-* opcodes
-JSRMSG:             DC.B        'JSR ',0
 
 
 *-----Carriage Return
