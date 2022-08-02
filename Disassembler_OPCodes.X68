@@ -258,61 +258,97 @@ OP_CODE_SHIFT_ROTATE
         MOVE.L     #6, D5
         MOVE.L     #7, D6
         JSR        GET_BIT
-        MOVEM.W    (A7)+, D5-D6
+        MOVEM.L    (A7)+, D5-D6
         CMP.L      #3, D4
-        BEQ        OP_CODE_REGISTER_SHIFT_ROTATE
-        BRA        OP_CODE_MEMORY_SHIFT_ROTATE
+        BEQ        OP_CODE_MEMORY_SHIFT_ROTATE
+        BRA        OP_CODE_REGISTER_SHIFT_ROTATE
 
 
 OP_CODE_REGISTER_SHIFT_ROTATE
-        *Check (3, 4) bit 
-        *00->ASL/ASR, 01->LSL/LSR, 11->ROR/ROL
+        *Messages are loaded in the order of -ASR, ASL, LSR, LSL, RORX, RORL, ROR, ROL where
+        *each message is of 4 bytes. Essentially using a combination of (9-11) bit + dr(8th bit) we
+        *can index the appropriate message. Mathy and unreadable code but prevents lot of rebudency
+        LEA        ASR_MSG, A1
         MOVEM.L    D5-D6, -(A7)
-        MOVE.L     #6, D5
-        MOVE.L     #7, D6
+        MOVE.L     #8, D5
+        MOVE.L     #8, D6
         JSR        GET_BIT
-        MOVEM.W    (A7)+, D5-D6
-        CMP.L      #0, D4
-        BEQ        OP_CODE_ASL_ASR_REGISTER_SHIFT
-        CMP.L      #1, D4
-        BEQ        OP_CODE_LSL_LSR_REGISTER_SHIFT
-        CMP.L      #3, D4
-        BEQ        OP_CODE_ROR_ROL_REGISTER_ROTATE
+        MOVEM.L    (A7)+, D5-D6
+        MULU         #4,            D4
+        ADDA.L       D4,            A1
+        *Check (3, 11) bit 
+        *000->ASR/ASL, 001->LSR/LSL, 011->ROR/ROL
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #3, D5
+        MOVE.L     #4, D6
+        JSR        GET_BIT
+        CMP.L      #2, D4
+        MOVEM.L    (A7)+, D5-D6
+        MULU        #8,      D4
+        ADDA.L       D4,            A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        JSR         SHIFT_ROTATE_EA_SIZE
+        JSR         SHIFT_ROTATE_EA_REGISTER
         RTS
 
 
 OP_CODE_MEMORY_SHIFT_ROTATE
-        *Check (3, 4) bit 
-        *00->ASL/ASR, 01->LSL/LSR, 11->ROR/ROL
+        *If mode bits are less than 010, then invalid instruction so just RTS
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #3, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #2, D4
+        BMI        INSTRUCTION_DECODE_FAILURE
+        *If mode bits are 101 or 110, then it is dispacement address register EA which is invalid
+        *for the current scope
+        CMP.L      #5, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #6, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        *If mode bits+register bits are greater than 111001, then invalid instruction
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #0, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #58, D4
+        BPL        INSTRUCTION_DECODE_FAILURE
+        MOVE.L     #9, D5
+        MOVE.L     #11, D6
+        JSR        GET_BIT
+        CMP.L      #2, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE *If the 9-11 are 010(RORX, ROLX), instruction decode error.
+        *Messages are loaded in the order of -ASR, ASL, LSR, LSL, RORX, RORL, ROR, ROL where
+        *each message is of 4 bytes. Essentially using a combination of (9-11) bit + dr(8th bit) we
+        *can index the appropriate message. Mathy and unreadable code but prevents lot of rebudency
+        LEA        ASR_MSG, A1
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #8, D5
+        MOVE.L     #8, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        MULU         #4,            D4
+        ADDA.L       D4,            A1
+        *Check (9, 11) bit 
+        *000->ASR/ASL, 001->LSR/LSL, 011->ROR/ROL
         MOVEM.L    D5-D6, -(A7)
         MOVE.L     #9, D5
-        MOVE.L     #10, D6
+        MOVE.L     #11, D6
         JSR        GET_BIT
-        MOVEM.W    (A7)+, D5-D6
-        CMP.L      #0, D4
-        BEQ        OP_CODE_ASL_ASR_MEMORY_SHIFT
-        CMP.L      #1, D4
-        BEQ        OP_CODE_LSL_LSR_MEMORY_SHIFT
-        CMP.L      #3, D4
-        BEQ        OP_CODE_ROR_ROL_MEMORY_ROTATE
+        CMP.L      #2, D4
+        MOVEM.L    (A7)+, D5-D6
+        MULU        #8,      D4
+        ADDA.L       D4,            A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        LEA        WORD_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        JSR         SHIFT_ROTATE_EA_MEMORY
         RTS
-
-OP_CODE_LSL_LSR_MEMORY_SHIFT
-        
-
-OP_CODE_ASL_ASR_MEMORY_SHIFT
-
-
-OP_CODE_ROR_ROL_MEMORY_ROTATE
-
-
-OP_CODE_LSL_LSR_REGISTER_SHIFT
-
-
-OP_CODE_ASL_ASR_REGISTER_SHIFT
-
-
-OP_CODE_ROR_ROL_REGISTER_ROTATE
 
 *----------------Some helpful subroutines------------*
 
@@ -334,7 +370,9 @@ GET_BIT
         LSR.W   D5, D4
         RTS
 
-
+*Just RTS, useful to use with a condition
+INSTRUCTION_DECODE_FAILURE
+        RTS
 
 
 
