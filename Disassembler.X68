@@ -241,6 +241,7 @@ DONE:
 
     INCLUDE         'Disassembler_OPCodes.x68'
     *INCLUDE         'demo_test.x68'
+    INCLUDE          'Disassembler_EA.x68'
 
 
 * Put variables and constants here
