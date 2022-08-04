@@ -120,111 +120,23 @@ OP_CODE_BLE
         LEA         BLE_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        BRA PRINT_BCC_SIZE_ATTR
+        JSR         BCC_EA_SIZE_AND_DISPLACEMENT
+        RTS
 
 OP_CODE_BGT
         LEA         BGT_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        BRA PRINT_BCC_SIZE_ATTR
+        JSR         BCC_EA_SIZE_AND_DISPLACEMENT
+        RTS
 
 
 OP_CODE_BEQ
         LEA         BEQ_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        BRA PRINT_BCC_SIZE_ATTR
-
-
-PRINT_BCC_SIZE_ATTR
-        MOVEM.L    D5-D6, -(A7)
-        MOVE.L     #0, D5
-        MOVE.L     #7, D6
-        JSR        GET_BIT
-        MOVEM.L    (A7)+, D5-D6
-        CMP.L      #0, D4
-        BEQ        PRINT_WORD_SIZE_ATTR
-PRINT_BYTE_SIZE_ATTR
-        LEA         BYTE_MSG, A1
-        MOVE.B      #14, D0
-        TRAP        #15
-        LEA         SPACE_MSG,      A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        MOVEM.L    D5-D6, -(A7)
-        MOVE.L     #0, D5
-        MOVE.L     #7, D6
-        JSR        GET_BIT
-        MOVEM.L    (A7)+, D5-D6
-
-
-        MOVEM.L    D5-D6, -(A7)
-        MOVE.L     #2, D6
-BYTE_DISPLACEMENT_PRINT_LOOP
-        *Gets the most significant bit basically
-        *Could use GET_BIT subroutine but it is 
-        *costly in terms of registers used
-        MOVE.B     D4, D5
-        LSR.B      #4, D5
-        LSL.B      #4, D4
-        LEA        ZERO_MSG,      A1
-        * load the address of Zero_msg
-        * because all of the msgs are stored next to each other in order
-        * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
-        * and then add it to the address starting at zero_msg
-        MULU         #2,            D5
-        ADDA.L       D5,            A1
-        MOVE.B      #14, D0
-        TRAP        #15
-        SUBI.L      #1, D6
-        CMP.B        #0, D6
-        BNE         BYTE_DISPLACEMENT_PRINT_LOOP
-        
-        LEA         NEW_LINE,       A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        MOVEM.L    (A7)+, D5-D6
+        JSR         BCC_EA_SIZE_AND_DISPLACEMENT
         RTS
-        
-PRINT_WORD_SIZE_ATTR
-        LEA         WORD_MSG, A1
-        MOVE.B      #14, D0
-        TRAP        #15
-        LEA         SPACE_MSG,      A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        MOVE.W      (A3)+,  D3
-        MOVE.W      D3, D4
-
-        MOVEM.L    D5-D6, -(A7)
-        MOVE.L     #4, D6
-WORD_DISPLACEMENT_PRINT_LOOP
-        *Gets the most significant bit basically
-        *Could use GET_BIT subroutine but it is 
-        *costly in terms of registers used
-        MOVE.W     D4, D5
-        LSR.W      #6, D5
-        LSR.W      #6, D5
-        LSL.W      #4, D4
-        LEA        ZERO_MSG,      A1
-        * load the address of Zero_msg
-        * because all of the msgs are stored next to each other in order
-        * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
-        * and then add it to the address starting at zero_msg
-        MULU         #2,            D5
-        ADDA.L       D5,            A1
-        MOVE.B      #14, D0
-        TRAP        #15
-        SUBI.L      #1, D6
-        CMP.B       #0, D6
-        BNE         WORD_DISPLACEMENT_PRINT_LOOP
-        
-        LEA         NEW_LINE,       A1
-        MOVE.B      #14,            D0    
-        TRAP        #15
-        MOVEM.L    (A7)+, D5-D6
-        RTS
-        
 
 OP_CODE_OR:
         *check for divu/other opcodes that start with 1000
@@ -347,6 +259,9 @@ OP_CODE_MEMORY_SHIFT_ROTATE
         LEA        WORD_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
+        LEA         SPACE_MSG,      A1
+        MOVE.B      #14,            D0    
+        TRAP        #15
         JSR         SHIFT_ROTATE_EA_MEMORY
         RTS
 
@@ -373,7 +288,6 @@ GET_BIT
 *Just RTS, useful to use with a condition
 INSTRUCTION_DECODE_FAILURE
         RTS
-
 
 
 

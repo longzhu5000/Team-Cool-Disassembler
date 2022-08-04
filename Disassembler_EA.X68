@@ -38,12 +38,12 @@ SHIFT_ROTATE_EA_REGISTER
     JSR        GET_BIT
     MOVEM.L    (A7)+, D5-D6
     CMP.L      #1,  D4
-    BNE        SHIFT_ROTATE_EA_REGISTER_IMM
+    BNE        SHIFT_ROTATE_IMM_SOURCE
+
+SHIFT_ROTATE_REGISTER_SOURCE
     LEA        D_MSG, A1
     MOVE.B      #14,   D0    
     TRAP        #15
-
-PRINT_COUNT_REGISTER
     MOVEM.L    D5-D6, -(A7)
     MOVE.L     #9, D5
     MOVE.L     #11, D6
@@ -54,34 +54,61 @@ PRINT_COUNT_REGISTER
     ADDA.L    D4, A1
     MOVE.B      #14,   D0    
     TRAP        #15
+    BRA       SHIFT_ROTATE_REGISTER_DEST
+
+SHIFT_ROTATE_REGISTER_DEST
+    LEA        COMMA_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA        SPACE_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA        D_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
     MOVEM.L    D5-D6, -(A7)
     MOVE.L     #0, D5
     MOVE.L     #2, D6
     JSR        GET_BIT
     MOVEM.L    (A7)+, D5-D6
-    LEA        COMMA_MSG, A1
-    MOVE.B      #14,   D0    
-    TRAP        #15
-    LEA        SPACE_MSG, A1
-    MOVE.B     #14, D0
-    TRAP       #15
-    LEA        D_MSG, A1
-    MOVE.B      #14,   D0    
-    TRAP        #15
+    CMP.L      #0, D4
+    BEQ       SHIFT_ROTATE_COUNT_8
+
+SHIFT_ROTATE_COUNT_1_7
     LEA       ZERO_MSG, A1
     MULU      #2, D4    
     ADDA.L    D4, A1
     MOVE.B      #14,   D0    
     TRAP        #15
     RTS
-         
-SHIFT_ROTATE_EA_REGISTER_IMM  
+
+SHIFT_ROTATE_COUNT_8
+    LEA       EIGHT_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    RTS
+
+
+
+SHIFT_ROTATE_IMM_SOURCE
     LEA        HASH_MSG, A1
     MOVE.B      #14,   D0    
     TRAP        #15
-    BRA       PRINT_COUNT_REGISTER
-
-    
+    LEA        DOLLAR_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #9, D5
+    MOVE.L     #11, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA       ZERO_MSG, A1
+    MULU      #2, D4    
+    ADDA.L    D4, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA      SHIFT_ROTATE_REGISTER_DEST
+ 
 
 
 SHIFT_ROTATE_EA_MEMORY
@@ -98,6 +125,38 @@ SHIFT_ROTATE_EA_MEMORY
     MOVE.B      #14,            D0    
     TRAP        #15
     RTS
+
+
+
+BCC_EA_SIZE_AND_DISPLACEMENT
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #0, D5
+    MOVE.L     #7, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    CMP.L      #0, D4
+    BEQ        BCC_WORD_DISPLACEMENT
+BCC_BYTE_DISPLACEMENT
+    LEA         BYTE_MSG, A1
+    MOVE.B      #14, D0
+    TRAP        #15
+    LEA         SPACE_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    JSR         PRINT_BYTE_VALUE
+    RTS
+BCC_WORD_DISPLACEMENT
+    LEA         WORD_MSG, A1
+    MOVE.B      #14, D0
+    TRAP        #15
+    LEA         SPACE_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    CLR.L       D4
+    MOVE.W      (A3)+, D4
+    JSR         PRINT_WORD_VALUE
+    RTS
+
 
 *D3 holds the mode+register bits
 *A3 points to current address in memory which is being scanned
@@ -208,6 +267,9 @@ EA_INDIRECT_INCREMENT
 
 
 EA_INDIRECT_DECREMENT
+    LEA   MINUS_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
     LEA   OPEN_PARENTHESIS_MSG, A1
     MOVE.B   #14,  D0    
     TRAP     #15
@@ -225,14 +287,12 @@ EA_INDIRECT_DECREMENT
     LEA   CLOSE_PARENTHESIS_MSG, A1
     MOVE.B   #14,  D0    
     TRAP     #15
-    LEA   MINUS_MSG, A1
-    MOVE.B   #14,  D0    
-    TRAP     #15
     RTS
 
 
 
 EA_ABS_WORD
+    CLR.L      D4
     MOVE.W     (A3)+, D4
     LEA        DOLLAR_MSG,       A1
     MOVE.B      #14,            D0    
