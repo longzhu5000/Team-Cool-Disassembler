@@ -253,9 +253,34 @@ OP_CODE_NOP:
         
 *------------------------  
 OP_CODE_MOVEQ:
+        *NOTE MOVEQ has static bit at index 8
         LEA         MOVEQ_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
+        
+        LEA         WHITESPACE, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        LEA         IMM_DATA, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+
+        LEA         HEX, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+       
+        JSR         DATA_7_0
+        
+        LEA         WHITESPACE_COM, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        LEA         DATA_REG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         REGISTER_11_9
         
         MOVE.B      #1,      D6
         
@@ -266,6 +291,55 @@ OP_CODE_AND:
         MOVE.B      #14, D0
         TRAP        #15
         
+        *check opmode
+        *if starts with 1 do Dn ^ <ea> -> <ea>
+        *OPMODE_8_6 will appent size next to opcode
+        JSR         OPMODE_8_6
+        ROL.W       #1, D4
+        BCS         OP_CODE_AND2
+        *else...
+        
+        LEA         WHITESPACE, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        *check ea and print
+        JSR         EFFECTIVEADD_5_0
+        
+        LEA         WHITESPACE_COM, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        *print out data reg
+        
+        LEA         DATA_REG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         REGISTER_11_9
+        
+        
+        MOVE.B      #1,      D6
+        
+        RTS
+        
+OP_CODE_AND2:
+        LEA         WHITESPACE, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        LEA         DATA_REG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         REGISTER_11_9
+        
+        LEA         WHITESPACE_COM, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         EFFECTIVEADD_5_0
+        
         MOVE.B      #1,      D6
         
         RTS
@@ -275,14 +349,61 @@ OP_CODE_OR:
         MOVE.B      #14, D0
         TRAP        #15
         
+        JSR         OPMODE_8_6
+        ROL.W       #1, D4
+        BCS         OP_CODE_OR2
+        
+        LEA         WHITESPACE, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         EFFECTIVEADD_5_0
+        
+        LEA         WHITESPACE_COM, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        LEA         DATA_REG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         REGISTER_11_9
+            
         MOVE.B      #1,      D6
         
         RTS
-
+        
+OP_CODE_OR2:
+        LEA         WHITESPACE, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        LEA         DATA_REG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         REGISTER_11_9
+        
+        LEA         WHITESPACE_COM, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         EFFECTIVEADD_5_0
+        
+        MOVE.B      #1,      D6
+        
+        RTS
+        
 OP_CODE_JSR:
         LEA         JSR_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
+        
+        LEA         WHITESPACE, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         EFFECTIVEADD_5_0
         
         MOVE.B      #1,      D6
         
@@ -307,6 +428,30 @@ MOVEQ_MSG:      DC.B        'MOVEQ',0
 AND_MSG:        DC.B        'AND',0
 OR_MSG:         DC.B        'OR',0
 JSR_MSG:        DC.B        'JSR',0
+
+WHITESPACE:     DC.B        ' ',0
+WHITESPACE_COM: DC.B        ', ',0
+
+DATA_REG:        DC.B        'D',0
+ADDR_REG:        DC.B        'A',0
+
+IMM_DATA:       DC.B        '#',0
+HEX:            DC.B        '$',0
+
+DOT_BYTE:       DC.B        '.B',0
+DOT_WORD:       DC.B        '.W',0
+DOT_LONG:       DC.B        '.L',0
+
+START_PAREN     DC.B        '(',0
+END_PAREN       DC.B        ')',0
+
+PLUS_SIGN       DC.B        '+',0
+MINUS_SIGN      DC.B        '-',0
+
+*DATA_MSG:   DC.B    'DATA',0
+
+
+
 
 
 
