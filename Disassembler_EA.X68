@@ -28,20 +28,63 @@ SHIFT_ROTATE_EA_SIZE
     TRAP        #15
     RTS
 
- SHIFT_ROTATE_EA_REGISTER
+
+
+
+SHIFT_ROTATE_EA_REGISTER
     MOVEM.L    D5-D6, -(A7)
     MOVE.L     #5, D5
     MOVE.L     #5, D6
     JSR        GET_BIT
     MOVEM.L    (A7)+, D5-D6
     CMP.L      #1,  D4
+    BNE        SHIFT_ROTATE_EA_REGISTER_IMM
+    LEA        D_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
 
+PRINT_COUNT_REGISTER
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #9, D5
+    MOVE.L     #11, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA       ZERO_MSG, A1
+    MULU      #2, D4    
+    ADDA.L    D4, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #0, D5
+    MOVE.L     #2, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA        COMMA_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA        SPACE_MSG, A1
+    MOVE.B     #14, D0
+    TRAP       #15
+    LEA        D_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA       ZERO_MSG, A1
+    MULU      #2, D4    
+    ADDA.L    D4, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    RTS
          
- 
+SHIFT_ROTATE_EA_REGISTER_IMM  
+    LEA        HASH_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA       PRINT_COUNT_REGISTER
+
+    
 
 
-
- SHIFT_ROTATE_EA_MEMORY
+SHIFT_ROTATE_EA_MEMORY
     MOVEM.L    D5-D6, -(A7)
     MOVE.L     #0, D5
     MOVE.L     #5, D6
@@ -81,6 +124,8 @@ GET_EA
     BEQ        EA_ABS_WORD
     CMP.L      #1, D4
     BEQ        EA_ABS_LONG
+    *Unreachable
+    RTS
     
 
 *D3 holds the mode+register bits
@@ -163,7 +208,6 @@ EA_INDIRECT_INCREMENT
 
 
 EA_INDIRECT_DECREMENT
-    EA_INDIRECT_INCREMENT
     LEA   OPEN_PARENTHESIS_MSG, A1
     MOVE.B   #14,  D0    
     TRAP     #15
@@ -211,6 +255,7 @@ EA_ABS_LONG
 *The value is in D4
 PRINT_BYTE_VALUE
         MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #2, D6
 PRINT_BYTE_VALUE_LOOP
         *Gets the most significant bit basically
         *Could use GET_BIT subroutine but it is 
@@ -239,6 +284,7 @@ PRINT_BYTE_VALUE_LOOP
 *The value is in D4
 PRINT_WORD_VALUE
         MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #4, D6
 PRINT_WORD_VALUE_LOOP
         *Gets the most significant bit basically
         *Could use GET_BIT subroutine but it is 
@@ -258,7 +304,7 @@ PRINT_WORD_VALUE_LOOP
         TRAP        #15
         SUBI.L      #1, D6
         CMP.B       #0, D6
-        BNE         PRINT_BYTE_VALUE_LOOP
+        BNE         PRINT_WORD_VALUE_LOOP
         MOVEM.L    (A7)+, D5-D6
         RTS
 
@@ -267,6 +313,7 @@ PRINT_WORD_VALUE_LOOP
 *The value is in D4
 PRINT_LONG_VALUE
         MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #8, D6
 PRINT_LONG_VALUE_LOOP
         *Gets the most significant bit basically
         *Could use GET_BIT subroutine but it is 
@@ -276,7 +323,7 @@ PRINT_LONG_VALUE_LOOP
         LSR.L      #8, D5
         LSR.L      #8, D5
         LSR.L      #4, D5
-        LSL.W      #4, D4
+        LSL.L      #4, D4
         LEA        ZERO_MSG,      A1
         * load the address of Zero_msg
         * because all of the msgs are stored next to each other in order
@@ -288,7 +335,7 @@ PRINT_LONG_VALUE_LOOP
         TRAP        #15
         SUBI.L      #1, D6
         CMP.B       #0, D6
-        BNE         PRINT_BYTE_VALUE_LOOP
+        BNE         PRINT_LONG_VALUE_LOOP
         MOVEM.L    (A7)+, D5-D6
         RTS
 

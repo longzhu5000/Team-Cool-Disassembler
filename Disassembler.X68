@@ -301,7 +301,13 @@ BYTE_MSG        DC.B        '.B', 0
 WORD_MSG        DC.B        '.W', 0
 LONG_MSG        DC.B        '.L', 0
 
-
+COMMA_MSG       DC.B        ',', 0
+DOLLAR_MSG      DC.B        '$', 0
+HASH_MSG        DC.B        '#', 0
+PLUS_MSG        DC.B        '+', 0
+MINUS_MSG       DC.B        '-', 0
+OPEN_PARENTHESIS_MSG  DC.B   '(', 0
+CLOSE_PARENTHESIS_MSG DC.B  ')', 0
 *-----Carriage Return
 CR              EQU          $0D
 *-----------Line Feed

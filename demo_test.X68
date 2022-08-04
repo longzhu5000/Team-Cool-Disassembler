@@ -8,13 +8,38 @@
 *
 *****************************
 
+
 start		EQU	$00009000	* ORG and END address
 
 * ORG the program so that it straddles the address boundary $00007FFF to $00008000
 
-    	ORG	start
+		ORG	start
 
 NOP
+    LSL.B     D1,D2
+    LSL.W     D1,D2
+    LSL.W     (A1)
+    LSL.W     (A1)+
+    LSL.W     -(A1)
+    LSL.L     D1,D2
+    LSR.B     D1,D2
+    LSR.W     D1,D2
+    LSR.W     (A1)
+    LSR.W     (A1)+
+    LSR.W     -(A1)
+    LSR.L     D1,D2    
+    ASR.B     D1,D2
+    ASR.W     D1,D2
+    ASR.W     (A1)
+    ASR.W     (A1)+
+    ASR.W     -(A1)
+    ASR.L     D1,D2
+    ASL.B     D1,D2
+    ASL.W     D1,D2
+    ASL.W     (A1)
+    ASL.W     (A1)+
+    ASL.W     -(A1)
+    ASL.L     D1,D2  
     BGT.B     label1
     BGT.B     label2
     BLE.B     label1
@@ -22,14 +47,53 @@ NOP
     BGE.B     label1
     BEQ.B     label2
     BEQ.W     label1
-    
 label1
 
 label2
-    
+
 label3
-    
+
+    LSL.B     #$1,D2
+    LSL.W     #$2,D2
+    LSL.L     #$3,D2
+    LSL.W     $12
+    LSL.W     $1234
+    LSL.W     $12345678
+    ASR.B     #$1,D2
+    ASR.W     #$2,D2
+    ASR.L     #$3,D2
+    ASR.W     $12
+    ASR.W     $1234
+    ASR.W     $12345678
 label4
+    BGT.B     label4
+    BGT.B     label4
+    BGT.B     label4
+    BLE.W     label1
+    BLE.W     label2
+    BLE.W     label3
+    BEQ.W     label1
+    BEQ.W     label2
+    BEQ.W     label3
+* Put program code here
+
+    SIMHALT             ; halt simulator
+
+* Put variables and constants here
+
+    END    START        ; last line of source
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
