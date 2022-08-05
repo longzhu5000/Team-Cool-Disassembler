@@ -20,10 +20,35 @@ TEST
     AND.B       D1,     D2
     OR.B        D1,     D2
 
-    ADD.B       D1,     D2
+    ADD.B     D1,D2
     ADDA.W      D1,     A2
     ADDQ.W      #$1,    A2
     SUB.B       D1,     D2
+    SUB.B     D1,D2
+    SUB.B     D1,(A1)
+    SUB.B     D1,(A1)+
+    SUB.B     D1,-(A1)
+    SUB.B     (A1),D1
+    SUB.B     (A1)+,D1
+    SUB.B     -(A1),D1
+    SUB.W     D1,D2
+    SUB.W     D1,A1
+    SUB.W     D1,(A1)
+    SUB.W     D1,(A1)+
+    SUB.W     D1,-(A1)
+    SUB.W     A1,D1
+    SUB.W     (A1),D1
+    SUB.W     (A1)+,D1
+    SUB.W     -(A1),D1
+    SUB.L     D1,D2
+    SUB.L     D1,A1
+    SUB.L     D1,(A1)
+    SUB.L     D1,(A1)+
+    SUB.L     D1,-(A1)
+    SUB.L     A1,D1
+    SUB.L     (A1),D1
+    SUB.L     (A1)+,D1
+    SUB.L     -(A1),D1
     
     JSR         TEST
     BGT.B       TEST
@@ -38,6 +63,9 @@ TEST
     ASR.B       D1,     D2
     ROL.B       D1,     D2
     ROR.B       D1,     D2
+
+
+
 
 
 *~Font name~Courier New~
