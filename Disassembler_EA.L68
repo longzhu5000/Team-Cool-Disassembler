@@ -1,6 +1,6 @@
 00000000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 8/2/2022 12:07:59 AM
+Created On: 8/4/2022 2:44:22 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :
@@ -9,330 +9,355 @@ Created On: 8/2/2022 12:07:59 AM
 00000000                             5  * Description:
 00000000                             6  *-----------------------------------------------------------
 00000000                             7  
-00000000                             8  *MOVEQ, AND, OR
-00000000                             9  REGISTER_11_9:
-00000000                            10          *make a copy
-00000000  3803                      11          MOVE.W      D3,     D4
-00000002                            12          
-00000002                            13          *isolate bits 11-9 on the right
-00000002  343C 0004                 14          MOVE.W      #4,     D2
-00000006  E56C                      15          LSL.W       D2,     D4
-00000008  343C 000D                 16          MOVE.W      #13,    D2
-0000000C  E46C                      17          LSR.W       D2,     D4
-0000000E                            18          
-0000000E                            19          *print out the register number
-0000000E  2204                      20          MOVE.L      D4,     D1
-00000010  103C 0003                 21          MOVE.B      #3,     D0
-00000014  4E4F                      22          TRAP        #15
-00000016                            23          
-00000016  4E75                      24          RTS
-00000018                            25  *AND, OR
-00000018                            26  OPMODE_8_6:
-00000018                            27          *append size to opcode
-00000018  3803                      28          MOVE.W      D3,     D4
-0000001A                            29          
-0000001A  343C 0007                 30          MOVE.W      #7,     D2
-0000001E  E56C                      31          LSL.W       D2,     D4
-00000020  343C 000D                 32          MOVE.W      #13,    D2
-00000024  E46C                      33          LSR.W       D2,     D4
-00000026                            34          
-00000026  B83C 0000                 35          CMP.B       #$0,    D4
-0000002A  6700 0032                 36          BEQ         BYTE_SIZE
-0000002E                            37          
-0000002E  B83C 0004                 38          CMP.B       #$4,    D4
-00000032  6700 002A                 39          BEQ         BYTE_SIZE
-00000036                            40          
-00000036  B83C 0001                 41          CMP.B       #$1,    D4
-0000003A  6700 0030                 42          BEQ         WORD_SIZE
-0000003E                            43          
-0000003E  B83C 0005                 44          CMP.B       #$5,    D4
-00000042  6700 0028                 45          BEQ         WORD_SIZE
-00000046                            46          
-00000046  B83C 0002                 47          CMP.B       #$2,    D4
-0000004A  6700 002E                 48          BEQ         LONG_SIZE
-0000004E                            49          
-0000004E  B83C 0006                 50          CMP.B       #$6,    D4
-00000052  6700 0026                 51          BEQ         LONG_SIZE
-00000056                            52             
-00000056                            53          *isolates bits 8-6 to D4 on the left side, so rotation can be done in higher level to corresponding output for opmode
-00000056                            54  PREP_FOR_ROT:
-00000056                            55          *MOVE.W      D3,     D4
-00000056                            56          
-00000056  343C 000D                 57          MOVE.W      #13,     D2
-0000005A  E56C                      58          LSL.W       D2,     D4
-0000005C                            59          *MOVE.W      #13,    D2
-0000005C                            60          *LSR.W       D2,     D4
-0000005C                            61          
-0000005C  4E75                      62          RTS
-0000005E                            63  *--------------------------------Start of opcode sizes        
-0000005E                            64  BYTE_SIZE:
-Line 65 ERROR: Undefined symbol
-0000005E  43F9 004DBD16             65          LEA         DOT_BYTE, A1
-00000064  103C 000E                 66          MOVE.B      #14, D0
-00000068  4E4F                      67          TRAP        #15
-0000006A                            68  
-0000006A  60EA                      69          BRA         PREP_FOR_ROT
-0000006C                            70  WORD_SIZE:
-Line 71 ERROR: Undefined symbol
-0000006C  43F9 004DBD16             71          LEA         DOT_WORD, A1
-00000072  103C 000E                 72          MOVE.B      #14, D0
-00000076  4E4F                      73          TRAP        #15
-00000078                            74          
-00000078  60DC                      75          BRA         PREP_FOR_ROT
-0000007A                            76  LONG_SIZE:
-Line 77 ERROR: Undefined symbol
-0000007A  43F9 004DBD16             77          LEA         DOT_LONG, A1
-00000080  103C 000E                 78          MOVE.B      #14, D0
-00000084  4E4F                      79          TRAP        #15
-00000086                            80          
-00000086  60CE                      81          BRA         PREP_FOR_ROT
-00000088                            82  *AND, OR, JSR
-00000088                            83  EFFECTIVEADD_5_0:
-00000088                            84          *isolate mode bits (5-3)
-00000088                            85          *make a copy
-00000088  3803                      86          MOVE.W      D3,     D4
-0000008A                            87          
-0000008A                            88          *isolate bits 5-3 on the right
-0000008A  343C 000A                 89          MOVE.W      #10,     D2
-0000008E  E56C                      90          LSL.W       D2,     D4
-00000090  343C 000D                 91          MOVE.W      #13,    D2
-00000094  E46C                      92          LSR.W       D2,     D4
-00000096                            93          
-00000096  B83C 0000                 94          CMP.B       #$0,    D4
-0000009A  6700 002C                 95          BEQ         DATAR_EA
-0000009E                            96          
-0000009E  B83C 0001                 97          CMP.B       #$1,    D4
-000000A2  6700 0048                 98          BEQ         ADDR_EA
-000000A6                            99          
-000000A6  B83C 0002                100          CMP.B       #$2,    D4
-000000AA  6700 0064                101          BEQ         ADDP_EA
-000000AE                           102          
-000000AE  B83C 0003                103          CMP.B       #$3,    D4
-000000B2  6700 0098                104          BEQ         ADDPP_EA
-000000B6                           105          
-000000B6  B83C 0004                106          CMP.B       #$4,    D4
-000000BA  6700 00D8                107          BEQ         ADDPM_EA
-000000BE                           108          
-000000BE  B83C 0007                109          CMP.B       #$7,    D4
-000000C2  6700 0118                110          BEQ         IDATA_EA
-000000C6                           111          *isolate register bits (2-0)
-000000C6                           112  
-000000C6  4E75                     113          RTS
-000000C8                           114  *----------------------------------------Start of EA branches
-000000C8                           115  DATAR_EA:
-000000C8                           116          *print the 'D'
-Line 117 ERROR: Undefined symbol
-000000C8  43F9 004DBD16            117          LEA         DATA_REG, A1
-000000CE  103C 000E                118          MOVE.B      #14, D0
-000000D2  4E4F                     119          TRAP        #15
-000000D4                           120          
-000000D4  3803                     121          MOVE.W      D3,     D4
-000000D6                           122          
-000000D6                           123          *print the reg num
-000000D6                           124          *isolate bits 2-0 on the right
-000000D6  343C 000D                125          MOVE.W      #13,     D2
-000000DA  E56C                     126          LSL.W       D2,     D4
-000000DC  343C 000D                127          MOVE.W      #13,    D2
-000000E0  E46C                     128          LSR.W       D2,     D4
-000000E2                           129          
-000000E2                           130          *print out the register number
-000000E2  2204                     131          MOVE.L      D4,     D1
-000000E4  103C 0003                132          MOVE.B      #3,     D0
-000000E8  4E4F                     133          TRAP        #15
-000000EA                           134  
-000000EA  4E75                     135          RTS
-000000EC                           136  ADDR_EA:
-000000EC                           137          *print the 'A'
-Line 138 ERROR: Undefined symbol
-000000EC  43F9 004DBD16            138          LEA         ADDR_REG, A1
-000000F2  103C 000E                139          MOVE.B      #14, D0
-000000F6  4E4F                     140          TRAP        #15
-000000F8                           141          
-000000F8  3803                     142          MOVE.W      D3,     D4
-000000FA                           143          
-000000FA                           144          *print the reg num
-000000FA                           145          *isolate bits 2-0 on the right
-000000FA  343C 000D                146          MOVE.W      #13,     D2
-000000FE  E56C                     147          LSL.W       D2,     D4
-00000100  343C 000D                148          MOVE.W      #13,    D2
-00000104  E46C                     149          LSR.W       D2,     D4
-00000106                           150          
-00000106                           151          *print out the register number
-00000106  2204                     152          MOVE.L      D4,     D1
-00000108  103C 0003                153          MOVE.B      #3,     D0
-0000010C  4E4F                     154          TRAP        #15
-0000010E                           155  
-0000010E  4E75                     156          RTS
-00000110                           157  ADDP_EA:
-00000110                           158          *print the '(A'
-Line 159 ERROR: Undefined symbol
-00000110  43F9 004DBD16            159          LEA         START_PAREN, A1
-00000116  103C 000E                160          MOVE.B      #14, D0
-0000011A  4E4F                     161          TRAP        #15
-0000011C                           162          
-Line 163 ERROR: Undefined symbol
-0000011C  43F9 004DBD16            163          LEA         ADDR_REG, A1
-00000122  103C 000E                164          MOVE.B      #14, D0
-00000126  4E4F                     165          TRAP        #15
-00000128                           166          
-00000128  3803                     167          MOVE.W      D3,     D4
-0000012A                           168          
-0000012A                           169          *print the reg num
-0000012A                           170          *isolate bits 2-0 on the right
-0000012A  343C 000D                171          MOVE.W      #13,     D2
-0000012E  E56C                     172          LSL.W       D2,     D4
-00000130  343C 000D                173          MOVE.W      #13,    D2
-00000134  E46C                     174          LSR.W       D2,     D4
-00000136                           175          
-00000136                           176          *print out the register number
-00000136  2204                     177          MOVE.L      D4,     D1
-00000138  103C 0003                178          MOVE.B      #3,     D0
-0000013C  4E4F                     179          TRAP        #15
-0000013E                           180          
-Line 181 ERROR: Undefined symbol
-0000013E  43F9 004DBD16            181          LEA         END_PAREN, A1
-00000144  103C 000E                182          MOVE.B      #14, D0
-00000148  4E4F                     183          TRAP        #15
-0000014A  4E75                     184          RTS
-0000014C                           185  ADDPP_EA:
-0000014C                           186          *print the '(A'
-Line 187 ERROR: Undefined symbol
-0000014C  43F9 004DBD16            187          LEA         START_PAREN, A1
-00000152  103C 000E                188          MOVE.B      #14, D0
-00000156  4E4F                     189          TRAP        #15
-00000158                           190          
-Line 191 ERROR: Undefined symbol
-00000158  43F9 004DBD16            191          LEA         ADDR_REG, A1
-0000015E  103C 000E                192          MOVE.B      #14, D0
-00000162  4E4F                     193          TRAP        #15
-00000164                           194          
-00000164  3803                     195          MOVE.W      D3,     D4
-00000166                           196          
-00000166                           197          *print the reg num
-00000166                           198          *isolate bits 2-0 on the right
-00000166  343C 000D                199          MOVE.W      #13,     D2
-0000016A  E56C                     200          LSL.W       D2,     D4
-0000016C  343C 000D                201          MOVE.W      #13,    D2
-00000170  E46C                     202          LSR.W       D2,     D4
-00000172                           203          
-00000172                           204          *print out the register number
-00000172  2204                     205          MOVE.L      D4,     D1
-00000174  103C 0003                206          MOVE.B      #3,     D0
-00000178  4E4F                     207          TRAP        #15
-0000017A                           208          
-Line 209 ERROR: Undefined symbol
-0000017A  43F9 004DBD16            209          LEA         END_PAREN, A1
-00000180  103C 000E                210          MOVE.B      #14, D0
-00000184  4E4F                     211          TRAP        #15
-00000186                           212          
-Line 213 ERROR: Undefined symbol
-00000186  43F9 004DBD16            213          LEA         PLUS_SIGN, A1
-0000018C  103C 000E                214          MOVE.B      #14, D0
-00000190  4E4F                     215          TRAP        #15
-00000192                           216          
-00000192  4E75                     217          RTS
-00000194                           218  ADDPM_EA:
-00000194                           219          *print the '-(A'
-Line 220 ERROR: Undefined symbol
-00000194  43F9 004DBD16            220          LEA         MINUS_SIGN, A1
-0000019A  103C 000E                221          MOVE.B      #14, D0
-0000019E  4E4F                     222          TRAP        #15
-000001A0                           223          
-Line 224 ERROR: Undefined symbol
-000001A0  43F9 004DBD16            224          LEA         START_PAREN, A1
-000001A6  103C 000E                225          MOVE.B      #14, D0
-000001AA  4E4F                     226          TRAP        #15
-000001AC                           227          
-Line 228 ERROR: Undefined symbol
-000001AC  43F9 004DBD16            228          LEA         ADDR_REG, A1
-000001B2  103C 000E                229          MOVE.B      #14, D0
-000001B6  4E4F                     230          TRAP        #15
-000001B8                           231          
-000001B8  3803                     232          MOVE.W      D3,     D4
-000001BA                           233          
-000001BA                           234          *print the reg num
-000001BA                           235          *isolate bits 2-0 on the right
-000001BA  343C 000D                236          MOVE.W      #13,     D2
-000001BE  E56C                     237          LSL.W       D2,     D4
-000001C0  343C 000D                238          MOVE.W      #13,    D2
-000001C4  E46C                     239          LSR.W       D2,     D4
-000001C6                           240          
-000001C6                           241          *print out the register number
-000001C6  2204                     242          MOVE.L      D4,     D1
-000001C8  103C 0003                243          MOVE.B      #3,     D0
-000001CC  4E4F                     244          TRAP        #15
-000001CE                           245          
-Line 246 ERROR: Undefined symbol
-000001CE  43F9 004DBD16            246          LEA         END_PAREN, A1
-000001D4  103C 000E                247          MOVE.B      #14, D0
-000001D8  4E4F                     248          TRAP        #15
-000001DA                           249          
-000001DA  4E75                     250          RTS
-000001DC                           251  IDATA_EA:
-000001DC                           252          *check register to see if it's W or L addressinG
-000001DC                           253          *use (A3)+.W or .L to get the address data
-000001DC                           254          *print it out
-000001DC                           255          *ACTUALLY, just take the next long and spit it out
-000001DC                           256          *print out the data in hex form
-000001DC                           257          *NOTE that if register = 100 it means raw data, can be in decimal b/c not address
-000001DC                           258          
-000001DC  3803                     259          MOVE.W      D3,     D4
-000001DE                           260          
-000001DE                           261          *get reg num
-000001DE                           262          *isolate bits 2-0 on the right
-000001DE  343C 000D                263          MOVE.W      #13,     D2
-000001E2  E56C                     264          LSL.W       D2,     D4
-000001E4  343C 000D                265          MOVE.W      #13,    D2
-000001E8  E46C                     266          LSR.W       D2,     D4
-000001EA                           267          
-000001EA  B87C 0004                268          CMP         #$4,    D4
-000001EE  6700 001C                269          BEQ         IDATA
-000001F2                           270          
-Line 271 ERROR: Undefined symbol
-000001F2  43F9 004DBD16            271          LEA         HEX, A1
-000001F8  103C 000E                272          MOVE.B      #14, D0
-000001FC  4E4F                     273          TRAP        #15
-000001FE                           274          
-000001FE  143C 0010                275          MOVE.B      #16,    D2          *base 16
-00000202  103C 000F                276          MOVE.B      #15,    D0
-00000206  221B                     277          MOVE.L      (A3)+,   D1
-00000208  4E4F                     278          TRAP        #15
-0000020A  4E75                     279          RTS
-0000020C                           280  IDATA:
-Line 281 ERROR: Undefined symbol
-0000020C  43F9 004DBD16            281          LEA         IMM_DATA, A1
-00000212  103C 000E                282          MOVE.B      #14, D0
-00000216  4E4F                     283          TRAP        #15
-00000218                           284          
-00000218  321B                     285          MOVE.W      (A3)+,     D1
-0000021A  103C 0003                286          MOVE.B      #3,     D0
-0000021E  4E4F                     287          TRAP        #15
-00000220  4E75                     288          RTS
-00000222                           289  
-00000222                           290  *MOVEQ
-00000222                           291  *Prints out hex data
-00000222                           292  DATA_7_0:
-00000222                           293          *make a copy
-00000222  3803                     294          MOVE.W      D3,     D4
-00000224                           295          
-00000224                           296          *isolate bits 7-0 on the right
-00000224  343C 0008                297          MOVE.W      #8,     D2
-00000228  E56C                     298          LSL.W       D2,     D4
-0000022A  343C 0008                299          MOVE.W      #8,     D2
-0000022E  E46C                     300          LSR.W       D2,     D4
-00000230                           301          
-00000230                           302          *print out the data in hex form
-00000230  143C 0010                303          MOVE.B      #16,    D2          *base 16
-00000234  103C 000F                304          MOVE.B      #15,    D0
-00000238  3204                     305          MOVE.W      D4,     D1
-0000023A  4E4F                     306          TRAP        #15
-0000023C                           307  
-0000023C                           308  
-0000023C  4E75                     309          RTS
-0000023E                           310  
-Line 311 WARNING: END directive missing, starting address not set
+00000000                             8  *Prints out appropriate register number
+00000000                             9  *does not print 'D' or 'A'
+00000000                            10  REGISTER_11_9:
+00000000                            11          *make a copy
+00000000  3803                      12          MOVE.W      D3,     D4
+00000002                            13          
+00000002                            14          *isolate bits 11-9 on the right
+00000002  343C 0004                 15          MOVE.W      #4,     D2
+00000006  E56C                      16          LSL.W       D2,     D4
+00000008  343C 000D                 17          MOVE.W      #13,    D2
+0000000C  E46C                      18          LSR.W       D2,     D4
+0000000E                            19          
+0000000E                            20          *print out the register number
+0000000E  2204                      21          MOVE.L      D4,     D1
+00000010  103C 0003                 22          MOVE.B      #3,     D0
+00000014  4E4F                      23          TRAP        #15
+00000016                            24          
+00000016  4E75                      25          RTS
+00000018                            26  *Appends the size to the opcode (.B, .W, .L)
+00000018                            27  *Preps for rotating leftmost bit to see which form to use (<ea>, Dn -> Dn)/(Dn, <ea> -> <ea>)
+00000018                            28  OPMODE_8_6:
+00000018                            29          *append size to opcode
+00000018  3803                      30          MOVE.W      D3,     D4
+0000001A                            31          
+0000001A  343C 0007                 32          MOVE.W      #7,     D2
+0000001E  E56C                      33          LSL.W       D2,     D4
+00000020  343C 000D                 34          MOVE.W      #13,    D2
+00000024  E46C                      35          LSR.W       D2,     D4
+00000026                            36          
+00000026  B83C 0000                 37          CMP.B       #$0,    D4
+0000002A  6700 0032                 38          BEQ         BYTE_SIZE
+0000002E                            39          
+0000002E  B83C 0004                 40          CMP.B       #$4,    D4
+00000032  6700 002A                 41          BEQ         BYTE_SIZE
+00000036                            42          
+00000036  B83C 0001                 43          CMP.B       #$1,    D4
+0000003A  6700 0030                 44          BEQ         WORD_SIZE
+0000003E                            45          
+0000003E  B83C 0005                 46          CMP.B       #$5,    D4
+00000042  6700 0028                 47          BEQ         WORD_SIZE
+00000046                            48          
+00000046  B83C 0002                 49          CMP.B       #$2,    D4
+0000004A  6700 002E                 50          BEQ         LONG_SIZE
+0000004E                            51          
+0000004E  B83C 0006                 52          CMP.B       #$6,    D4
+00000052  6700 0026                 53          BEQ         LONG_SIZE
+00000056                            54             
+00000056                            55          *isolates bits 8-6 to D4 on the left side, so rotation can be done in higher level to corresponding output for opmode
+00000056                            56  PREP_FOR_ROT:
+00000056                            57          *MOVE.W      D3,     D4
+00000056                            58          
+00000056  343C 000D                 59          MOVE.W      #13,     D2
+0000005A  E56C                      60          LSL.W       D2,     D4
+0000005C                            61          *MOVE.W      #13,    D2
+0000005C                            62          *LSR.W       D2,     D4
+0000005C                            63          
+0000005C  4E75                      64          RTS
+0000005E                            65  *--------------------------------Start of opcode sizes        
+0000005E                            66  BYTE_SIZE:
+Line 67 ERROR: Undefined symbol
+0000005E  43F9 004DBD16             67          LEA         DOT_BYTE, A1
+00000064  103C 000E                 68          MOVE.B      #14, D0
+00000068  4E4F                      69          TRAP        #15
+0000006A                            70  
+0000006A  60EA                      71          BRA         PREP_FOR_ROT
+0000006C                            72  WORD_SIZE:
+Line 73 ERROR: Undefined symbol
+0000006C  43F9 004DBD16             73          LEA         DOT_WORD, A1
+00000072  103C 000E                 74          MOVE.B      #14, D0
+00000076  4E4F                      75          TRAP        #15
+00000078                            76          
+00000078  60DC                      77          BRA         PREP_FOR_ROT
+0000007A                            78  LONG_SIZE:
+Line 79 ERROR: Undefined symbol
+0000007A  43F9 004DBD16             79          LEA         DOT_LONG, A1
+00000080  103C 000E                 80          MOVE.B      #14, D0
+00000084  4E4F                      81          TRAP        #15
+00000086                            82          
+00000086  60CE                      83          BRA         PREP_FOR_ROT
+00000088                            84  *Handles EA, prints out appropriate registers and numbers
+00000088                            85  *immediate data may need editing
+00000088                            86  EFFECTIVEADD_5_0:
+00000088                            87          *isolate mode bits (5-3)
+00000088                            88          *make a copy
+00000088  3803                      89          MOVE.W      D3,     D4
+0000008A                            90          
+0000008A                            91          *isolate bits 5-3 on the right
+0000008A  343C 000A                 92          MOVE.W      #10,     D2
+0000008E  E56C                      93          LSL.W       D2,     D4
+00000090  343C 000D                 94          MOVE.W      #13,    D2
+00000094  E46C                      95          LSR.W       D2,     D4
+00000096                            96          
+00000096  B83C 0000                 97          CMP.B       #$0,    D4
+0000009A  6700 002C                 98          BEQ         DATAR_EA
+0000009E                            99          
+0000009E  B83C 0001                100          CMP.B       #$1,    D4
+000000A2  6700 0048                101          BEQ         ADDR_EA
+000000A6                           102          
+000000A6  B83C 0002                103          CMP.B       #$2,    D4
+000000AA  6700 0064                104          BEQ         ADDP_EA
+000000AE                           105          
+000000AE  B83C 0003                106          CMP.B       #$3,    D4
+000000B2  6700 0098                107          BEQ         ADDPP_EA
+000000B6                           108          
+000000B6  B83C 0004                109          CMP.B       #$4,    D4
+000000BA  6700 00D8                110          BEQ         ADDPM_EA
+000000BE                           111          
+000000BE  B83C 0007                112          CMP.B       #$7,    D4
+000000C2  6700 0118                113          BEQ         IDATA_EA
+000000C6                           114  
+000000C6  4E75                     115          RTS
+000000C8                           116  *----------------------------------------Start of EA branches
+000000C8                           117  DATAR_EA:
+000000C8                           118          *print the 'D'
+Line 119 ERROR: Undefined symbol
+000000C8  43F9 004DBD16            119          LEA         DATA_REG, A1
+000000CE  103C 000E                120          MOVE.B      #14, D0
+000000D2  4E4F                     121          TRAP        #15
+000000D4                           122          
+000000D4  3803                     123          MOVE.W      D3,     D4
+000000D6                           124          
+000000D6                           125          *print the reg num
+000000D6                           126          *isolate bits 2-0 on the right
+000000D6  343C 000D                127          MOVE.W      #13,     D2
+000000DA  E56C                     128          LSL.W       D2,     D4
+000000DC  343C 000D                129          MOVE.W      #13,    D2
+000000E0  E46C                     130          LSR.W       D2,     D4
+000000E2                           131          
+000000E2                           132          *print out the register number
+000000E2  2204                     133          MOVE.L      D4,     D1
+000000E4  103C 0003                134          MOVE.B      #3,     D0
+000000E8  4E4F                     135          TRAP        #15
+000000EA                           136  
+000000EA  4E75                     137          RTS
+000000EC                           138  ADDR_EA:
+000000EC                           139          *print the 'A'
+Line 140 ERROR: Undefined symbol
+000000EC  43F9 004DBD16            140          LEA         ADDR_REG, A1
+000000F2  103C 000E                141          MOVE.B      #14, D0
+000000F6  4E4F                     142          TRAP        #15
+000000F8                           143          
+000000F8  3803                     144          MOVE.W      D3,     D4
+000000FA                           145          
+000000FA                           146          *print the reg num
+000000FA                           147          *isolate bits 2-0 on the right
+000000FA  343C 000D                148          MOVE.W      #13,     D2
+000000FE  E56C                     149          LSL.W       D2,     D4
+00000100  343C 000D                150          MOVE.W      #13,    D2
+00000104  E46C                     151          LSR.W       D2,     D4
+00000106                           152          
+00000106                           153          *print out the register number
+00000106  2204                     154          MOVE.L      D4,     D1
+00000108  103C 0003                155          MOVE.B      #3,     D0
+0000010C  4E4F                     156          TRAP        #15
+0000010E                           157  
+0000010E  4E75                     158          RTS
+00000110                           159  ADDP_EA:
+00000110                           160          *print the '(A'
+Line 161 ERROR: Undefined symbol
+00000110  43F9 004DBD16            161          LEA         START_PAREN, A1
+00000116  103C 000E                162          MOVE.B      #14, D0
+0000011A  4E4F                     163          TRAP        #15
+0000011C                           164          
+Line 165 ERROR: Undefined symbol
+0000011C  43F9 004DBD16            165          LEA         ADDR_REG, A1
+00000122  103C 000E                166          MOVE.B      #14, D0
+00000126  4E4F                     167          TRAP        #15
+00000128                           168          
+00000128  3803                     169          MOVE.W      D3,     D4
+0000012A                           170          
+0000012A                           171          *print the reg num
+0000012A                           172          *isolate bits 2-0 on the right
+0000012A  343C 000D                173          MOVE.W      #13,     D2
+0000012E  E56C                     174          LSL.W       D2,     D4
+00000130  343C 000D                175          MOVE.W      #13,    D2
+00000134  E46C                     176          LSR.W       D2,     D4
+00000136                           177          
+00000136                           178          *print out the register number
+00000136  2204                     179          MOVE.L      D4,     D1
+00000138  103C 0003                180          MOVE.B      #3,     D0
+0000013C  4E4F                     181          TRAP        #15
+0000013E                           182          
+Line 183 ERROR: Undefined symbol
+0000013E  43F9 004DBD16            183          LEA         END_PAREN, A1
+00000144  103C 000E                184          MOVE.B      #14, D0
+00000148  4E4F                     185          TRAP        #15
+0000014A  4E75                     186          RTS
+0000014C                           187  ADDPP_EA:
+0000014C                           188          *print the '(A'
+Line 189 ERROR: Undefined symbol
+0000014C  43F9 004DBD16            189          LEA         START_PAREN, A1
+00000152  103C 000E                190          MOVE.B      #14, D0
+00000156  4E4F                     191          TRAP        #15
+00000158                           192          
+Line 193 ERROR: Undefined symbol
+00000158  43F9 004DBD16            193          LEA         ADDR_REG, A1
+0000015E  103C 000E                194          MOVE.B      #14, D0
+00000162  4E4F                     195          TRAP        #15
+00000164                           196          
+00000164  3803                     197          MOVE.W      D3,     D4
+00000166                           198          
+00000166                           199          *print the reg num
+00000166                           200          *isolate bits 2-0 on the right
+00000166  343C 000D                201          MOVE.W      #13,     D2
+0000016A  E56C                     202          LSL.W       D2,     D4
+0000016C  343C 000D                203          MOVE.W      #13,    D2
+00000170  E46C                     204          LSR.W       D2,     D4
+00000172                           205          
+00000172                           206          *print out the register number
+00000172  2204                     207          MOVE.L      D4,     D1
+00000174  103C 0003                208          MOVE.B      #3,     D0
+00000178  4E4F                     209          TRAP        #15
+0000017A                           210          
+Line 211 ERROR: Undefined symbol
+0000017A  43F9 004DBD16            211          LEA         END_PAREN, A1
+00000180  103C 000E                212          MOVE.B      #14, D0
+00000184  4E4F                     213          TRAP        #15
+00000186                           214          
+Line 215 ERROR: Undefined symbol
+00000186  43F9 004DBD16            215          LEA         PLUS_SIGN, A1
+0000018C  103C 000E                216          MOVE.B      #14, D0
+00000190  4E4F                     217          TRAP        #15
+00000192                           218          
+00000192  4E75                     219          RTS
+00000194                           220  ADDPM_EA:
+00000194                           221          *print the '-(A'
+Line 222 ERROR: Undefined symbol
+00000194  43F9 004DBD16            222          LEA         MINUS_SIGN, A1
+0000019A  103C 000E                223          MOVE.B      #14, D0
+0000019E  4E4F                     224          TRAP        #15
+000001A0                           225          
+Line 226 ERROR: Undefined symbol
+000001A0  43F9 004DBD16            226          LEA         START_PAREN, A1
+000001A6  103C 000E                227          MOVE.B      #14, D0
+000001AA  4E4F                     228          TRAP        #15
+000001AC                           229          
+Line 230 ERROR: Undefined symbol
+000001AC  43F9 004DBD16            230          LEA         ADDR_REG, A1
+000001B2  103C 000E                231          MOVE.B      #14, D0
+000001B6  4E4F                     232          TRAP        #15
+000001B8                           233          
+000001B8  3803                     234          MOVE.W      D3,     D4
+000001BA                           235          
+000001BA                           236          *print the reg num
+000001BA                           237          *isolate bits 2-0 on the right
+000001BA  343C 000D                238          MOVE.W      #13,     D2
+000001BE  E56C                     239          LSL.W       D2,     D4
+000001C0  343C 000D                240          MOVE.W      #13,    D2
+000001C4  E46C                     241          LSR.W       D2,     D4
+000001C6                           242          
+000001C6                           243          *print out the register number
+000001C6  2204                     244          MOVE.L      D4,     D1
+000001C8  103C 0003                245          MOVE.B      #3,     D0
+000001CC  4E4F                     246          TRAP        #15
+000001CE                           247          
+Line 248 ERROR: Undefined symbol
+000001CE  43F9 004DBD16            248          LEA         END_PAREN, A1
+000001D4  103C 000E                249          MOVE.B      #14, D0
+000001D8  4E4F                     250          TRAP        #15
+000001DA                           251          
+000001DA  4E75                     252          RTS
+000001DC                           253  IDATA_EA:
+000001DC                           254          *(not doing this)check register to see if it's W or L addressinG
+000001DC                           255          *use (A3)+.W or .L to get the address data
+000001DC                           256          *print it out
+000001DC                           257          
+000001DC                           258          *->take the next long and spit it out
+000001DC                           259          *print out the data in hex form
+000001DC                           260          *NOTE that if register = 100 it means raw data, can be in decimal b/c not address
+000001DC                           261          
+000001DC  3803                     262          MOVE.W      D3,     D4
+000001DE                           263          
+000001DE                           264          *get reg num
+000001DE                           265          *isolate bits 2-0 on the right
+000001DE  343C 000D                266          MOVE.W      #13,     D2
+000001E2  E56C                     267          LSL.W       D2,     D4
+000001E4  343C 000D                268          MOVE.W      #13,    D2
+000001E8  E46C                     269          LSR.W       D2,     D4
+000001EA                           270          
+000001EA                           271          *raw data
+000001EA  B87C 0004                272          CMP         #$4,    D4
+000001EE  6700 0024                273          BEQ         IDATA
+000001F2                           274          
+000001F2                           275          *W addressing
+000001F2  B87C 0000                276          CMP         #$0,    D4
+000001F6  6700 0032                277          BEQ         WADDR
+000001FA                           278          
+Line 279 ERROR: Undefined symbol
+000001FA  43F9 004DBD16            279          LEA         HEX, A1
+00000200  103C 000E                280          MOVE.B      #14, D0
+00000204  4E4F                     281          TRAP        #15
+00000206                           282          
+00000206  143C 0010                283          MOVE.B      #16,    D2          *base 16
+0000020A  103C 000F                284          MOVE.B      #15,    D0
+0000020E  221B                     285          MOVE.L      (A3)+,   D1
+00000210  4E4F                     286          TRAP        #15
+00000212  4E75                     287          RTS
+00000214                           288  *immediate data, print as hex or binary?
+00000214                           289  IDATA:
+Line 290 ERROR: Undefined symbol
+00000214  43F9 004DBD16            290          LEA         IMM_DATA, A1
+0000021A  103C 000E                291          MOVE.B      #14, D0
+0000021E  4E4F                     292          TRAP        #15
+00000220                           293          
+00000220  321B                     294          MOVE.W      (A3)+,     D1
+00000222  103C 0003                295          MOVE.B      #3,     D0
+00000226  4E4F                     296          TRAP        #15
+00000228  4E75                     297          RTS
+0000022A                           298          
+0000022A                           299  WADDR:
+Line 300 ERROR: Undefined symbol
+0000022A  43F9 004DBD16            300          LEA         HEX, A1
+00000230  103C 000E                301          MOVE.B      #14, D0
+00000234  4E4F                     302          TRAP        #15
+00000236                           303          
+00000236  143C 0010                304          MOVE.B      #16,    D2          *base 16
+0000023A  103C 000F                305          MOVE.B      #15,    D0
+0000023E  321B                     306          MOVE.W      (A3)+,   D1
+00000240  4E4F                     307          TRAP        #15
+00000242  4E75                     308          RTS
+00000244                           309  
+00000244                           310          
+00000244                           311  *Prints out hex data
+00000244                           312  *immediate data, print as hex or binary?
+00000244                           313  DATA_7_0:
+00000244                           314          *make a copy
+00000244  3803                     315          MOVE.W      D3,     D4
+00000246                           316          
+00000246                           317          *isolate bits 7-0 on the right
+00000246  343C 0008                318          MOVE.W      #8,     D2
+0000024A  E56C                     319          LSL.W       D2,     D4
+0000024C  343C 0008                320          MOVE.W      #8,     D2
+00000250  E46C                     321          LSR.W       D2,     D4
+00000252                           322          
+00000252                           323          *print out the data in hex form
+00000252  143C 0010                324          MOVE.B      #16,    D2          *base 16
+00000256  103C 000F                325          MOVE.B      #15,    D0
+0000025A  3204                     326          MOVE.W      D4,     D1
+0000025C  4E4F                     327          TRAP        #15
+0000025E                           328  
+0000025E                           329  
+0000025E  4E75                     330          RTS
+00000260                           331  
+00000260                           332  
+00000260                           333  
+00000260                           334  
+Line 335 WARNING: END directive missing, starting address not set
 
-18 errors detected
+19 errors detected
 1 warning generated
 
 
@@ -345,12 +370,13 @@ ADDP_EA             110
 ADDR_EA             EC
 BYTE_SIZE           5E
 DATAR_EA            C8
-DATA_7_0            222
+DATA_7_0            244
 EFFECTIVEADD_5_0    88
-IDATA               20C
+IDATA               214
 IDATA_EA            1DC
 LONG_SIZE           7A
 OPMODE_8_6          18
 PREP_FOR_ROT        56
 REGISTER_11_9       0
+WADDR               22A
 WORD_SIZE           6C

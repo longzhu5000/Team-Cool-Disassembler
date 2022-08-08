@@ -22,11 +22,11 @@ TEST
     AND.L       (A3),   D5
     AND.W       -(A2),  D1
     AND.W       #123,   D0         
-    AND.L       $A000,  D2          *shows up as 0000A000 in data
+    AND.L       $A000,  D2          *shows up as A000 in data
     AND.W       $0000A000, D2       *shows up as 0000A000 in data
     AND.B       (A6)+,  D0
     AND.B       D1,     (A2)
-    AND.W       D2, $FFFFA000       *shows up as A000 in data, MOVE.L will take word from next opcode
+    AND.W       D2, $FFFF1234       *shows up as A000 in data, MOVE.L will take word from next opcode
     
     OR.B        D1,     D2
     OR.B        $00001234,  D6
@@ -36,6 +36,10 @@ TEST
     
     MOVEQ       #$CD,    D0
     MOVEQ       #50,  D6
+    
+    NOT.B       D0
+    NOT.W       (A2)+
+    NOT.L       $A000
 
 
     ADD.B       D1,     D2
@@ -56,6 +60,8 @@ TEST
     ASR.B       D1,     D2
     ROL.B       D1,     D2
     ROR.B       D1,     D2
+
+
 
 
 

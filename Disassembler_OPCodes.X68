@@ -146,6 +146,14 @@ OP_CODE_NOT:
         MOVE.B      #14, D0
         TRAP        #15
         
+        JSR         SIZE_7_6
+        
+        LEA         WHITESPACE, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        JSR         EFFECTIVEADD_5_0
+        
         MOVE.B      #1,      D6
         
         RTS 
@@ -449,6 +457,7 @@ PLUS_SIGN       DC.B        '+',0
 MINUS_SIGN      DC.B        '-',0
 
 *DATA_MSG:   DC.B    'DATA',0
+
 
 
 

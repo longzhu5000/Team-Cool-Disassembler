@@ -62,6 +62,27 @@ PREP_FOR_ROT:
         *LSR.W       D2,     D4
         
         RTS
+        
+*Appends the size to the opcode (.B, .W, .L)
+SIZE_7_6:
+        MOVE.W      D3,     D4
+        
+        MOVE.W      #8,     D2
+        LSL.W       D2,     D4
+        MOVE.W      #14,    D2
+        LSR.W       D2,     D4
+        
+        CMP.B       #$0,    D4
+        BEQ         BYTE_SIZE
+        
+        CMP.B       #$1,    D4
+        BEQ         WORD_SIZE
+        
+        CMP.B       #$2,    D4
+        BEQ         LONG_SIZE
+        
+        RTS
+        
 *--------------------------------Start of opcode sizes        
 BYTE_SIZE:
         LEA         DOT_BYTE, A1
@@ -291,9 +312,19 @@ IDATA:
         MOVE.B      #14, D0
         TRAP        #15
         
-        MOVE.W      (A3)+,     D1
-        MOVE.B      #3,     D0
+        LEA         HEX, A1
+        MOVE.B      #14, D0
         TRAP        #15
+        
+        *MOVE.W      (A3)+,     D1
+        *MOVE.B      #3,     D0
+        *TRAP        #15
+        
+        MOVE.B      #16,    D2          *base 16
+        MOVE.B      #15,    D0
+        MOVE.W      (A3)+,   D1
+        TRAP        #15
+
         RTS
         
 WADDR:
@@ -328,6 +359,7 @@ DATA_7_0:
 
 
         RTS
+
 
 
 
