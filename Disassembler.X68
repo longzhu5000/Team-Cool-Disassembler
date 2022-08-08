@@ -283,6 +283,7 @@ BRA_MSG:        DC.B        'BRA',0
 JSR_MSG:        DC.B        'JSR',0
 MOVEQ_MSG:      DC.B        'MOVEQ',0
 AND_MSG:        DC.B        'AND',0
+LEA_MSG         DC.B        'LEA',0
 ASR_MSG         DC.B        'ASR',0
 ASL_MSG         DC.B        'ASL',0
 LSR_MSG         DC.B        'LSR',0
