@@ -10,7 +10,7 @@
 *------Use D4 to copy and modify D3 data
 *------A3 points to current address in memory
 
-
+******************************Start of shift/rotate EA functions***********************
 
 SHIFT_ROTATE_EA_SIZE
     MOVEM.L    D5-D6, -(A7)
@@ -126,17 +126,19 @@ SHIFT_ROTATE_EA_MEMORY
     TRAP        #15
     RTS
 
+********************************End of shift/rotate EA functions**************************
 
 
-BCC_EA_SIZE_AND_DISPLACEMENT
+********************************Start of BR/BCC EA functions****************************
+BR_EA_SIZE_AND_DISPLACEMENT
     MOVEM.L    D5-D6, -(A7)
     MOVE.L     #0, D5
     MOVE.L     #7, D6
     JSR        GET_BIT
     MOVEM.L    (A7)+, D5-D6
     CMP.L      #0, D4
-    BEQ        BCC_WORD_DISPLACEMENT
-BCC_BYTE_DISPLACEMENT
+    BEQ        BR_WORD_DISPLACEMENT
+BR_BYTE_DISPLACEMENT
     LEA         BYTE_MSG, A1
     MOVE.B      #14, D0
     TRAP        #15
@@ -145,7 +147,7 @@ BCC_BYTE_DISPLACEMENT
     TRAP        #15
     JSR         PRINT_BYTE_VALUE
     RTS
-BCC_WORD_DISPLACEMENT
+BR_WORD_DISPLACEMENT
     LEA         WORD_MSG, A1
     MOVE.B      #14, D0
     TRAP        #15
@@ -157,6 +159,51 @@ BCC_WORD_DISPLACEMENT
     JSR         PRINT_WORD_VALUE
     RTS
 
+
+********************************End of BR/BCC EA functions****************************
+
+********************************Start of LEA EA functions*****************************
+
+
+LEA_EA
+    *Prints the source operand
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #0, D5
+    MOVE.L     #5, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    MOVEM.L    D3/D5-D6, -(A7)
+    MOVE.L     D4, D3
+    JSR        GET_EA
+    MOVEM.L    (A7)+, D3/D5-D6
+
+    LEA        COMMA_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+
+    *Prints the dest operand
+    LEA        A_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #9, D5
+    MOVE.L     #11, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA       ZERO_MSG, A1
+    MULU      #2, D4    
+    ADDA.L    D4, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+
+    LEA         NEW_LINE,       A1
+    MOVE.B      #14,            D0    
+    TRAP        #15
+    
+    RTS
+
+
+********************************End of LEA EA functions*******************************
 
 *D3 holds the mode+register bits
 *A3 points to current address in memory which is being scanned
