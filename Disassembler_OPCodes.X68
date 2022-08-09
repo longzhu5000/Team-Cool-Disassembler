@@ -61,6 +61,10 @@ ISOLATE_15_12:
         *If the 15-12 are 1110, then it is a shift(LSL, LSR, ROR, ROL, ASR, ASL)
         CMP.B       #14,   D4
         BEQ         OP_CODE_SHIFT_ROTATE
+        CMP.B       #4,     D4
+        BEQ         OP_CODE_LEA
+        CMP.B       #%1101, D4
+        BEQ         OP_CODE_ADDA
         RTS
 
 
@@ -76,7 +80,7 @@ OP_CODE_BRA:
         LEA         BRA_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        
+        JSR         BR_EA_SIZE_AND_DISPLACEMENT
         RTS 
 OP_CODE_JSR:
         LEA         JSR_MSG, A1
@@ -90,6 +94,44 @@ OP_CODE_MOVEQ:
         TRAP        #15
         
         RTS
+
+OP_CODE_LEA:
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #6, D5
+        MOVE.L     #8, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #7, D3
+        BNE        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #0, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%111001, D3
+        BEQ        OP_CODE_LEA_PRINT
+        CMP.L      #%111000, D3
+        BEQ        OP_CODE_LEA_PRINT
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #3, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        BEQ        OP_CODE_LEA_PRINT
+        BRA        INSTRUCTION_DECODE_FAILURE
+        *Unreachable
+        RTS
+OP_CODE_LEA_PRINT
+        LEA         LEA_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        LEA         SPACE_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        JSR         LEA_EA
+        RTS
+
+
 OP_CODE_AND:
         LEA         AND_MSG, A1
         MOVE.B      #14, D0
@@ -120,14 +162,14 @@ OP_CODE_BLE
         LEA         BLE_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        JSR         BCC_EA_SIZE_AND_DISPLACEMENT
+        JSR         BR_EA_SIZE_AND_DISPLACEMENT
         RTS
 
 OP_CODE_BGT
         LEA         BGT_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        JSR         BCC_EA_SIZE_AND_DISPLACEMENT
+        JSR         BR_EA_SIZE_AND_DISPLACEMENT
         RTS
 
 
@@ -135,8 +177,48 @@ OP_CODE_BEQ
         LEA         BEQ_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        JSR         BCC_EA_SIZE_AND_DISPLACEMENT
+        JSR         BR_EA_SIZE_AND_DISPLACEMENT
         RTS
+
+
+OP_CODE_ADDA
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #6, D5
+        MOVE.L     #8, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%010, D4
+        BLE        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%100, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%101, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #$110, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #0, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%111010, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%111011, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #3, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%101, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%110, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        LEA        ADDQ_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        JSR        ADDQ_EA_SIZE_AND_EA  
+        RTS
+
 
 OP_CODE_OR:
         *check for divu/other opcodes that start with 1000
