@@ -301,10 +301,12 @@ IDATA_EA:
         MOVE.B      #14, D0
         TRAP        #15
         
-        MOVE.B      #16,    D2          *base 16
-        MOVE.B      #15,    D0
-        MOVE.L      (A3)+,   D1
-        TRAP        #15
+        *MOVE.B      #16,    D2          *base 16
+        *MOVE.B      #15,    D0
+        MOVE.L      (A3)+,   D4
+        JSR         PRINT_LONG_VALUE
+        *TRAP        #15
+        
         RTS
 *immediate data, print as hex or binary?
 IDATA:
@@ -320,10 +322,11 @@ IDATA:
         *MOVE.B      #3,     D0
         *TRAP        #15
         
-        MOVE.B      #16,    D2          *base 16
-        MOVE.B      #15,    D0
-        MOVE.W      (A3)+,   D1
-        TRAP        #15
+        *MOVE.B      #16,    D2          *base 16
+        *MOVE.B      #15,    D0
+        MOVE.W      (A3)+,   D4
+        JSR         PRINT_WORD_VALUE
+        *TRAP        #15
 
         RTS
         
@@ -332,10 +335,12 @@ WADDR:
         MOVE.B      #14, D0
         TRAP        #15
         
-        MOVE.B      #16,    D2          *base 16
-        MOVE.B      #15,    D0
-        MOVE.W      (A3)+,   D1
-        TRAP        #15
+        *MOVE.B      #16,    D2          *base 16
+        *MOVE.B      #15,    D0
+        MOVE.W      (A3)+,   D4
+        JSR         PRINT_WORD_VALUE
+        *TRAP        #15
+        
         RTS
 
         
@@ -352,12 +357,71 @@ DATA_7_0:
         LSR.W       D2,     D4
         
         *print out the data in hex form
-        MOVE.B      #16,    D2          *base 16
-        MOVE.B      #15,    D0
-        MOVE.W      D4,     D1
+        *MOVE.B      #16,    D2          *base 16
+        *MOVE.B      #15,    D0
+        *MOVE.W      D4,     D1
+        JSR         PRINT_WORD_VALUE
+        *TRAP        #15
+
+
+        RTS
+        
+*Prints the long size value.
+*The value is in D4
+PRINT_LONG_VALUE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #8, D6
+PRINT_LONG_VALUE_LOOP
+        *Gets the most significant bit basically
+        *Could use GET_BIT subroutine but it is 
+        *costly in terms of registers used
+        MOVE.L     D4, D5
+        LSR.L      #8, D5
+        LSR.L      #8, D5
+        LSR.L      #8, D5
+        LSR.L      #4, D5
+        LSL.L      #4, D4
+        LEA        ZERO_MSG,      A1
+        * load the address of Zero_msg
+        * because all of the msgs are stored next to each other in order
+        * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+        * and then add it to the address starting at zero_msg
+        MULU         #2,            D5
+        ADDA.L       D5,            A1
+        MOVE.B      #14, D0
         TRAP        #15
-
-
+        SUBI.L      #1, D6
+        CMP.B       #0, D6
+        BNE         PRINT_LONG_VALUE_LOOP
+        MOVEM.L    (A7)+, D5-D6
+        RTS
+        
+*Prints the word size value.
+*The value is in D4
+PRINT_WORD_VALUE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #4, D6
+PRINT_WORD_VALUE_LOOP
+        *Gets the most significant bit basically
+        *Could use GET_BIT subroutine but it is 
+        *costly in terms of registers used
+        MOVE.W     D4, D5
+        LSR.W      #6, D5
+        LSR.W      #6, D5
+        LSL.W      #4, D4
+        LEA        ZERO_MSG,      A1
+        * load the address of Zero_msg
+        * because all of the msgs are stored next to each other in order
+        * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+        * and then add it to the address starting at zero_msg
+        MULU         #2,            D5
+        ADDA.L       D5,            A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        SUBI.L      #1, D6
+        CMP.B       #0, D6
+        BNE         PRINT_WORD_VALUE_LOOP
+        MOVEM.L    (A7)+, D5-D6
         RTS
 
 

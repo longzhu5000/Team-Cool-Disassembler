@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 8/8/2022 1:51:47 PM
+Created On: 8/8/2022 6:55:08 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Disassembler
@@ -16,11 +16,11 @@ Created On: 8/8/2022 1:51:47 PM
 00001000                            12  *------LEA = Load effective address
 00001000                            13  *------Running Trap #15 while the number 14 is in D0 will print out whatever data is in the address stored in A1
 00001000                            14  
-00001000  43F9 0000185A             15          LEA         INTRO_MSG,      A1
+00001000  43F9 000018A8             15          LEA         INTRO_MSG,      A1
 00001006  103C 000E                 16          MOVE.B      #14,            D0    
 0000100A  4E4F                      17          TRAP        #15
 0000100C                            18          
-0000100C  43F9 00001880             19          LEA         STARTING_MSG,   A1
+0000100C  43F9 000018CE             19          LEA         STARTING_MSG,   A1
 00001012  103C 000E                 20          MOVE.B      #14,            D0   
 00001016  4E4F                      21          TRAP        #15
 00001018                            22          
@@ -32,7 +32,7 @@ Created On: 8/8/2022 1:51:47 PM
 00001018                            28  *       IE 31 = 1, 32 = 2 etc etc
 00001018                            29  *       If I store the number 1200, it will appear in memory as 31 32 30 30
 00001018                            30  
-00001018  43F9 000018DA             31          LEA         STA_ADDR,       A1
+00001018  43F9 00001928             31          LEA         STA_ADDR,       A1
 0000101E  103C 0002                 32          MOVE.B      #2,             D0
 00001022  4E4F                      33          TRAP        #15
 00001024                            34          
@@ -44,11 +44,11 @@ Created On: 8/8/2022 1:51:47 PM
 0000102C  4282                      40          CLR.L       D2
 0000102E  4287                      41          CLR.L       D7
 00001030                            42          
-00001030  43F9 000018A4             43          LEA         ENDING_MSG,     A1
+00001030  43F9 000018F2             43          LEA         ENDING_MSG,     A1
 00001036  103C 000E                 44          MOVE.B      #14,            D0
 0000103A  4E4F                      45          TRAP        #15
 0000103C                            46          
-0000103C  43F9 00001902             47          LEA         END_ADDR,       A1
+0000103C  43F9 00001950             47          LEA         END_ADDR,       A1
 00001042  103C 0002                 48          MOVE.B      #2,             D0
 00001046  4E4F                      49          TRAP        #15
 00001048                            50          
@@ -125,7 +125,7 @@ Created On: 8/8/2022 1:51:47 PM
 000010C2                           121          
 000010C2                           122          
 000010C2                           123          * space between address and data
-000010C2  43F9 0000192A            124          LEA         SPACE_MSG,      A1
+000010C2  43F9 00001978            124          LEA         SPACE_MSG,      A1
 000010C8  103C 000E                125          MOVE.B      #14,            D0    
 000010CC  4E4F                     126          TRAP        #15
 000010CE                           127          
@@ -150,7 +150,7 @@ Created On: 8/8/2022 1:51:47 PM
 000010E6  4283                     146          CLR.L       D3
 000010E8  4284                     147          CLR.L       D4
 000010EA                           148          * new line
-000010EA  43F9 0000194D            149          LEA         NEW_LINE,       A1
+000010EA  43F9 0000199B            149          LEA         NEW_LINE,       A1
 000010F0  103C 000E                150          MOVE.B      #14,            D0    
 000010F4  4E4F                     151          TRAP        #15
 000010F6                           152  
@@ -180,7 +180,7 @@ Created On: 8/8/2022 1:51:47 PM
 0000110E                           176          *Assuming D4 is empty
 0000110E                           177          
 0000110E  1802                     178          MOVE.B       D2,            D4
-00001110  43F9 0000192D            179          LEA          ZERO_MSG,      A1
+00001110  43F9 0000197B            179          LEA          ZERO_MSG,      A1
 00001116                           180          * load the address of Zero_msg
 00001116                           181          * because all of the msgs are stored next to each other in order
 00001116                           182          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
@@ -234,7 +234,7 @@ Created On: 8/8/2022 1:51:47 PM
 00001156  4E75                     230          RTS
 00001158                           231  DONE:
 00001158                           232  
-00001158  43F9 000018C6            233          LEA         GOODBYE_MSG,    A1
+00001158  43F9 00001914            233          LEA         GOODBYE_MSG,    A1
 0000115E  103C 000E                234          MOVE.B      #14,            D0
 00001162  4E4F                     235          TRAP        #15
 00001164  103C 0009                236          MOVE.B      #9,             D0
@@ -507,7 +507,7 @@ Created On: 8/8/2022 1:51:47 PM
 000013A8  103C 000E                503          MOVE.B      #14, D0
 000013AC  4E4F                     504          TRAP        #15
 000013AE                           505         
-000013AE  4EB9 000017BE            506          JSR         DATA_7_0
+000013AE  4EB9 000017B2            506          JSR         DATA_7_0
 000013B4                           507          
 000013B4  43F9 0000154E            508          LEA         WHITESPACE_COM, A1
 000013BA  103C 000E                509          MOVE.B      #14, D0
@@ -972,187 +972,247 @@ Created On: 8/8/2022 1:51:47 PM
 0000175C                           968          
 0000175C                           969          *raw data
 0000175C  B87C 0004                970          CMP         #$4,    D4
-00001760  6700 0022                971          BEQ         IDATA
+00001760  6700 001E                971          BEQ         IDATA
 00001764                           972          
 00001764                           973          *W addressing
 00001764  B87C 0000                974          CMP         #$0,    D4
-00001768  6700 003C                975          BEQ         WADDR
+00001768  6700 0034                975          BEQ         WADDR
 0000176C                           976          
 0000176C  43F8 1557                977          LEA         HEX, A1
 00001770  103C 000E                978          MOVE.B      #14, D0
 00001774  4E4F                     979          TRAP        #15
 00001776                           980          
-00001776  143C 0010                981          MOVE.B      #16,    D2          *base 16
-0000177A  103C 000F                982          MOVE.B      #15,    D0
-0000177E  221B                     983          MOVE.L      (A3)+,   D1
-00001780  4E4F                     984          TRAP        #15
-00001782  4E75                     985          RTS
-00001784                           986  IDATA:
-00001784  43F8 1555                987          LEA         IMM_DATA, A1
-00001788  103C 000E                988          MOVE.B      #14, D0
-0000178C  4E4F                     989          TRAP        #15
-0000178E                           990          
-0000178E  43F8 1557                991          LEA         HEX, A1
-00001792  103C 000E                992          MOVE.B      #14, D0
-00001796  4E4F                     993          TRAP        #15
-00001798                           994          
-00001798                           995          *MOVE.W      (A3)+,     D1
-00001798                           996          *MOVE.B      #3,     D0
-00001798                           997          *TRAP        #15
-00001798                           998          
-00001798  143C 0010                999          MOVE.B      #16,    D2          *base 16
-0000179C  103C 000F               1000          MOVE.B      #15,    D0
-000017A0  321B                    1001          MOVE.W      (A3)+,   D1
-000017A2  4E4F                    1002          TRAP        #15
-000017A4                          1003  
-000017A4  4E75                    1004          RTS
-000017A6                          1005          
-000017A6                          1006  WADDR:
-000017A6  43F8 1557               1007          LEA         HEX, A1
-000017AA  103C 000E               1008          MOVE.B      #14, D0
-000017AE  4E4F                    1009          TRAP        #15
-000017B0                          1010          
-000017B0  143C 0010               1011          MOVE.B      #16,    D2          *base 16
-000017B4  103C 000F               1012          MOVE.B      #15,    D0
-000017B8  321B                    1013          MOVE.W      (A3)+,   D1
-000017BA  4E4F                    1014          TRAP        #15
-000017BC  4E75                    1015          RTS
-000017BE                          1016  
-000017BE                          1017          
-000017BE                          1018  DATA_7_0:
-000017BE                          1019          *make a copy
-000017BE  3803                    1020          MOVE.W      D3,     D4
-000017C0                          1021          
-000017C0                          1022          *isolate bits 7-0 on the right
-000017C0  343C 0008               1023          MOVE.W      #8,     D2
-000017C4  E56C                    1024          LSL.W       D2,     D4
-000017C6  343C 0008               1025          MOVE.W      #8,     D2
-000017CA  E46C                    1026          LSR.W       D2,     D4
-000017CC                          1027          
-000017CC                          1028          *print out the data in hex form
-000017CC  143C 0010               1029          MOVE.B      #16,    D2          *base 16
-000017D0  103C 000F               1030          MOVE.B      #15,    D0
-000017D4  3204                    1031          MOVE.W      D4,     D1
-000017D6  4E4F                    1032          TRAP        #15
-000017D8                          1033  
-000017D8                          1034  
-000017D8  4E75                    1035          RTS
-000017DA                          1036  
-000017DA                          1037  
-000017DA                          1038  
-000017DA                          1039  
-000017DA                          1040  
-000017DA                          1041  -------------------- end include --------------------
-000017DA                          1042      INCLUDE         'Sample_Test.x68'
-000017DA                          1043  
-000017DA                          1044                    ; first instruction of program
-000017DA                          1045  
-000017DA                          1046  TEST
-000017DA  4E75                    1047      RTS
-000017DC  4E71                    1048      NOP
-000017DE                          1049      
-000017DE  1401                    1050      MOVE.B      D1,     D2
-000017E0  3449                    1051      MOVEA.W     A1,     A2
-000017E2  48A1 007F               1052      MOVEM.W     A1-A7,  -(A1)
-000017E6  7000                    1053      MOVEQ       #$0,    D0
-000017E8  7C32                    1054      MOVEQ       #50,  D6
-000017EA  45D1                    1055      LEA         (A1),   A2
-000017EC                          1056      
-000017EC  C401                    1057      AND.B       D1,     D2
-000017EE  CA93                    1058      AND.L       (A3),   D5
-000017F0  C262                    1059      AND.W       -(A2),  D1
-000017F2  C07C 007B               1060      AND.W       #123,   D0         
-000017F6  C4B9 0000A000           1061      AND.L       $A000,  D2          *shows up as A000 in data
-000017FC  C479 0000A000           1062      AND.W       $0000A000, D2       *shows up as 0000A000 in data
-00001802  C01E                    1063      AND.B       (A6)+,  D0
-00001804  C312                    1064      AND.B       D1,     (A2)
-00001806  C579 FFFF1234           1065      AND.W       D2, $FFFF1234       *shows up as A000 in data, MOVE.L will take word from next opcode
-0000180C                          1066      
-0000180C  8401                    1067      OR.B        D1,     D2
-0000180E  8C38 1234               1068      OR.B        $00001234,  D6
-00001812  8E39 0000ABCD           1069      OR.B        $ABCD,  D7
-00001818  8D39 1234ABCD           1070      OR.B        D6,     $1234ABCD
-0000181E  8F39 0000ABCD           1071      OR.B        D7,     $ABCD
-00001824                          1072      
-00001824  70CD                    1073      MOVEQ       #$CD,    D0
-00001826  7C32                    1074      MOVEQ       #50,  D6
-00001828                          1075      
-00001828  4600                    1076      NOT.B       D0
-0000182A  465A                    1077      NOT.W       (A2)+
-0000182C  46B9 0000A000           1078      NOT.L       $A000
-00001832                          1079  
-00001832                          1080  
-00001832  D401                    1081      ADD.B       D1,     D2
-00001834  D4C1                    1082      ADDA.W      D1,     A2
-00001836  524A                    1083      ADDQ.W      #$1,    A2
-00001838  9401                    1084      SUB.B       D1,     D2
-0000183A                          1085      
-0000183A  4EB8 17DA               1086      JSR         TEST
-0000183E  6E9A                    1087      BGT.B       TEST
-00001840  6F00 FF98               1088      BLE.W       TEST
-00001844  6700 FF94               1089      BEQ.W       TEST
-00001848  6090                    1090      BRA         TEST
-0000184A  4678 17DA               1091      NOT         TEST
-0000184E                          1092      
-0000184E  E32A                    1093      LSL.B       D1,     D2
-00001850  E22A                    1094      LSR.B       D1,     D2
-00001852  E322                    1095      ASL.B       D1,     D2
-00001854  E222                    1096      ASR.B       D1,     D2
-00001856  E33A                    1097      ROL.B       D1,     D2
-00001858  E23A                    1098      ROR.B       D1,     D2
-0000185A                          1099  
-0000185A                          1100  
-0000185A                          1101  
-0000185A                          1102  
-0000185A                          1103  
-0000185A                          1104  
-0000185A                          1105  
-0000185A                          1106  
-0000185A                          1107  -------------------- end include --------------------
-0000185A                          1108      *INCLUDE         'demo_test.x68'
-0000185A                          1109  
-0000185A                          1110  
-0000185A                          1111  * Put variables and constants here
-0000185A                          1112  
-0000185A= 57 65 6C 63 6F 6D ...   1113  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
-00001880= 50 6C 65 61 73 65 ...   1114  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
-000018A4= 50 6C 65 61 73 65 ...   1115  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
-000018C6= 44 6F 6E 65 20 52 ...   1116  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
-000018DA                          1117  * CR and LF for strings above because we want to go to next line after printing message
-000018DA                          1118  
-000018DA                          1119  STA_ADDR         DS.B        40
-00001902                          1120  END_ADDR         DS.B        40
-0000192A                          1121  
-0000192A                          1122  * no CR and LF for strings below because we want to print each number and letter
-0000192A                          1123  
-0000192A= 20 20 00                1124  SPACE_MSG:       DC.B        '  ',0
-0000192D                          1125  
-0000192D= 30 00                   1126  ZERO_MSG:        DC.B        '0',0
-0000192F= 31 00                   1127  ONE_MSG:         DC.B        '1',0
-00001931= 32 00                   1128  TWO_MSG:         DC.B        '2',0
-00001933= 33 00                   1129  THREE_MSG:       DC.B        '3',0
-00001935= 34 00                   1130  FOUR_MSG:        DC.B        '4',0
-00001937= 35 00                   1131  FIVE_MSG:        DC.B        '5',0
-00001939= 36 00                   1132  SIX_MSG:         DC.B        '6',0
-0000193B= 37 00                   1133  SEVEN_MSG:       DC.B        '7',0
-0000193D= 38 00                   1134  EIGHT_MSG:       DC.B        '8',0
-0000193F= 39 00                   1135  NINE_MSG:        DC.B        '9',0
-00001941= 41 00                   1136  A_MSG:           DC.B        'A',0
-00001943= 42 00                   1137  B_MSG:           DC.B        'B',0
-00001945= 43 00                   1138  C_MSG:           DC.B        'C',0
-00001947= 44 00                   1139  D_MSG:           DC.B        'D',0
-00001949= 45 00                   1140  E_MSG:           DC.B        'E',0
-0000194B= 46 00                   1141  F_MSG:           DC.B        'F',0 
-0000194D                          1142  
-0000194D                          1143  
-0000194D                          1144  *-----Carriage Return
-0000194D  =0000000D               1145  CR              EQU          $0D
-0000194D                          1146  *-----------Line Feed
-0000194D  =0000000A               1147  LF              EQU          $0A
-0000194D                          1148  
-0000194D= 0D 0A 00                1149  NEW_LINE:       DC.B         '',CR,LF,0
-00001950                          1150  
-00001950                          1151      END    START        ; last line of source
+00001776                           981          *MOVE.B      #16,    D2          *base 16
+00001776                           982          *MOVE.B      #15,    D0
+00001776  281B                     983          MOVE.L      (A3)+,   D4
+00001778  4EB9 000017C8            984          JSR         PRINT_LONG_VALUE
+0000177E                           985          *TRAP        #15
+0000177E                           986          
+0000177E  4E75                     987          RTS
+00001780                           988  IDATA:
+00001780  43F8 1555                989          LEA         IMM_DATA, A1
+00001784  103C 000E                990          MOVE.B      #14, D0
+00001788  4E4F                     991          TRAP        #15
+0000178A                           992          
+0000178A  43F8 1557                993          LEA         HEX, A1
+0000178E  103C 000E                994          MOVE.B      #14, D0
+00001792  4E4F                     995          TRAP        #15
+00001794                           996          
+00001794                           997          *MOVE.W      (A3)+,     D1
+00001794                           998          *MOVE.B      #3,     D0
+00001794                           999          *TRAP        #15
+00001794                          1000          
+00001794                          1001          *MOVE.B      #16,    D2          *base 16
+00001794                          1002          *MOVE.B      #15,    D0
+00001794  381B                    1003          MOVE.W      (A3)+,   D4
+00001796  4EB9 000017FA           1004          JSR         PRINT_WORD_VALUE
+0000179C                          1005          *TRAP        #15
+0000179C                          1006  
+0000179C  4E75                    1007          RTS
+0000179E                          1008          
+0000179E                          1009  WADDR:
+0000179E  43F8 1557               1010          LEA         HEX, A1
+000017A2  103C 000E               1011          MOVE.B      #14, D0
+000017A6  4E4F                    1012          TRAP        #15
+000017A8                          1013          
+000017A8                          1014          *MOVE.B      #16,    D2          *base 16
+000017A8                          1015          *MOVE.B      #15,    D0
+000017A8  381B                    1016          MOVE.W      (A3)+,   D4
+000017AA  4EB9 000017FA           1017          JSR         PRINT_WORD_VALUE
+000017B0                          1018          *TRAP        #15
+000017B0                          1019          
+000017B0  4E75                    1020          RTS
+000017B2                          1021  
+000017B2                          1022          
+000017B2                          1023  DATA_7_0:
+000017B2                          1024          *make a copy
+000017B2  3803                    1025          MOVE.W      D3,     D4
+000017B4                          1026          
+000017B4                          1027          *isolate bits 7-0 on the right
+000017B4  343C 0008               1028          MOVE.W      #8,     D2
+000017B8  E56C                    1029          LSL.W       D2,     D4
+000017BA  343C 0008               1030          MOVE.W      #8,     D2
+000017BE  E46C                    1031          LSR.W       D2,     D4
+000017C0                          1032          
+000017C0                          1033          *print out the data in hex form
+000017C0                          1034          *MOVE.B      #16,    D2          *base 16
+000017C0                          1035          *MOVE.B      #15,    D0
+000017C0                          1036          *MOVE.W      D4,     D1
+000017C0  4EB9 000017FA           1037          JSR         PRINT_WORD_VALUE
+000017C6                          1038          *TRAP        #15
+000017C6                          1039  
+000017C6                          1040  
+000017C6  4E75                    1041          RTS
+000017C8                          1042          
+000017C8                          1043  PRINT_LONG_VALUE
+000017C8  48E7 0600               1044          MOVEM.L    D5-D6, -(A7)
+000017CC  7C08                    1045          MOVE.L     #8, D6
+000017CE                          1046  PRINT_LONG_VALUE_LOOP
+000017CE                          1047          *Gets the most significant bit basically
+000017CE                          1048          *Could use GET_BIT subroutine but it is 
+000017CE                          1049          *costly in terms of registers used
+000017CE  2A04                    1050          MOVE.L     D4, D5
+000017D0  E08D                    1051          LSR.L      #8, D5
+000017D2  E08D                    1052          LSR.L      #8, D5
+000017D4  E08D                    1053          LSR.L      #8, D5
+000017D6  E88D                    1054          LSR.L      #4, D5
+000017D8  E98C                    1055          LSL.L      #4, D4
+000017DA  43F9 0000197B           1056          LEA        ZERO_MSG,      A1
+000017E0                          1057          * load the address of Zero_msg
+000017E0                          1058          * because all of the msgs are stored next to each other in order
+000017E0                          1059          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+000017E0                          1060          * and then add it to the address starting at zero_msg
+000017E0  CAFC 0002               1061          MULU         #2,            D5
+000017E4  D3C5                    1062          ADDA.L       D5,            A1
+000017E6  103C 000E               1063          MOVE.B      #14, D0
+000017EA  4E4F                    1064          TRAP        #15
+000017EC  5386                    1065          SUBI.L      #1, D6
+000017EE  BC3C 0000               1066          CMP.B       #0, D6
+000017F2  66DA                    1067          BNE         PRINT_LONG_VALUE_LOOP
+000017F4  4CDF 0060               1068          MOVEM.L    (A7)+, D5-D6
+000017F8  4E75                    1069          RTS
+000017FA                          1070          
+000017FA                          1071  PRINT_WORD_VALUE
+000017FA  48E7 0600               1072          MOVEM.L    D5-D6, -(A7)
+000017FE  7C04                    1073          MOVE.L     #4, D6
+00001800                          1074  PRINT_WORD_VALUE_LOOP
+00001800                          1075          *Gets the most significant bit basically
+00001800                          1076          *Could use GET_BIT subroutine but it is 
+00001800                          1077          *costly in terms of registers used
+00001800  3A04                    1078          MOVE.W     D4, D5
+00001802  EC4D                    1079          LSR.W      #6, D5
+00001804  EC4D                    1080          LSR.W      #6, D5
+00001806  E94C                    1081          LSL.W      #4, D4
+00001808  43F9 0000197B           1082          LEA        ZERO_MSG,      A1
+0000180E                          1083          * load the address of Zero_msg
+0000180E                          1084          * because all of the msgs are stored next to each other in order
+0000180E                          1085          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+0000180E                          1086          * and then add it to the address starting at zero_msg
+0000180E  CAFC 0002               1087          MULU         #2,            D5
+00001812  D3C5                    1088          ADDA.L       D5,            A1
+00001814  103C 000E               1089          MOVE.B      #14, D0
+00001818  4E4F                    1090          TRAP        #15
+0000181A  5386                    1091          SUBI.L      #1, D6
+0000181C  BC3C 0000               1092          CMP.B       #0, D6
+00001820  66DE                    1093          BNE         PRINT_WORD_VALUE_LOOP
+00001822  4CDF 0060               1094          MOVEM.L    (A7)+, D5-D6
+00001826  4E75                    1095          RTS
+00001828                          1096  
+00001828                          1097  
+00001828                          1098  
+00001828                          1099  
+00001828                          1100  
+00001828                          1101  -------------------- end include --------------------
+00001828                          1102      INCLUDE         'Sample_Test.x68'
+00001828                          1103  
+00001828                          1104                    ; first instruction of program
+00001828                          1105  
+00001828                          1106  TEST
+00001828  4E75                    1107      RTS
+0000182A  4E71                    1108      NOP
+0000182C                          1109      
+0000182C  1401                    1110      MOVE.B      D1,     D2
+0000182E  3449                    1111      MOVEA.W     A1,     A2
+00001830  48A1 007F               1112      MOVEM.W     A1-A7,  -(A1)
+00001834  7000                    1113      MOVEQ       #$0,    D0
+00001836  7C32                    1114      MOVEQ       #50,  D6
+00001838  45D1                    1115      LEA         (A1),   A2
+0000183A                          1116      
+0000183A  C401                    1117      AND.B       D1,     D2
+0000183C  CA93                    1118      AND.L       (A3),   D5
+0000183E  C262                    1119      AND.W       -(A2),  D1
+00001840  C07C 007B               1120      AND.W       #123,   D0         
+00001844  C4B9 0000A000           1121      AND.L       $A000,  D2          *shows up as A000 in data
+0000184A  C479 0000A000           1122      AND.W       $0000A000, D2       *shows up as 0000A000 in data
+00001850  C01E                    1123      AND.B       (A6)+,  D0
+00001852  C312                    1124      AND.B       D1,     (A2)
+00001854  C579 FFFF1234           1125      AND.W       D2, $FFFF1234       *shows up as A000 in data, MOVE.L will take word from next opcode
+0000185A                          1126      
+0000185A  8401                    1127      OR.B        D1,     D2
+0000185C  8C38 1234               1128      OR.B        $00001234,  D6
+00001860  8E39 0000ABCD           1129      OR.B        $ABCD,  D7
+00001866  8D39 1234ABCD           1130      OR.B        D6,     $1234ABCD
+0000186C  8F39 0000ABCD           1131      OR.B        D7,     $ABCD
+00001872                          1132      
+00001872  70CD                    1133      MOVEQ       #$CD,    D0
+00001874  7C32                    1134      MOVEQ       #50,  D6
+00001876                          1135      
+00001876  4600                    1136      NOT.B       D0
+00001878  465A                    1137      NOT.W       (A2)+
+0000187A  46B9 0000A000           1138      NOT.L       $A000
+00001880                          1139  
+00001880                          1140  
+00001880  D401                    1141      ADD.B       D1,     D2
+00001882  D4C1                    1142      ADDA.W      D1,     A2
+00001884  524A                    1143      ADDQ.W      #$1,    A2
+00001886  9401                    1144      SUB.B       D1,     D2
+00001888                          1145      
+00001888  4EB8 1828               1146      JSR         TEST
+0000188C  6E9A                    1147      BGT.B       TEST
+0000188E  6F00 FF98               1148      BLE.W       TEST
+00001892  6700 FF94               1149      BEQ.W       TEST
+00001896  6090                    1150      BRA         TEST
+00001898  4678 1828               1151      NOT         TEST
+0000189C                          1152      
+0000189C  E32A                    1153      LSL.B       D1,     D2
+0000189E  E22A                    1154      LSR.B       D1,     D2
+000018A0  E322                    1155      ASL.B       D1,     D2
+000018A2  E222                    1156      ASR.B       D1,     D2
+000018A4  E33A                    1157      ROL.B       D1,     D2
+000018A6  E23A                    1158      ROR.B       D1,     D2
+000018A8                          1159  
+000018A8                          1160  
+000018A8                          1161  
+000018A8                          1162  
+000018A8                          1163  
+000018A8                          1164  
+000018A8                          1165  
+000018A8                          1166  
+000018A8                          1167  -------------------- end include --------------------
+000018A8                          1168      *INCLUDE         'demo_test.x68'
+000018A8                          1169  
+000018A8                          1170  
+000018A8                          1171  * Put variables and constants here
+000018A8                          1172  
+000018A8= 57 65 6C 63 6F 6D ...   1173  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
+000018CE= 50 6C 65 61 73 65 ...   1174  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
+000018F2= 50 6C 65 61 73 65 ...   1175  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
+00001914= 44 6F 6E 65 20 52 ...   1176  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
+00001928                          1177  * CR and LF for strings above because we want to go to next line after printing message
+00001928                          1178  
+00001928                          1179  STA_ADDR         DS.B        40
+00001950                          1180  END_ADDR         DS.B        40
+00001978                          1181  
+00001978                          1182  * no CR and LF for strings below because we want to print each number and letter
+00001978                          1183  
+00001978= 20 20 00                1184  SPACE_MSG:       DC.B        '  ',0
+0000197B                          1185  
+0000197B= 30 00                   1186  ZERO_MSG:        DC.B        '0',0
+0000197D= 31 00                   1187  ONE_MSG:         DC.B        '1',0
+0000197F= 32 00                   1188  TWO_MSG:         DC.B        '2',0
+00001981= 33 00                   1189  THREE_MSG:       DC.B        '3',0
+00001983= 34 00                   1190  FOUR_MSG:        DC.B        '4',0
+00001985= 35 00                   1191  FIVE_MSG:        DC.B        '5',0
+00001987= 36 00                   1192  SIX_MSG:         DC.B        '6',0
+00001989= 37 00                   1193  SEVEN_MSG:       DC.B        '7',0
+0000198B= 38 00                   1194  EIGHT_MSG:       DC.B        '8',0
+0000198D= 39 00                   1195  NINE_MSG:        DC.B        '9',0
+0000198F= 41 00                   1196  A_MSG:           DC.B        'A',0
+00001991= 42 00                   1197  B_MSG:           DC.B        'B',0
+00001993= 43 00                   1198  C_MSG:           DC.B        'C',0
+00001995= 44 00                   1199  D_MSG:           DC.B        'D',0
+00001997= 45 00                   1200  E_MSG:           DC.B        'E',0
+00001999= 46 00                   1201  F_MSG:           DC.B        'F',0 
+0000199B                          1202  
+0000199B                          1203  
+0000199B                          1204  *-----Carriage Return
+0000199B  =0000000D               1205  CR              EQU          $0D
+0000199B                          1206  *-----------Line Feed
+0000199B  =0000000A               1207  LF              EQU          $0A
+0000199B                          1208  
+0000199B= 0D 0A 00                1209  NEW_LINE:       DC.B         '',CR,LF,0
+0000199E                          1210  
+0000199E                          1211      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -1171,37 +1231,37 @@ ADDR_REG            1553
 ADD_MSG             1521
 AND_MSG             1541
 ASCII_DONE          106E
-A_MSG               1941
+A_MSG               198F
 BRA_MSG             1508
 BYTE_SIZE           15F0
-B_MSG               1943
+B_MSG               1991
 CHECK_OPCODES       116A
 CONVERT_TO_ASCII    1056
 CR                  D
-C_MSG               1945
+C_MSG               1993
 DATAR_EA            1654
-DATA_7_0            17BE
+DATA_7_0            17B2
 DATA_REG            1551
 DONE                1158
 DOT_BYTE            1559
 DOT_LONG            155F
 DOT_WORD            155C
-D_MSG               1947
+D_MSG               1995
 EFFECTIVEADD_5_0    1614
-EIGHT_MSG           193D
-ENDING_MSG          18A4
-END_ADDR            1902
+EIGHT_MSG           198B
+ENDING_MSG          18F2
+END_ADDR            1950
 END_PAREN           1564
-E_MSG               1949
-FIVE_MSG            1937
-FOUR_MSG            1935
-F_MSG               194B
-GOODBYE_MSG         18C6
+E_MSG               1997
+FIVE_MSG            1985
+FOUR_MSG            1983
+F_MSG               1999
+GOODBYE_MSG         1914
 HEX                 1557
-IDATA               1784
+IDATA               1780
 IDATA_EA            174E
 IMM_DATA            1555
-INTRO_MSG           185A
+INTRO_MSG           18A8
 ISOLATE_15_11       124A
 ISOLATE_15_12       11D2
 ISOLATE_15_14       125C
@@ -1219,12 +1279,12 @@ MOVEA_MSG           1517
 MOVEM_MSG           1511
 MOVEQ_MSG           153B
 MOVE_MSG            150C
-NEW_LINE            194D
-NINE_MSG            193F
+NEW_LINE            199B
+NINE_MSG            198D
 NOP_MSG             1537
 NOT_MSG             1504
 NUMBER_ASCII        1070
-ONE_MSG             192F
+ONE_MSG             197D
 OPMODE_8_6          1582
 OP_CODE_ADD         1312
 OP_CODE_ADDA        1324
@@ -1248,28 +1308,32 @@ OR_MSG              1545
 PLUS_SIGN           1566
 PREP_FOR_ROT        15C0
 PRINT_DONE          1126
+PRINT_LONG_VALUE    17C8
+PRINT_LONG_VALUE_LOOP  17CE
 PRINT_LOOP          10F8
 PRINT_MEMORY_LOOP   1098
+PRINT_WORD_VALUE    17FA
+PRINT_WORD_VALUE_LOOP  1800
 REGISTER_11_9       156A
 RETURN              11D0
 REVERSE_DONE        1156
 REVERSE_LOOP        1138
 REVERSE_START       1128
 RTS_MSG             1533
-SEVEN_MSG           193B
-SIX_MSG             1939
+SEVEN_MSG           1989
+SIX_MSG             1987
 SIZE_7_6            15C8
-SPACE_MSG           192A
+SPACE_MSG           1978
 START               1000
-STARTING_MSG        1880
+STARTING_MSG        18CE
 START_PAREN         1562
-STA_ADDR            18DA
+STA_ADDR            1928
 SUB_MSG             152F
-TEST                17DA
-THREE_MSG           1933
-TWO_MSG             1931
-WADDR               17A6
+TEST                1828
+THREE_MSG           1981
+TWO_MSG             197F
+WADDR               179E
 WHITESPACE          154C
 WHITESPACE_COM      154E
 WORD_SIZE           15FC
-ZERO_MSG            192D
+ZERO_MSG            197B
