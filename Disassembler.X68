@@ -298,6 +298,8 @@ BCC_MSG         DC.B        'B', 0
 BLE_MSG         DC.B        'BLE', 0
 BGT_MSG         DC.B        'BGT',0
 BEQ_MSG         DC.B        'BEQ',0
+ADDQ_MSG        DC.B        'ADDQ',0
+ADDA_MSG        DC.B        'ADDA',0
 BYTE_MSG        DC.B        '.B', 0
 WORD_MSG        DC.B        '.W', 0
 LONG_MSG        DC.B        '.L', 0

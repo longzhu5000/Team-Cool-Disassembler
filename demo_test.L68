@@ -1,6 +1,6 @@
 00009000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 8/3/2022 9:24:44 PM
+Created On: 8/9/2022 6:55:01 PM
 
 00000000                             1  *****************************
 00000000                             2  *
@@ -60,32 +60,64 @@ Created On: 8/3/2022 9:24:44 PM
 00009040  E30A                      56      LSL.B     #$1,D2
 00009042  E54A                      57      LSL.W     #$2,D2
 00009044  E78A                      58      LSL.L     #$3,D2
-00009046  E3F8 0012                 59      LSL.W     $12
-0000904A  E3F8 1234                 60      LSL.W     $1234
-0000904E  E3F9 12345678             61      LSL.W     $12345678
-00009054  E202                      62      ASR.B     #$1,D2
-00009056  E442                      63      ASR.W     #$2,D2
-00009058  E682                      64      ASR.L     #$3,D2
-0000905A  E0F8 0012                 65      ASR.W     $12
-0000905E  E0F8 1234                 66      ASR.W     $1234
-00009062  E0F9 12345678             67      ASR.W     $12345678
-00009068                            68  label4
-00009068  6EFE                      69      BGT.B     label4
-0000906A  6EFC                      70      BGT.B     label4
-0000906C  6EFA                      71      BGT.B     label4
-0000906E  6F00 FFD0                 72      BLE.W     label1
-00009072  6F00 FFCC                 73      BLE.W     label2
-00009076  6F00 FFC8                 74      BLE.W     label3
-0000907A  6700 FFC4                 75      BEQ.W     label1
-0000907E  6700 FFC0                 76      BEQ.W     label2
-00009082  6700 FFBC                 77      BEQ.W     label3
-00009086                            78  * Put program code here
-00009086                            79  
-00009086  FFFF FFFF                 80      SIMHALT             ; halt simulator
-0000908A                            81  
-0000908A                            82  * Put variables and constants here
-0000908A                            83  
-0000908A                            84      END    START        ; last line of source
+00009046  E14A                      59      LSL.W     #8, D2
+00009048  E3F8 0012                 60      LSL.W     $12
+0000904C  E3F8 1234                 61      LSL.W     $1234
+00009050  E3F9 12345678             62      LSL.W     $12345678
+00009056  E202                      63      ASR.B     #$1,D2
+00009058  E442                      64      ASR.W     #$2,D2
+0000905A  E682                      65      ASR.L     #$3,D2
+0000905C  E082                      66      ASR.L     #8, D2
+0000905E  E0F8 0012                 67      ASR.W     $12
+00009062  E0F8 1234                 68      ASR.W     $1234
+00009066  E0F9 12345678             69      ASR.W     $12345678
+0000906C                            70  label4
+0000906C  6EFE                      71      BGT.B     label4
+0000906E  6EFC                      72      BGT.B     label4
+00009070  6EFA                      73      BGT.B     label4
+00009072  6F00 FFCC                 74      BLE.W     label1
+00009076  6F00 FFC8                 75      BLE.W     label2
+0000907A  6F00 FFC4                 76      BLE.W     label3
+0000907E  6700 FFC0                 77      BEQ.W     label1
+00009082  6700 FFBC                 78      BEQ.W     label2
+00009086  6700 FFB8                 79      BEQ.W     label3
+0000908A  41D0                      80      LEA     (A0),A0
+0000908C  41D5                      81      LEA     (A5),A0
+0000908E  41D7                      82      LEA     (A7),A0
+00009090  4FD0                      83      LEA     (A0),A7
+00009092  4FD5                      84      LEA     (A5),A7
+00009094  4FD7                      85      LEA     (A7),A7
+00009096  D4C1                      86      ADDA.W        D1,A2
+00009098  D4D1                      87          ADDA.W        (A1),A2
+0000909A  D4D9                      88          ADDA.W        (A1)+,A2
+0000909C  D4E1                      89          ADDA.W        -(A1),A2
+0000909E  D5C1                      90          ADDA.L        D1,A2
+000090A0  D5D1                      91          ADDA.L        (A1),A2
+000090A2  D5D9                      92          ADDA.L        (A1)+,A2
+000090A4  D5E1                      93          ADDA.L        -(A1),A2
+000090A6  D4F8 0012                 94          ADDA.W    $12,A2
+000090AA  D4F8 1234                 95          ADDA.W    $1234,A2
+000090AE  D4F9 12345678             96          ADDA.W    $12345678,A2
+000090B4  D4FC 1234                 97          ADDA.W    #$1234,A2
+000090B8  D5F8 0012                 98          ADDA.L    $12,A2
+000090BC  D5F8 1234                 99          ADDA.L    $1234,A2
+000090C0  D5F9 12345678            100          ADDA.L    $12345678,A2
+000090C6  D5FC 12345678            101          ADDA.L    #$12345678,A2
+000090CC  5003                     102          ADDQ.B    #8, D3
+000090CE  5E4B                     103          ADDQ.W    #7, A3
+000090D0  529B                     104          ADDQ.L    #1, (A3)+
+000090D2  5E52                     105          ADDQ.W    #7, (A2)
+000090D4  54A2                     106          ADDQ.L    #2, -(A2)
+000090D6  50B8 0012                107          ADDQ.L    #8, $12
+000090DA  50B8 1234                108          ADDQ.L    #8, $1234
+000090DE  50B9 12345678            109          ADDQ.L    #8, $12345678
+000090E4                           110  * Put program code here 
+000090E4                           111  
+000090E4  FFFF FFFF                112      SIMHALT             ; halt simulator
+000090E8                           113  
+000090E8                           114  * Put variables and constants here
+000090E8                           115  
+000090E8                           116      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -97,6 +129,6 @@ Symbol-name         Value
 LABEL1              9040
 LABEL2              9040
 LABEL3              9040
-LABEL4              9068
+LABEL4              906C
 NOP                 9000
 START               9000

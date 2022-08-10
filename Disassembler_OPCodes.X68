@@ -65,6 +65,8 @@ ISOLATE_15_12:
         BEQ         OP_CODE_LEA
         CMP.B       #%1101, D4
         BEQ         OP_CODE_ADDA
+        CMP.B       #%0101, D4
+        BEQ         OP_CODE_ADDQ
         RTS
 
 
@@ -101,22 +103,23 @@ OP_CODE_LEA:
         MOVE.L     #8, D6
         JSR        GET_BIT
         MOVEM.L    (A7)+, D5-D6
-        CMP.L      #7, D3
+        CMP.L      #7, D4
         BNE        INSTRUCTION_DECODE_FAILURE
         MOVEM.L    D5-D6, -(A7)
         MOVE.L     #0, D5
         MOVE.L     #5, D6
         JSR        GET_BIT
         MOVEM.L    (A7)+, D5-D6
-        CMP.L      #%111001, D3
+        CMP.L      #%111001, D4
         BEQ        OP_CODE_LEA_PRINT
-        CMP.L      #%111000, D3
+        CMP.L      #%111000, D4
         BEQ        OP_CODE_LEA_PRINT
         MOVEM.L    D5-D6, -(A7)
         MOVE.L     #3, D5
         MOVE.L     #5, D6
         JSR        GET_BIT
         MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%010, D4
         BEQ        OP_CODE_LEA_PRINT
         BRA        INSTRUCTION_DECODE_FAILURE
         *Unreachable
@@ -193,7 +196,7 @@ OP_CODE_ADDA
         BEQ        INSTRUCTION_DECODE_FAILURE
         CMP.L      #%101, D4
         BEQ        INSTRUCTION_DECODE_FAILURE
-        CMP.L      #$110, D4
+        CMP.L      #%110, D4
         BEQ        INSTRUCTION_DECODE_FAILURE
         MOVEM.L    D5-D6, -(A7)
         MOVE.L     #0, D5
@@ -204,6 +207,38 @@ OP_CODE_ADDA
         BEQ        INSTRUCTION_DECODE_FAILURE
         CMP.L      #%111011, D4
         BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%111100, D4
+        BGT        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #3, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%101, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%110, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        LEA        ADDA_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        JSR        ADDA_EA_SIZE_AND_EA  
+        RTS
+
+OP_CODE_ADDQ
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #6, D5
+        MOVE.L     #7, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%11, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #0, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%111001, D4
+        BGT        INSTRUCTION_DECODE_FAILURE
         MOVEM.L    D5-D6, -(A7)
         MOVE.L     #3, D5
         MOVE.L     #5, D6
@@ -216,9 +251,8 @@ OP_CODE_ADDA
         LEA        ADDQ_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        JSR        ADDQ_EA_SIZE_AND_EA  
+        JSR        ADDQ_EA_SIZE_AND_EA
         RTS
-
 
 OP_CODE_OR:
         *check for divu/other opcodes that start with 1000
@@ -308,8 +342,8 @@ OP_CODE_MEMORY_SHIFT_ROTATE
         MOVE.L     #5, D6
         JSR        GET_BIT
         MOVEM.L    (A7)+, D5-D6
-        CMP.L      #58, D4
-        BPL        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%111001, D4
+        BGT        INSTRUCTION_DECODE_FAILURE
         MOVE.L     #9, D5
         MOVE.L     #11, D6
         JSR        GET_BIT
@@ -369,6 +403,20 @@ GET_BIT
 
 *Just RTS, useful to use with a condition
 INSTRUCTION_DECODE_FAILURE
+        MOVE.W  D3, D4
+        LEA DATA_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        LEA SPACE_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        LEA DOLLAR_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        JSR PRINT_WORD_VALUE
+        LEA NEW_LINE, A1
+        MOVE.B      #14, D0
+        TRAP        #15
         RTS
 
 

@@ -57,10 +57,7 @@ SHIFT_ROTATE_REGISTER_SOURCE
     BRA       SHIFT_ROTATE_REGISTER_DEST
 
 SHIFT_ROTATE_REGISTER_DEST
-    LEA        COMMA_MSG, A1
-    MOVE.B      #14,   D0    
-    TRAP        #15
-    LEA        SPACE_MSG, A1
+    LEA        COMMA_MSG, A1    
     MOVE.B      #14,   D0    
     TRAP        #15
     LEA        D_MSG, A1
@@ -71,24 +68,12 @@ SHIFT_ROTATE_REGISTER_DEST
     MOVE.L     #2, D6
     JSR        GET_BIT
     MOVEM.L    (A7)+, D5-D6
-    CMP.L      #0, D4
-    BEQ       SHIFT_ROTATE_COUNT_8
-
-SHIFT_ROTATE_COUNT_1_7
     LEA       ZERO_MSG, A1
     MULU      #2, D4    
     ADDA.L    D4, A1
     MOVE.B      #14,   D0    
     TRAP        #15
     RTS
-
-SHIFT_ROTATE_COUNT_8
-    LEA       EIGHT_MSG, A1
-    MOVE.B      #14,   D0    
-    TRAP        #15
-    RTS
-
-
 
 SHIFT_ROTATE_IMM_SOURCE
     LEA        HASH_MSG, A1
@@ -102,13 +87,26 @@ SHIFT_ROTATE_IMM_SOURCE
     MOVE.L     #11, D6
     JSR        GET_BIT
     MOVEM.L    (A7)+, D5-D6
+    CMP.L      #0, D4
+    BEQ       SHIFT_ROTATE_COUNT_8
+    BRA       SHIFT_ROTATE_COUNT_1_7
+ 
+SHIFT_ROTATE_COUNT_1_7
     LEA       ZERO_MSG, A1
     MULU      #2, D4    
     ADDA.L    D4, A1
     MOVE.B      #14,   D0    
     TRAP        #15
-    BRA      SHIFT_ROTATE_REGISTER_DEST
- 
+    BRA       SHIFT_ROTATE_REGISTER_DEST
+
+SHIFT_ROTATE_COUNT_8
+    LEA       EIGHT_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA       SHIFT_ROTATE_REGISTER_DEST
+
+
+
 
 
 SHIFT_ROTATE_EA_MEMORY
@@ -145,7 +143,8 @@ BR_BYTE_DISPLACEMENT
     LEA         SPACE_MSG,   A1
     MOVE.B      #14,   D0    
     TRAP        #15
-    JSR         PRINT_BYTE_VALUE
+    ADD.L       A3, D4
+    JSR         PRINT_WORD_VALUE
     RTS
 BR_WORD_DISPLACEMENT
     LEA         WORD_MSG, A1
@@ -156,6 +155,8 @@ BR_WORD_DISPLACEMENT
     TRAP        #15
     CLR.L       D4
     MOVE.W      (A3)+, D4
+    ADD.L       A3, D4
+    SUB.L       #2, D4
     JSR         PRINT_WORD_VALUE
     RTS
 
@@ -206,15 +207,15 @@ LEA_EA
 ********************************End of LEA EA functions*******************************
 
 
-*********************************Start of ADDQ EA functions**************************
-ADDQ_EA_SIZE_AND_EA 
+*********************************Start of ADDA EA functions**************************
+ADDA_EA_SIZE_AND_EA 
     MOVEM.L    D5-D6, -(A7)
     MOVE.L     #8, D5
     MOVE.L     #8, D6
     JSR        GET_BIT
     MOVEM.L    (A7)+, D5-D6
     LEA        WORD_MSG, A1
-    MULU       #2, D4
+    MULU       #3, D4
     ADDA.L     D4, A1
     MOVE.B      #14, D0
     TRAP        #15
@@ -229,39 +230,48 @@ ADDQ_EA_SIZE_AND_EA
     JSR        GET_BIT
     MOVEM.L    (A7)+, D5-D6
     CMP.L      #%111100, D4
-    BEQ        ADDQ_EA_IMM_SOURCE
-ADDQ_EA_NON_IMM_SOURCE
+    BEQ        ADDA_EA_IMM_SOURCE
+ADDA_EA_NON_IMM_SOURCE
     MOVEM.L    D3/D5-D6, -(A7)
     MOVE.L     D4, D3     
     JSR        GET_EA
+    LEA         COMMA_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
     MOVEM.L    (A7)+, D3/D5-D6
-    BRA        ADDQ_EA_DEST
-ADDQ_EA_IMM_SOURCE
+    BRA        ADDA_EA_DEST
+ADDA_EA_IMM_SOURCE
+    LEA        HASH_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA        DOLLAR_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
     MOVEM.L    D5-D6, -(A7)
     MOVE.L     #6, D5
     MOVE.L     #8, D6
     JSR        GET_BIT
     MOVEM.L    (A7)+, D5-D6
     CMP.L      #%011, D4
-    BEQ        ADD_EA_IMM_WORD
-ADDQ_EA_IMM_LONG
+    BEQ        ADDA_EA_IMM_WORD
+ADDA_EA_IMM_LONG
     MOVE.L     (A3)+, D4
     JSR        PRINT_LONG_VALUE
 
     LEA         COMMA_MSG,   A1
     MOVE.B      #14,   D0    
     TRAP        #15
-    BRA         ADDQ_EA_DEST
-ADDQ_EA_IMM_WORD
+    BRA         ADDA_EA_DEST
+ADDA_EA_IMM_WORD
     MOVE.W     (A3)+, D4
     JSR        PRINT_WORD_VALUE
 
     LEA         COMMA_MSG,   A1
     MOVE.B      #14,   D0    
     TRAP        #15
-    BRA         ADDQ_EA_DEST
+    BRA         ADDA_EA_DEST
 
-ADDQ_EA_DEST   
+ADDA_EA_DEST   
     MOVEM.L    D5-D6, -(A7)
     MOVE.L     #9, D5
     MOVE.L     #11, D6
@@ -281,7 +291,87 @@ ADDQ_EA_DEST
     RTS
 
 
-*********************************End of ADDQ EA functions***************************
+*********************************End of ADDA EA functions***************************
+
+
+********************************Start of ADDQ EA functions***************************
+ADDQ_EA_SIZE_AND_EA
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #6, D5
+    MOVE.L     #7, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA        BYTE_MSG, A1
+    MULU       #3, D4
+    ADDA.L       D4,  A1
+    MOVE.B      #14, D0
+    TRAP        #15
+    LEA         SPACE_MSG,      A1
+    MOVE.B      #14,            D0    
+    TRAP        #15
+
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #9, D5
+    MOVE.L     #11, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA        HASH_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA        DOLLAR_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    CMP.L      #0, D4
+    BEQ       ADDQ_ADD_COUNT_8
+
+ADDQ_ADD_COUNT_1_7
+    LEA       ZERO_MSG, A1
+    MULU      #2, D4    
+    ADDA.L    D4, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA         COMMA_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #0, D5
+    MOVE.L     #5, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    MOVEM.L    D3/D5-D6, -(A7)
+    MOVE.L     D4, D3
+    JSR        GET_EA
+    MOVEM.L    (A7)+, D3/D5-D6
+    LEA         NEW_LINE,       A1
+    MOVE.B      #14,            D0    
+    TRAP        #15
+    RTS
+
+ADDQ_ADD_COUNT_8
+    LEA       EIGHT_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA         COMMA_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #0, D5
+    MOVE.L     #5, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    MOVEM.L    D3/D5-D6, -(A7)
+    MOVE.L     D4, D3   
+    JSR        GET_EA
+    MOVEM.L    (A7)+, D3/D5-D6
+    LEA         NEW_LINE,       A1
+    MOVE.B      #14,            D0    
+    TRAP        #15
+    RTS
+
+
+
+
+********************************End of ADDQ EA functions*****************************
 *D3 holds the mode+register bits
 *A3 points to current address in memory which is being scanned
 *D5, D6, D4 can be used as temporary storage registers

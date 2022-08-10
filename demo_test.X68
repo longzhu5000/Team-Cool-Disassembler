@@ -56,12 +56,14 @@ label3
     LSL.B     #$1,D2
     LSL.W     #$2,D2
     LSL.L     #$3,D2
+    LSL.W     #8, D2
     LSL.W     $12
     LSL.W     $1234
     LSL.W     $12345678
     ASR.B     #$1,D2
     ASR.W     #$2,D2
     ASR.L     #$3,D2
+    ASR.L     #8, D2
     ASR.W     $12
     ASR.W     $1234
     ASR.W     $12345678
@@ -75,13 +77,44 @@ label4
     BEQ.W     label1
     BEQ.W     label2
     BEQ.W     label3
-* Put program code here
+    LEA     (A0),A0
+    LEA     (A5),A0
+    LEA     (A7),A0
+    LEA     (A0),A7
+    LEA     (A5),A7
+    LEA     (A7),A7
+    ADDA.W        D1,A2
+        ADDA.W        (A1),A2
+        ADDA.W        (A1)+,A2
+        ADDA.W        -(A1),A2
+        ADDA.L        D1,A2
+        ADDA.L        (A1),A2
+        ADDA.L        (A1)+,A2
+        ADDA.L        -(A1),A2
+        ADDA.W    $12,A2
+        ADDA.W    $1234,A2
+        ADDA.W    $12345678,A2
+        ADDA.W    #$1234,A2
+        ADDA.L    $12,A2
+        ADDA.L    $1234,A2
+        ADDA.L    $12345678,A2
+        ADDA.L    #$12345678,A2
+        ADDQ.B    #8, D3
+        ADDQ.W    #7, A3
+        ADDQ.L    #1, (A3)+
+        ADDQ.W    #7, (A2)
+        ADDQ.L    #2, -(A2)
+        ADDQ.L    #8, $12
+        ADDQ.L    #8, $1234
+        ADDQ.L    #8, $12345678
+* Put program code here 
 
     SIMHALT             ; halt simulator
 
 * Put variables and constants here
 
     END    START        ; last line of source
+
 
 
 
