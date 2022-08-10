@@ -284,14 +284,22 @@ label3
     MOVEM.L   $12345678,D1-D7
     MOVEM.W   $12345678,A1/D7
     MOVEM.L   $12345678,A1/D7
-    ADDA.W    $12,A2
-    ADDA.W    $1234,A2
-    ADDA.W    $12345678,A2
-    ADDA.W    #$1234,A2
-    ADDA.L    $12,A2
-    ADDA.L    $1234,A2
-    ADDA.L    $12345678,A2
-    ADDA.L    #$12345678,A2
+    SUB.W    $12,A2
+    SUB.W    $1234,A2
+    SUB.W    $12345678,A2
+    SUB.W    #$1234,A2
+    SUB.L    $12,A2
+    SUB.L    $1234,A2
+    SUB.L    $12345678,A2
+    SUB.L    #$12345678,A2
+    ADD.W    $12,A2
+    ADD.W    $1234,A2
+    ADD.W    $12345678,A2
+    ADD.W    #$1234,A2
+    ADD.L    $12,A2
+    ADD.L    $1234,A2
+    ADD.L    $12345678,A2
+    ADD.L    #$12345678,A2
     MULS.W    $12,D1
     MULS.W    $1234,D1
     MULS.W    $12345678,D1
@@ -346,6 +354,9 @@ label4
     JSR       label1
     JSR       label2
     JSR       label3
+
+
+
 
 
 

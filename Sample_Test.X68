@@ -8,61 +8,29 @@
                   ; first instruction of program
 
 TEST
-    RTS
-    NOP
     
-    MOVE.B      D1,     D2
-    MOVEA.W     A1,     A2
-    MOVEM.W     A1-A7,  -(A1)
-    MOVEQ       #$0,    D0
-    LEA         (A1),   A2
-    
-    AND.B       D1,     D2
-    OR.B        D1,     D2
+    AND.B     D1,$12
+    AND.B     D1,$1234
+    AND.B     D1,$12345678
+    AND.B     $12,D1
+    AND.B     $1234,D1
+    AND.B     $12345678,D1
+    AND.B     #$12,D1
+    AND.W     D1,$12
+    AND.W     D1,$1234
+    AND.W     D1,$12345678
+    AND.W     $12,D1
+    AND.W     $1234,D1
+    AND.W     $12345678,D1
+    AND.W     #$1234,D1
+    AND.L     D1,$12
+    AND.L     D1,$1234
+    AND.L     D1,$12345678
+    AND.L     $12,D1
+    AND.L     $1234,D1
+    AND.L     $12345678,D1
+    AND.L     #$12345678,D1
 
-    ADD.B     D1,D2
-    ADDA.W      D1,     A2
-    ADDQ.W      #$1,    A2
-    SUB.B       D1,     D2
-    SUB.B     D1,D2
-    SUB.B     D1,(A1)
-    SUB.B     D1,(A1)+
-    SUB.B     D1,-(A1)
-    SUB.B     (A1),D1
-    SUB.B     (A1)+,D1
-    SUB.B     -(A1),D1
-    SUB.W     D1,D2
-    SUB.W     D1,A1
-    SUB.W     D1,(A1)
-    SUB.W     D1,(A1)+
-    SUB.W     D1,-(A1)
-    SUB.W     A1,D1
-    SUB.W     (A1),D1
-    SUB.W     (A1)+,D1
-    SUB.W     -(A1),D1
-    SUB.L     D1,D2
-    SUB.L     D1,A1
-    SUB.L     D1,(A1)
-    SUB.L     D1,(A1)+
-    SUB.L     D1,-(A1)
-    SUB.L     A1,D1
-    SUB.L     (A1),D1
-    SUB.L     (A1)+,D1
-    SUB.L     -(A1),D1
-    
-    JSR         TEST
-    BGT.B       TEST
-    BLE.W       TEST
-    BEQ.W       TEST
-    BRA         TEST
-    NOT         TEST
-    
-    LSL.B       D1,     D2
-    LSR.B       D1,     D2
-    ASL.B       D1,     D2
-    ASR.B       D1,     D2
-    ROL.B       D1,     D2
-    ROR.B       D1,     D2
 
 
 

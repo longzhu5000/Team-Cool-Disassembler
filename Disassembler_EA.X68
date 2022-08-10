@@ -1,420 +1,534 @@
-*--------------------------------------------------------------------
-* Title      : EA 
+*-----------------------------------------------------------
+* Title      :
 * Written by :
 * Date       :
-* Description: Compare OPMODE for bit 6-8 of ADD, ADDA, SUB, AND, OR
-*--------------------------------------------------------------------
+* Description:
+*-----------------------------------------------------------
+    
+SHIFT_ROTATE_EA_SIZE
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #6, D5
+    MOVE.L     #7, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA        BYTE_MSG, A1
+    MULU       #3, D4
+    ADDA.L       D4,  A1
+    MOVE.B      #14, D0
+    TRAP        #15
+    LEA         SPACE_MSG,      A1
+    MOVE.B      #14,            D0    
+    TRAP        #15
+    RTS
 
 
-*----------------------------------------------
-* D2 stores unique values for isolation
-* D3 store original data
-* D4 to copy and modify D3      (OPMODE; bit 8-6)
-* D5 to copy and modify D3      (EAMODE; bit 5-3)
-* D6 to copy and modify D3      (EAREG;  bit 2-0)
-*----------------------------------------------
-CHECK_OPMODE:
-        JSR         OPMODE_ISOLATE_8_6
-        
-        RTS
-        
-OPMODE_ISOLATE_8_6:
-        MOVE.L      D3,     D4
-        MOVE.L      #6,     D2
-        LSR.L       D2,     D4
-        MOVE.L      #29,    D2
-        LSL.L       D2,     D4
-        LSR.L       D2,     D4      ;D4 Holds bit 8-6
-        
-        JSR         CMP_OPMODE
-        
-        CMP.B       #$0,    D4      ;<ea>, Dn       EXCEPT FOR SUB (REVERSED)
-        BEQ         OP_FIELD_DN
-        
-        CMP.B       #$1,    D4      ;<ea>, Dn
-        BEQ         OP_FIELD_DN
-        
-        CMP.B       #$2,    D4      ;<ea>, Dn
-        BEQ         OP_FIELD_DN
-        
-        CMP.B       #$4,    D4      ;Dn, <ea>
-        BEQ         OP_FIELD_EA
-        
-        CMP.B       #$5,    D4      ;Dn, <ea>
-        BEQ         OP_FIELD_EA
-        
-        CMP.B       #$6,    D4      ;Dn, <ea>
-        BEQ         OP_FIELD_EA
-        
-        CMP.B       #$3,    D4      ;#$3 and #$7 are ADDA
-        BEQ         OP_FIELD_DN
-        
-        CMP.B       #$7,    D4
-        BEQ         OP_FIELD_DN
-        
-        RTS
-        
-OP_FIELD_DN:
-        JSR         ISO_EA
-                
-        LEA         COMMA_MSG,  A1
-        MOVE.B      #14,        D0
+
+
+SHIFT_ROTATE_EA_REGISTER
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #5, D5
+    MOVE.L     #5, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    CMP.L      #1,  D4
+    BNE        SHIFT_ROTATE_IMM_SOURCE
+
+SHIFT_ROTATE_REGISTER_SOURCE
+    LEA        D_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #9, D5
+    MOVE.L     #11, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA       ZERO_MSG, A1
+    MULU      #2, D4    
+    ADDA.L    D4, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA       SHIFT_ROTATE_REGISTER_DEST
+
+SHIFT_ROTATE_REGISTER_DEST
+    LEA        COMMA_MSG, A1    
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA        D_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #0, D5
+    MOVE.L     #2, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA       ZERO_MSG, A1
+    MULU      #2, D4    
+    ADDA.L    D4, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    RTS
+
+SHIFT_ROTATE_IMM_SOURCE
+    LEA        HASH_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA        DOLLAR_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #9, D5
+    MOVE.L     #11, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    CMP.L      #0, D4
+    BEQ       SHIFT_ROTATE_COUNT_8
+    BRA       SHIFT_ROTATE_COUNT_1_7
+ 
+SHIFT_ROTATE_COUNT_1_7
+    LEA       ZERO_MSG, A1
+    MULU      #2, D4    
+    ADDA.L    D4, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA       SHIFT_ROTATE_REGISTER_DEST
+
+SHIFT_ROTATE_COUNT_8
+    LEA       EIGHT_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA       SHIFT_ROTATE_REGISTER_DEST
+
+
+
+
+
+SHIFT_ROTATE_EA_MEMORY
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #0, D5
+    MOVE.L     #5, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    MOVEM.L    D3/D5-D6, -(A7)
+    MOVE.L     D4, D3
+    JSR        GET_EA
+    MOVEM.L    (A7)+, D3/D5-D6
+    RTS
+    
+GET_EA
+    MOVE.L     #3, D5
+    MOVE.L     #5, D6
+    JSR        GET_BIT
+    CMP.L      #0, D4
+    BEQ        EA_DATA_REGISTER
+    CMP.L      #1, D4
+    BEQ        EA_ADDR_REGISTER
+    CMP.L      #2, D4
+    BEQ        EA_INDIRECT
+    CMP.L      #3, D4
+    BEQ        EA_INDIRECT_INCREMENT
+    CMP.L      #4, D4
+    BEQ        EA_INDIRECT_DECREMENT
+    *101, and 110 mode bits should be detected in disassembler_OPCodes 
+    MOVE.L     #0, D5
+    MOVE.L     #2, D6
+    JSR        GET_BIT
+    CMP.L      #0, D4
+    BEQ        EA_ABS_WORD
+    CMP.L      #1, D4
+    BEQ        EA_ABS_LONG
+    *Unreachable
+    RTS
+    
+
+*D3 holds the mode+register bits
+*A3 points to current address in memory which is being scanned
+*D5, D6, D4 can be used as temporary storage registers
+EA_DATA_REGISTER
+    LEA   D_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA    ZERO_MSG, A1
+    MOVE.L     #0, D5
+    MOVE.L     #2, D6
+    JSR        GET_BIT
+    MULU       #2, D4
+    ADDA.L     D4, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    RTS
+
+
+EA_ADDR_REGISTER
+    LEA   A_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA    ZERO_MSG, A1
+    MOVE.L     #0, D5
+    MOVE.L     #2, D6
+    JSR        GET_BIT
+    MULU       #2, D4
+    ADDA.L     D4, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    RTS
+
+
+EA_INDIRECT
+    LEA   OPEN_PARENTHESIS_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA   A_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA    ZERO_MSG, A1
+    MOVE.L     #0, D5
+    MOVE.L     #2, D6
+    JSR        GET_BIT
+    MULU       #2, D4
+    ADDA.L     D4, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA   CLOSE_PARENTHESIS_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    RTS
+
+
+
+EA_INDIRECT_INCREMENT
+    LEA   OPEN_PARENTHESIS_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA   A_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA    ZERO_MSG, A1
+    MOVE.L     #0, D5
+    MOVE.L     #2, D6
+    JSR        GET_BIT
+    MULU       #2, D4
+    ADDA.L     D4, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA   CLOSE_PARENTHESIS_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA   PLUS_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    RTS
+
+
+EA_INDIRECT_DECREMENT
+    LEA   MINUS_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA   OPEN_PARENTHESIS_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA   A_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA    ZERO_MSG, A1
+    MOVE.L     #0, D5
+    MOVE.L     #2, D6
+    JSR        GET_BIT
+    MULU       #2, D4
+    ADDA.L     D4, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    LEA   CLOSE_PARENTHESIS_MSG, A1
+    MOVE.B   #14,  D0    
+    TRAP     #15
+    RTS
+
+
+
+EA_ABS_WORD
+    CLR.L      D4
+    MOVE.W     (A3)+, D4
+    LEA        DOLLAR_MSG,       A1
+    MOVE.B      #14,            D0    
+    TRAP        #15
+    JSR        PRINT_WORD_VALUE
+    RTS
+
+EA_ABS_LONG
+    MOVE.L    (A3)+, D4
+    LEA        DOLLAR_MSG,       A1
+    MOVE.B      #14,            D0    
+    TRAP        #15
+    JSR        PRINT_LONG_VALUE
+    RTS
+
+
+
+
+*Prints the byte size value.
+*The value is in D4
+PRINT_BYTE_VALUE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #2, D6
+PRINT_BYTE_VALUE_LOOP
+        *Gets the most significant bit basically
+        *Could use GET_BIT subroutine but it is 
+        *costly in terms of registers used
+        MOVE.B     D4, D5
+        LSR.B      #4, D5
+        LSL.B      #4, D4
+        LEA        ZERO_MSG,      A1
+        * load the address of Zero_msg
+        * because all of the msgs are stored next to each other in order
+        * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+        * and then add it to the address starting at zero_msg
+        MULU         #2,            D5
+        ADDA.L       D5,            A1
+        MOVE.B      #14, D0
         TRAP        #15
-        
-        JSR         ISO_REG_11_9
-        
-        RTS
-        
-OP_FIELD_EA:
-        JSR         ISO_REG_11_9
-        
-        LEA         COMMA_MSG,  A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        JSR         ISO_EA
-        
-        RTS
-*-------------------------------------
-CMP_OPMODE:
-        CMP.B       #$0,    D4       
-        BEQ         TYPE_B
-        
-        CMP.B       #$1,    D4
-        BEQ         TYPE_W
-        
-        CMP.B       #$2,    D4
-        BEQ         TYPE_L
-        
-        CMP.B       #$4,    D4
-        BEQ         TYPE_B
-        
-        CMP.B       #$5,    D4
-        BEQ         TYPE_W
-        
-        CMP.B       #$6,    D4
-        BEQ         TYPE_L
-        
-        BNE         OP_ADDA
-        
-        RTS
-*------------------------------------------        
-ISO_EA:
-        CLR.L       D5
-        CLR.L       D6
-        CLR.L       D2
-        
-        MOVE.L      D3,     D5          ;isolate EA Mode bit 5-3, store in D5
-        MOVE.L      #3,     D2          
-        LSR.L       D2,     D5
-        MOVE.L      #29,    D2
-        LSL.L       D2,     D5
-        LSR.L       D2,     D5
-        
-        MOVE.L      D3,     D6          ;isolate EA Reg bit 2-0, store in D6
-        MOVE.L      #29,    D2
-        LSL.L       D2,     D6
-        LSR.L       D2,     D6          
-        JSR         EA_MODE
-        
+        SUBI.L      #1, D6
+        CMP.B       #0, D6
+        BNE         PRINT_BYTE_VALUE_LOOP
+        MOVEM.L    (A7)+, D5-D6
         RTS
 
-ISO_REG_11_9:
-        CLR.L       D6
-        CLR.L       D5
-        CLR.L       D2
-        
-        CMP.B       #$3,    D4
-        BEQ         IS_ADDA
-        CMP.B       #$7,    D4
-        BEQ         IS_ADDA
-        
-        MOVE.L      D3,     D6          ;isolate bit 11-9 for register
-        MOVE.L      #9,     D2
-        LSR.L       D2,     D6
-        MOVE.L      #29,    D2
-        LSL.L       D2,     D6
-        LSR.L       D2,     D6 
-        
-        JSR         EA_MODE
-        
-        RTS
-        
-*-------------------------------------
-* Because ADDA is unique
-* always prints out An as destination
-*-------------------------------------
-IS_ADDA:
-        LEA         SPACE_MSG,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        LEA         A_MSG,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        
-        MOVE.L      D3,     D6
-        MOVE.L      #9,     D2
-        LSR.L       D2,     D6
-        MOVE.L      #29,    D2
-        LSL.L       D2,     D6
-        LSR.L       D2,     D6 
-        
-        JSR         REG
 
-        RTS
-*---------------------------------------
-EA_MODE:                                ;Finds out EA mode value and type        
-        CMP.B       #0,     D5
-        BEQ         DN
-        CMP.B       #1,     D5
-        BEQ         AN_DIRECT
-        CMP.B       #2,     D5
-        BEQ         AN_INDIRECT
-        CMP.B       #3,     D5
-        BEQ         AN_INC
-        CMP.B       #4,     D5
-        BEQ         AN_DEC
-        CMP.B       #7,     D5
-        BEQ         ABSOLUTE
-        
+
+*Prints the word size value.
+*The value is in D4
+PRINT_WORD_VALUE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #4, D6
+PRINT_WORD_VALUE_LOOP
+        *Gets the most significant bit basically
+        *Could use GET_BIT subroutine but it is 
+        *costly in terms of registers used
+        MOVE.W     D4, D5
+        LSR.W      #6, D5
+        LSR.W      #6, D5
+        LSL.W      #4, D4
+        LEA        ZERO_MSG,      A1
+        * load the address of Zero_msg
+        * because all of the msgs are stored next to each other in order
+        * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+        * and then add it to the address starting at zero_msg
+        MULU         #2,            D5
+        ADDA.L       D5,            A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        SUBI.L      #1, D6
+        CMP.B       #0, D6
+        BNE         PRINT_WORD_VALUE_LOOP
+        MOVEM.L    (A7)+, D5-D6
         RTS
 
-REG:                                    ;Finds out REG BIT value and type
-        CMP.B       #0,     D6
-        BEQ         ZERO                ;value of bits 0-7
-        CMP.B       #1,     D6
-        BEQ         ONE
-        CMP.B       #2,     D6
-        BEQ         TWO
-        CMP.B       #3,     D6
-        BEQ         THREE
-        CMP.B       #4,     D6
-        BEQ         FOUR
-        CMP.B       #5,     D6
-        BEQ         FIVE
-        CMP.B       #6,     D6
-        BEQ         SIX
-        CMP.B       #7,     D6
-        BEQ         SEVEN
+
+*Prints the long size value.
+*The value is in D4
+PRINT_LONG_VALUE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #8, D6
+PRINT_LONG_VALUE_LOOP
+        *Gets the most significant bit basically
+        *Could use GET_BIT subroutine but it is 
+        *costly in terms of registers used
+        MOVE.L     D4, D5
+        LSR.L      #8, D5
+        LSR.L      #8, D5
+        LSR.L      #8, D5
+        LSR.L      #4, D5
+        LSL.L      #4, D4
+        LEA        ZERO_MSG,      A1
+        * load the address of Zero_msg
+        * because all of the msgs are stored next to each other in order
+        * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+        * and then add it to the address starting at zero_msg
+        MULU         #2,            D5
+        ADDA.L       D5,            A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        SUBI.L      #1, D6
+        CMP.B       #0, D6
+        BNE         PRINT_LONG_VALUE_LOOP
+        MOVEM.L    (A7)+, D5-D6
         RTS
         
         
-*---------------------------------------
-DN:
-        LEA         SPACE_MSG,  A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        LEA         D_MSG,      A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        ;CODE HERE
-        JSR         REG
-        RTS
-        
-AN_DIRECT:
-        LEA         SPACE_MSG,  A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        LEA         A_MSG,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        ;CODE HERE
-        JSR         REG
-        RTS
-        
-AN_INDIRECT:
-        LEA         SPACE_MSG,  A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        LEA         OPEN_PAR,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        LEA         A_MSG,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        ;CODE HERE
-        JSR         REG
-        LEA         CLOSE_PAR,  A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        RTS
-        
-AN_INC:
-        LEA         SPACE_MSG,  A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        LEA         OPEN_PAR,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        LEA         A_MSG,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        ;CODE HERE
-        JSR         REG
-        LEA         CLOSE_PAR,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        LEA         PLUS_MSG,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        
-        RTS
-        
-AN_DEC:
-        LEA         SPACE_MSG,  A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        LEA         MINUS_MSG,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        LEA         OPEN_PAR,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        LEA         A_MSG,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        ;CODE HERE
-        JSR         REG
-        LEA         CLOSE_PAR,  A1
-        MOVE.B      #14,    D0
-        TRAP        #15
-        
-        RTS
-        
-ABSOLUTE:
-        LEA         SPACE_MSG,  A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        CMP.B       #0,     D5
-        BEQ         WORD_TYPE
-        CMP.B       #1,     D5
-        BEQ         LONG_TYPE
-        CMP.B       #4,     D5          ;Compare for immediate data
-        BEQ         IM_DATA
-        
-        RTS
         
 *------------------------------------
-ZERO:
-        LEA         ZERO_MSG,   A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        RTS
-ONE:
-        LEA         ONE_MSG,    A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        RTS
-TWO:
-        LEA         TWO_MSG,    A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        RTS
-THREE:
-        LEA         THREE_MSG,    A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        RTS
-FOUR:
-        LEA         FOUR_MSG,    A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        RTS
-FIVE:
-        LEA         FIVE_MSG,    A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        RTS
-SIX:
-        LEA         SIX_MSG,    A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        RTS
-SEVEN:
-        LEA         SEVEN_MSG,  A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-        
-        RTS
 *------------------------------------
-* ABSOLUTE EA MODE -> REGISTER TYPE
-*------------------------------------
-WORD_TYPE:
-        LEA         DOLLAR_MSG, A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-*        JSR         GET_VALUE_W
-        
-        RTS
-        
-LONG_TYPE:
-        LEA         DOLLAR_MSG, A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-*        JSR         GET_VALUE_W
-        
-        RTS
 
-IM_DATA:
-        LEA         HASH_MSG,   A1
-        MOVE.B      #14,        D0
-        TRAP        #15
-*        JSR         GET_DATA
-        
-        RTS
+ADD_EA_SIZE_AND_EA 
+    MOVEM.L     D5-D6, -(A7)
+    MOVE.L      #8, D5
+    MOVE.L      #8, D6
+    JSR         GET_BIT
+    MOVEM.L     (A7)+, D5-D6
+    LEA         WORD_MSG, A1
+    MULU        #3, D4
+    ADDA.L      D4, A1
+    MOVE.B      #14, D0
+    TRAP        #15
 
-*------------------------------------
-* OPMODE values
-* ADDA: has unique OPMODE; unique implementation
-*------------------------------------
-TYPE_B:
-        LEA     BYTE_MSG, A1
-        MOVE.B  #14,    D0
-        TRAP    #15
-        
-        RTS
-        
-TYPE_W:
-        LEA     WORD_MSG, A1
-        MOVE.B  #14,    D0
-        TRAP    #15
-        
-        RTS
-        
-TYPE_L:
-        LEA     LONG_MSG, A1
-        MOVE.B  #14,    D0
-        TRAP    #15        
-        
-        RTS
-        
-OP_ADDA:
-        CMP.B   #%011,      D4
-        BEQ     ADDA_W
-        CMP.B   #%111,      D4
-        BEQ     ADDA_L
-        
-ADDA_W:
-        LEA     ADDA_W_MSG, A1
-        MOVE.B  #14,    D0
-        TRAP    #15        
+    LEA         SPACE_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
 
-        RTS
-ADDA_L:
-        LEA     ADDA_L_MSG, A1
-        MOVE.B  #14,    D0
-        TRAP    #15        
+    MOVEM.L     D5-D6, -(A7)
+    MOVE.L      #0, D5
+    MOVE.L      #5, D6
+    JSR         GET_BIT
+    MOVEM.L     (A7)+, D5-D6
+    CMP.L       #%111100, D4
+    BEQ         ADD_EA_IMM_SOURCE
+    
+ADD_EA_NON_IMM_SOURCE
+    MOVEM.L     D3/D5-D6, -(A7)
+    MOVE.L      D4, D3     
+    JSR         GET_EA
+    LEA         COMMA_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L     (A7)+, D3/D5-D6
+    BRA         ADD_EA_DEST
+    
+ADD_EA_IMM_SOURCE
+    LEA         HASH_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA         DOLLAR_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L     D5-D6, -(A7)
+    MOVE.L      #6, D5
+    MOVE.L      #8, D6
+    JSR         GET_BIT
+    MOVEM.L     (A7)+, D5-D6
+    CMP.L       #%011, D4
+    BEQ         ADD_EA_IMM_WORD
+    
+ADD_EA_IMM_LONG
+    MOVE.L      (A3)+, D4
+    JSR         PRINT_LONG_VALUE
 
-        RTS
-        
+    LEA         COMMA_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA         ADD_EA_DEST
+    
+ADD_EA_IMM_WORD
+    MOVE.W      (A3)+, D4
+    JSR         PRINT_WORD_VALUE
+
+    LEA         COMMA_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA         ADD_EA_DEST
+
+ADD_EA_DEST
+    MOVEM.L     D5-D6, -(A7)
+    MOVE.L      #9, D5
+    MOVE.L      #11, D6
+    JSR         GET_BIT
+    MOVEM.L     (A7)+, D5-D6
+    LEA         A_MSG, A1
+    MOVE.B      #14,  D0    
+    TRAP        #15
+    LEA         ZERO_MSG, A1
+    MULU        #2, D4
+    ADDA.L      D4, A1
+    MOVE.B      #14,  D0    
+    TRAP        #15
+    RTS
+    
+    
+*--------- SUB -----------
+
+SUB_EA_SIZE_AND_EA 
+    MOVEM.L     D5-D6, -(A7)
+    MOVE.L      #8, D5
+    MOVE.L      #8, D6
+    JSR         GET_BIT
+    MOVEM.L     (A7)+, D5-D6
+    LEA         WORD_MSG, A1
+    MULU        #3, D4
+    ADDA.L      D4, A1
+    MOVE.B      #14, D0
+    TRAP        #15
+
+    LEA         SPACE_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+
+    MOVEM.L     D5-D6, -(A7)
+    MOVE.L      #0, D5
+    MOVE.L      #5, D6
+    JSR         GET_BIT
+    MOVEM.L     (A7)+, D5-D6
+    CMP.L       #%111100, D4
+    BEQ         SUB_EA_IMM_SOURCE
+    
+SUB_EA_NON_IMM_SOURCE
+    MOVEM.L     D3/D5-D6, -(A7)
+    MOVE.L      D4, D3     
+    JSR         GET_EA
+    LEA         COMMA_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L     (A7)+, D3/D5-D6
+    BRA         SUB_EA_DEST
+    
+SUB_EA_IMM_SOURCE
+    LEA         HASH_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA         DOLLAR_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L     D5-D6, -(A7)
+    MOVE.L      #6, D5
+    MOVE.L      #8, D6
+    JSR         GET_BIT
+    MOVEM.L     (A7)+, D5-D6
+    CMP.L       #%011, D4
+    BEQ         SUB_EA_IMM_WORD
+
+SUB_EA_IMM_LONG
+    MOVE.L      (A3)+, D4
+    JSR         PRINT_LONG_VALUE
+
+    LEA         COMMA_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA         SUB_EA_DEST
+    
+SUB_EA_IMM_WORD
+    MOVE.W      (A3)+, D4
+    JSR         PRINT_WORD_VALUE
+
+    LEA         COMMA_MSG,   A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    BRA         SUB_EA_DEST
+
+SUB_EA_DEST   
+    MOVEM.L     D5-D6, -(A7)
+    MOVE.L      #9, D5
+    MOVE.L      #11, D6
+    JSR         GET_BIT
+    MOVEM.L     (A7)+, D5-D6
+    LEA         A_MSG, A1
+    MOVE.B      #14,  D0    
+    TRAP        #15
+    LEA         ZERO_MSG, A1
+    MULU        #2, D4
+    ADDA.L      D4, A1
+    MOVE.B      #14,  D0    
+    TRAP        #15
+    RTS
+    
+    
+
+
 
 
 

@@ -171,7 +171,7 @@ PRINT_LOOP:
         
         * Bit shifting to prep the next digit
         * 1234 4567 => 0123 4567
-        ASR.L       #4, D3
+        LSR.L       #4, D3
         
         *Assuming D4 is empty
         
@@ -240,9 +240,8 @@ DONE:
     *SIMHALT             ; halt simulator
 
     INCLUDE         'Disassembler_OPCodes.x68'
-    INCLUDE         'Disassembler_EA.x68'
-    INCLUDE         'Sample_Test.x68'
     INCLUDE         'demo_test.x68'
+    INCLUDE         'Disassembler_EA.x68'
 
 
 * Put variables and constants here
@@ -277,18 +276,17 @@ D_MSG:           DC.B        'D',0
 E_MSG:           DC.B        'E',0
 F_MSG:           DC.B        'F',0 
 
-BYTE_MSG:        DC.B        '.B',0
-WORD_MSG:        DC.B        '.W',0
-LONG_MSG:        DC.B        '.L',0
-ADDA_W_MSG:      DC.B        'A.W',0
-ADDA_L_MSG:      DC.B        'A.L',0
-COMMA_MSG:       DC.B        ',',0
-DOLLAR_MSG:      DC.B        '$',0
-HASH_MSG:        DC.B        '#',0
-PLUS_MSG:        DC.B        '+',0
-MINUS_MSG:       DC.B        '-',0
-CLOSE_PAR:       DC.B        ')',0
-OPEN_PAR:        DC.B        '(',0
+BYTE_MSG        DC.B        '.B',0
+WORD_MSG        DC.B        '.W',0
+LONG_MSG        DC.B        '.L',0
+        
+COMMA_MSG       DC.B        ',',0
+DOLLAR_MSG      DC.B        '$',0
+HASH_MSG        DC.B        '#',0
+PLUS_MSG        DC.B        '+',0
+MINUS_MSG       DC.B        '-',0
+OPEN_PARENTHESIS_MSG  DC.B  '(',0
+CLOSE_PARENTHESIS_MSG DC.B  ')',0
 *-----Carriage Return
 CR              EQU          $0D
 *-----------Line Feed
@@ -297,16 +295,6 @@ LF              EQU          $0A
 NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
-
-
-
-
-
-
-
-
-
-
 
 
 

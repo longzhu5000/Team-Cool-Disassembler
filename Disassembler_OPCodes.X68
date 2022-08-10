@@ -200,10 +200,8 @@ OP_CODE_ADD:
         LEA         ADD_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        
-        JSR CHECK_OPMODE
-        
-        MOVE.B      #1,      D6
+        JSR         ADD_EA_SIZE_AND_EA
+        MOVE.B      #1,     D6
         
         RTS
         
@@ -211,8 +209,6 @@ OP_CODE_ADDA:
         LEA         ADDA_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
-        
-        JSR CHECK_OPMODE
         
         MOVE.B      #1,      D6
         
@@ -232,10 +228,9 @@ OP_CODE_SUB:
         MOVE.B      #14, D0
         TRAP        #15
         
-        JSR CHECK_OPMODE
-        
+        JSR         SUB_EA_SIZE_AND_EA
         MOVE.B      #1,      D6
-        
+
         RTS
         
 *------------------------        
@@ -272,7 +267,7 @@ OP_CODE_AND:
         MOVE.B      #14, D0
         TRAP        #15
         
-        JSR CHECK_OPMODE
+
         
         MOVE.B      #1,      D6
         
@@ -283,7 +278,7 @@ OP_CODE_OR:
         MOVE.B      #14, D0
         TRAP        #15
         
-        JSR CHECK_OPMODE
+
         
         MOVE.B      #1,      D6
         
@@ -297,7 +292,7 @@ OP_CODE_JSR:
         MOVE.B      #1,      D6
         
         RTS
-
+        
 NOT_MSG:        DC.B        'NOT',0
 BRA_MSG:        DC.B        'BRA',0
 
@@ -317,6 +312,23 @@ MOVEQ_MSG:      DC.B        'MOVEQ',0
 AND_MSG:        DC.B        'AND',0
 OR_MSG:         DC.B        'OR',0
 JSR_MSG:        DC.B        'JSR',0
+
+*------------ Helpful Subroutines ------------
+GET_BIT
+        CLR.L   D4
+        MOVE.W  D3, D4   
+        *Shift it to left by 15-y to get rid of all the bits to the left of yth bit 
+        *and then shift the bits such that the xth bit is the 0th bit
+        NEG.L   D6
+        ADDI.L  #15, D6
+        ADD.L   D6, D5
+        LSL.W   D6, D4
+        LSR.W   D5, D4
+        RTS
+
+        
+
+
 
 
 
