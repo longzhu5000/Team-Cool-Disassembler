@@ -119,9 +119,6 @@ SHIFT_ROTATE_EA_MEMORY
     MOVE.L     D4, D3
     JSR        GET_EA
     MOVEM.L    (A7)+, D3/D5-D6
-    LEA         NEW_LINE,       A1
-    MOVE.B      #14,            D0    
-    TRAP        #15
     RTS
 
 ********************************End of shift/rotate EA functions**************************
@@ -143,8 +140,22 @@ BR_BYTE_DISPLACEMENT
     LEA         SPACE_MSG,   A1
     MOVE.B      #14,   D0    
     TRAP        #15
+    MOVEM.L     D5, -(A7)
+    MOVE.L      D4, D5
+    ROL.B       #1, D5
+    ANDI.L      #1, D5
+    CMP.B       #1, D5
+    BEQ         NEG_BYTE_DISPLACEMENT
+    MOVEM.L    (A7)+, D5
     ADD.L       A3, D4
-    JSR         PRINT_WORD_VALUE
+    JSR         PRINT_LONG_VALUE
+    RTS
+NEG_BYTE_DISPLACEMENT
+    MOVEM.L    (A7)+, D5
+    NEG.B       D4
+    SUB.L       A3, D4
+    NEG.L       D4
+    JSR         PRINT_LONG_VALUE
     RTS
 BR_WORD_DISPLACEMENT
     LEA         WORD_MSG, A1
@@ -152,12 +163,27 @@ BR_WORD_DISPLACEMENT
     TRAP        #15
     LEA         SPACE_MSG,   A1
     MOVE.B      #14,   D0    
-    TRAP        #15
+    TRAP        #15 
     CLR.L       D4
     MOVE.W      (A3)+, D4
+    MOVEM.L     D5, -(A7)
+    MOVE.L      D4, D5
+    ROL.W       #1, D5
+    ANDI.L      #1, D5
+    CMP.B       #1, D5
+    BEQ         NEG_WORD_DISPLACEMENT
+    MOVEM.L    (A7)+, D5
     ADD.L       A3, D4
     SUB.L       #2, D4
-    JSR         PRINT_WORD_VALUE
+    JSR         PRINT_LONG_VALUE
+    RTS
+NEG_WORD_DISPLACEMENT
+    MOVEM.L    (A7)+, D5
+    NEG.W       D4
+    SUB.L       A3, D4
+    NEG.L       D4
+    SUB.L       #2, D4
+    JSR         PRINT_LONG_VALUE
     RTS
 
 
@@ -196,11 +222,6 @@ LEA_EA
     ADDA.L    D4, A1
     MOVE.B      #14,   D0    
     TRAP        #15
-
-    LEA         NEW_LINE,       A1
-    MOVE.B      #14,            D0    
-    TRAP        #15
-    
     RTS
 
 
@@ -285,9 +306,6 @@ ADDA_EA_DEST
     ADDA.L     D4, A1
     MOVE.B   #14,  D0    
     TRAP     #15
-    LEA         NEW_LINE,       A1
-    MOVE.B      #14,            D0    
-    TRAP        #15
     RTS
 
 
@@ -342,9 +360,6 @@ ADDQ_ADD_COUNT_1_7
     MOVE.L     D4, D3
     JSR        GET_EA
     MOVEM.L    (A7)+, D3/D5-D6
-    LEA         NEW_LINE,       A1
-    MOVE.B      #14,            D0    
-    TRAP        #15
     RTS
 
 ADDQ_ADD_COUNT_8
@@ -363,9 +378,6 @@ ADDQ_ADD_COUNT_8
     MOVE.L     D4, D3   
     JSR        GET_EA
     MOVEM.L    (A7)+, D3/D5-D6
-    LEA         NEW_LINE,       A1
-    MOVE.B      #14,            D0    
-    TRAP        #15
     RTS
 
 

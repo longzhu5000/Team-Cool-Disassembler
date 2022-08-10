@@ -47,6 +47,7 @@ NOP
     BGE.B     label1
     BEQ.B     label2
     BEQ.W     label1
+    BRA       label1
 label1
 
 label2
