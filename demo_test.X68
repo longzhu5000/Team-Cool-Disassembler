@@ -16,6 +16,15 @@ start		EQU	$00009000	* ORG and END address
 		ORG	start
 
 NOP
+    SUB.B     (A0), D0
+    SUB.L     (A1), D1
+    SUB.L     D1, $A000
+    SUB.L     D1, $12345678
+    SUB.W     D1, $1234
+    SUB.W     D1, (A1)
+    SUB.L     D1, (A0)
+    SUB.W     D1, (A1)+
+    SUB.L     D1, -(A1)
     LSL.B     D1,D2
     LSL.W     D1,D2
     LSL.W     (A1)

@@ -384,6 +384,98 @@ ADDQ_ADD_COUNT_8
 
 
 ********************************End of ADDQ EA functions*****************************
+
+********************************Start of ADD EA functions****************************
+
+ADD_SUB_EA_SIZE
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #6, D5
+    MOVE.L     #8, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    ANDI.L     #%011, D4
+    LEA        BYTE_MSG, A1
+    MULU       #3, D4
+    ADDA.L       D4,  A1
+    MOVE.B      #14, D0
+    TRAP        #15
+    RTS
+
+ADD_SUB_EA_REG
+    LEA        D_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #9, D5
+    MOVE.L     #11, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    LEA       ZERO_MSG, A1
+    MULU      #2, D4    
+    ADDA.L    D4, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    RTS
+
+
+ADD_SUB_EA_EA
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #0, D5
+    MOVE.L     #5, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    CMP.L      #%111100, D4
+    BEQ        ADD_SUB_EA_EA_IMM
+    MOVEM.L    D3/D5-D6, -(A7)
+    MOVE.L     D4, D3   
+    JSR        GET_EA
+    MOVEM.L    (A7)+, D3/D5-D6
+    RTS
+
+ADD_SUB_EA_EA_IMM
+    LEA        HASH_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    LEA        DOLLAR_MSG, A1
+    MOVE.B      #14,   D0    
+    TRAP        #15
+    MOVEM.L    D5-D6, -(A7)
+    MOVE.L     #6, D5
+    MOVE.L     #8, D6
+    JSR        GET_BIT
+    MOVEM.L    (A7)+, D5-D6
+    ANDI.L     #%011, D4
+    CMP.L      #%010, D4
+    BNE        ADD_SUB_EA_EA_IMM_WORD
+ADD_SUB_EA_EA_IMM_LONG
+    MOVE.L     (A3)+, D4
+    JSR         PRINT_LONG_VALUE
+    RTS
+ADD_SUB_EA_EA_IMM_WORD
+    MOVE.W     (A3)+, D4
+    JSR        PRINT_WORD_VALUE
+    RTS
+
+
+********************************End of ADD EA functions*****************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 *D3 holds the mode+register bits
 *A3 points to current address in memory which is being scanned
 *D5, D6, D4 can be used as temporary storage registers

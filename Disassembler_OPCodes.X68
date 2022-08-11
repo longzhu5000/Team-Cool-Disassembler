@@ -14,11 +14,29 @@
 *------Print out OPCode message, and then return to main loop
 CHECK_OPCODES:
 
+        MOVE.L   #0, D6
         JSR     ISOLATE_15_6
         JSR     ISOLATE_15_8
         JSR     ISOLATE_15_12
+        CMP.L   #1, D6
+        BNE     TOTAL_DECODE_FAILURE
         RTS
         
+
+TOTAL_DECODE_FAILURE
+        MOVE.W  D3, D4
+        LEA DATA_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        LEA SPACE_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        LEA DOLLAR_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        JSR PRINT_WORD_VALUE
+        RTS
+
 ISOLATE_15_6:
         
         MOVE.L      D3,     D4
@@ -67,6 +85,10 @@ ISOLATE_15_12:
         BEQ         OP_CODE_ADDA
         CMP.B       #%0101, D4
         BEQ         OP_CODE_ADDQ
+        CMP.B       #%1101, D4
+        BEQ         OP_CODE_ADD
+        CMP.B       #%1001, D4
+        BEQ         OP_CODE_SUB
         RTS
 
 
@@ -83,6 +105,7 @@ OP_CODE_BRA:
         MOVE.B      #14, D0
         TRAP        #15
         JSR         BR_EA_SIZE_AND_DISPLACEMENT
+        MOVE.L      #1, D6
         RTS 
 OP_CODE_JSR:
         LEA         JSR_MSG, A1
@@ -132,6 +155,7 @@ OP_CODE_LEA_PRINT
         MOVE.B      #14, D0
         TRAP        #15
         JSR         LEA_EA
+        MOVE.L      #1, D6
         RTS
 
 
@@ -157,7 +181,7 @@ OP_CODE_BCC
         BEQ        OP_CODE_BGT
         CMP.L      #7,  D4
         BEQ        OP_CODE_BEQ
-        *Invalid instruction for the scope
+        BRA        INSTRUCTION_DECODE_FAILURE
         RTS
 
 
@@ -166,6 +190,7 @@ OP_CODE_BLE
         MOVE.B      #14, D0
         TRAP        #15
         JSR         BR_EA_SIZE_AND_DISPLACEMENT
+        MOVE.L      #1, D6
         RTS
 
 OP_CODE_BGT
@@ -173,6 +198,7 @@ OP_CODE_BGT
         MOVE.B      #14, D0
         TRAP        #15
         JSR         BR_EA_SIZE_AND_DISPLACEMENT
+        MOVE.L      #1, D6
         RTS
 
 
@@ -181,6 +207,7 @@ OP_CODE_BEQ
         MOVE.B      #14, D0
         TRAP        #15
         JSR         BR_EA_SIZE_AND_DISPLACEMENT
+        MOVE.L      #1, D6
         RTS
 
 
@@ -222,6 +249,7 @@ OP_CODE_ADDA
         MOVE.B      #14, D0
         TRAP        #15
         JSR        ADDA_EA_SIZE_AND_EA  
+        MOVE.L      #1, D6
         RTS
 
 OP_CODE_ADDQ
@@ -252,7 +280,135 @@ OP_CODE_ADDQ
         MOVE.B      #14, D0
         TRAP        #15
         JSR        ADDQ_EA_SIZE_AND_EA
+        MOVE.L      #1, D6
         RTS
+
+OP_CODE_ADD
+        BRA     OP_CODE_ADD_SUB
+
+OP_CODE_SUB  
+        BRA     OP_CODE_ADD_SUB
+
+OP_CODE_ADD_SUB
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #6, D5
+        MOVE.L     #8, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%010, D4
+        BGT        OP_CODE_ADD_SUB_SOURCE_REG
+        BRA        OP_CODE_ADD_SUB_DEST_REG
+
+
+OP_CODE_ADD_SUB_SOURCE_REG      
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #0, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%111001, D4
+        BGT        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #3, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%101, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%110, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%000, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%001, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #6, D5
+        MOVE.L     #8, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%111, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%011, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        LEA        SUB_MSG, A1
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        SUBI.L      #%1001, D4
+        ADDA.L     D4, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        JSR        ADD_SUB_EA_SIZE
+
+        LEA         SPACE_MSG,   A1
+        MOVE.B      #14,   D0    
+        TRAP        #15
+
+        JSR        ADD_SUB_EA_REG
+
+        LEA         COMMA_MSG,   A1
+        MOVE.B      #14,   D0    
+        TRAP        #15
+        JSR        ADD_SUB_EA_EA
+        MOVE.L      #1, D6
+        RTS
+
+
+OP_CODE_ADD_SUB_DEST_REG
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #0, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%111010, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%111011, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #3, D5
+        MOVE.L     #5, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%101, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%110, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #6, D5
+        MOVE.L     #8, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%111, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        CMP.L      #%011, D4
+        BEQ        INSTRUCTION_DECODE_FAILURE
+        LEA        SUB_MSG, A1
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        SUBI.L      #%1001, D4
+        ADDA.L     D4, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        JSR        ADD_SUB_EA_SIZE
+
+        LEA         SPACE_MSG,   A1
+        MOVE.B      #14,   D0    
+        TRAP        #15
+        
+        JSR        ADD_SUB_EA_EA
+
+        LEA         COMMA_MSG,   A1
+        MOVE.B      #14,   D0    
+        TRAP        #15
+        JSR        ADD_SUB_EA_REG
+        MOVE.L      #1, D6
+        RTS
+
 
 OP_CODE_OR:
         *check for divu/other opcodes that start with 1000
@@ -318,6 +474,7 @@ OP_CODE_REGISTER_SHIFT_ROTATE
         TRAP        #15
         JSR         SHIFT_ROTATE_EA_SIZE
         JSR         SHIFT_ROTATE_EA_REGISTER
+        MOVE.L      #1, D6
         RTS
 
 
@@ -379,6 +536,7 @@ OP_CODE_MEMORY_SHIFT_ROTATE
         MOVE.B      #14,            D0    
         TRAP        #15
         JSR         SHIFT_ROTATE_EA_MEMORY
+        MOVE.L      #1, D6
         RTS
 
 *----------------Some helpful subroutines------------*
@@ -403,22 +561,7 @@ GET_BIT
 
 *Just RTS, useful to use with a condition
 INSTRUCTION_DECODE_FAILURE
-        MOVE.W  D3, D4
-        LEA DATA_MSG, A1
-        MOVE.B      #14, D0
-        TRAP        #15
-        LEA SPACE_MSG, A1
-        MOVE.B      #14, D0
-        TRAP        #15
-        LEA DOLLAR_MSG, A1
-        MOVE.B      #14, D0
-        TRAP        #15
-        JSR PRINT_WORD_VALUE
-        LEA NEW_LINE, A1
-        MOVE.B      #14, D0
-        TRAP        #15
         RTS
-
 
 
 
