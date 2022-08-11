@@ -18,6 +18,7 @@ CHECK_OPCODES:
         JSR     ISOLATE_15_6
         JSR     ISOLATE_15_8
         JSR     ISOLATE_15_12
+        JSR     ISOLATE_15_0
         CMP.L   #1, D6
         BNE     TOTAL_DECODE_FAILURE
         RTS
@@ -83,14 +84,39 @@ ISOLATE_15_12:
         RTS
 
 
+ISOLATE_15_0:
+        JSR       OP_CODE_NOP
+        JSR       OP_CODE_RTS
+        RTS
+
 
 *----------------
 OP_CODE_NOT:
         LEA         NOT_MSG, A1
         MOVE.B      #14, D0
-        TRAP        #15
-        
+        TRAP        #15 
         RTS 
+
+OP_CODE_NOP:
+        CMP.L    #%0100111001110001, D3
+        BNE      INSTRUCTION_DECODE_FAILURE
+        LEA      NOP_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15 
+        MOVE.L      #1, D6
+        RTS 
+
+
+
+OP_CODE_RTS:
+        CMP.L    #%0100111001110101, D3
+        BNE      INSTRUCTION_DECODE_FAILURE
+        LEA      RTS_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15 
+        MOVE.L      #1, D6
+        RTS 
+
 OP_CODE_BRA:
         MOVEM.L    D5-D6, -(A7)
         MOVE.L     #12, D5

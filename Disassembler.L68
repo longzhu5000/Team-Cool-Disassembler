@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 8/11/2022 4:11:13 PM
+Created On: 8/11/2022 4:26:10 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Disassembler
@@ -16,11 +16,11 @@ Created On: 8/11/2022 4:11:13 PM
 00001000                            12  *------LEA = Load effective address
 00001000                            13  *------Running Trap #15 while the number 14 is in D0 will print out whatever data is in the address stored in A1
 00001000                            14  
-00001000  43F9 00001FD8             15          LEA         INTRO_MSG,      A1
+00001000  43F9 00002020             15          LEA         INTRO_MSG,      A1
 00001006  103C 000E                 16          MOVE.B      #14,            D0    
 0000100A  4E4F                      17          TRAP        #15
 0000100C                            18          
-0000100C  43F9 00001FFE             19          LEA         STARTING_MSG,   A1
+0000100C  43F9 00002046             19          LEA         STARTING_MSG,   A1
 00001012  103C 000E                 20          MOVE.B      #14,            D0   
 00001016  4E4F                      21          TRAP        #15
 00001018                            22          
@@ -32,7 +32,7 @@ Created On: 8/11/2022 4:11:13 PM
 00001018                            28  *       IE 31 = 1, 32 = 2 etc etc
 00001018                            29  *       If I store the number 1200, it will appear in memory as 31 32 30 30
 00001018                            30  
-00001018  43F9 00002058             31          LEA         STA_ADDR,       A1
+00001018  43F9 000020A0             31          LEA         STA_ADDR,       A1
 0000101E  103C 0002                 32          MOVE.B      #2,             D0
 00001022  4E4F                      33          TRAP        #15
 00001024                            34          
@@ -44,11 +44,11 @@ Created On: 8/11/2022 4:11:13 PM
 0000102C  4282                      40          CLR.L       D2
 0000102E  4287                      41          CLR.L       D7
 00001030                            42          
-00001030  43F9 00002022             43          LEA         ENDING_MSG,     A1
+00001030  43F9 0000206A             43          LEA         ENDING_MSG,     A1
 00001036  103C 000E                 44          MOVE.B      #14,            D0
 0000103A  4E4F                      45          TRAP        #15
 0000103C                            46          
-0000103C  43F9 00002080             47          LEA         END_ADDR,       A1
+0000103C  43F9 000020C8             47          LEA         END_ADDR,       A1
 00001042  103C 0002                 48          MOVE.B      #2,             D0
 00001046  4E4F                      49          TRAP        #15
 00001048                            50          
@@ -125,7 +125,7 @@ Created On: 8/11/2022 4:11:13 PM
 000010C2                           121          
 000010C2                           122          
 000010C2                           123          * space between address and data
-000010C2  43F9 000020A8            124          LEA         SPACE_MSG,      A1
+000010C2  43F9 000020F0            124          LEA         SPACE_MSG,      A1
 000010C8  103C 000E                125          MOVE.B      #14,            D0    
 000010CC  4E4F                     126          TRAP        #15
 000010CE                           127          
@@ -150,7 +150,7 @@ Created On: 8/11/2022 4:11:13 PM
 000010E6  4283                     146          CLR.L       D3
 000010E8  4284                     147          CLR.L       D4
 000010EA                           148          * new line
-000010EA  43F9 00002149            149          LEA         NEW_LINE,       A1
+000010EA  43F9 00002199            149          LEA         NEW_LINE,       A1
 000010F0  103C 000E                150          MOVE.B      #14,            D0    
 000010F4  4E4F                     151          TRAP        #15
 000010F6                           152  
@@ -180,7 +180,7 @@ Created On: 8/11/2022 4:11:13 PM
 0000110E                           176          *Assuming D4 is empty
 0000110E                           177          
 0000110E  1802                     178          MOVE.B       D2,            D4
-00001110  43F9 000020AB            179          LEA          ZERO_MSG,      A1
+00001110  43F9 000020F3            179          LEA          ZERO_MSG,      A1
 00001116                           180          * load the address of Zero_msg
 00001116                           181          * because all of the msgs are stored next to each other in order
 00001116                           182          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
@@ -234,7 +234,7 @@ Created On: 8/11/2022 4:11:13 PM
 00001156  4E75                     230          RTS
 00001158                           231  DONE:
 00001158                           232  
-00001158  43F9 00002044            233          LEA         GOODBYE_MSG,    A1
+00001158  43F9 0000208C            233          LEA         GOODBYE_MSG,    A1
 0000115E  103C 000E                234          MOVE.B      #14,            D0
 00001162  4E4F                     235          TRAP        #15
 00001164  103C 0009                236          MOVE.B      #9,             D0
@@ -249,1366 +249,1394 @@ Created On: 8/11/2022 4:11:13 PM
 0000116A                           245  CHECK_OPCODES:
 0000116A                           246  
 0000116A  7C00                     247          MOVE.L   #0, D6
-0000116C  4EB9 000011B8            248          JSR     ISOLATE_15_6
-00001172  4EB9 000011C8            249          JSR     ISOLATE_15_8
-00001178  4EB9 000011E0            250          JSR     ISOLATE_15_12
-0000117E  BCBC 00000001            251          CMP.L   #1, D6
-00001184  6600 0004                252          BNE     TOTAL_DECODE_FAILURE
-00001188  4E75                     253          RTS
-0000118A                           254          
-0000118A                           255  
-0000118A                           256  TOTAL_DECODE_FAILURE
-0000118A  3803                     257          MOVE.W  D3, D4
-0000118C  43F9 0000210D            258          LEA DATA_MSG, A1
-00001192  103C 000E                259          MOVE.B      #14, D0
-00001196  4E4F                     260          TRAP        #15
-00001198  43F9 000020A8            261          LEA SPACE_MSG, A1
-0000119E  103C 000E                262          MOVE.B      #14, D0
-000011A2  4E4F                     263          TRAP        #15
-000011A4  43F9 0000213D            264          LEA DOLLAR_MSG, A1
-000011AA  103C 000E                265          MOVE.B      #14, D0
-000011AE  4E4F                     266          TRAP        #15
-000011B0  4EB9 00001F78            267          JSR PRINT_WORD_VALUE
-000011B6  4E75                     268          RTS
-000011B8                           269  
-000011B8                           270  ISOLATE_15_6:
-000011B8                           271          
-000011B8  2803                     272          MOVE.L      D3,     D4
-000011BA  7406                     273          MOVE.L      #6,     D2
-000011BC  E4AC                     274          LSR.L       D2,     D4
-000011BE                           275          
-000011BE  B87C 013A                276          CMP.W       #$13A,  D4
-000011C2  6700 00A6                277          BEQ         OP_CODE_JSR
-000011C6                           278          
-000011C6  4E75                     279          RTS
-000011C8                           280  
-000011C8                           281  
-000011C8                           282  ISOLATE_15_8:
-000011C8                           283          *SIMHALT
-000011C8  2803                     284          MOVE.L      D3,     D4
-000011CA  7408                     285          MOVE.L      #8,     D2
-000011CC  E4AC                     286          LSR.L       D2,     D4
-000011CE                           287          
-000011CE  B83C 0046                288          CMP.B       #$46,   D4
-000011D2  6700 0056                289          BEQ         OP_CODE_NOT
-000011D6  B83C 0060                290          CMP.B       #$60,   D4
-000011DA  6700 005C                291          BEQ         OP_CODE_BRA
-000011DE                           292  
-000011DE  4E75                     293          RTS
-000011E0                           294          
-000011E0                           295  ISOLATE_15_12:
-000011E0  2803                     296          MOVE.L      D3,     D4
-000011E2  740C                     297          MOVE.L      #12,    D2
-000011E4  E4AC                     298          LSR.L       D2,     D4
-000011E6                           299          
-000011E6  B83C 0007                300          CMP.B       #$7,    D4
-000011EA  6700 008C                301          BEQ         OP_CODE_MOVEQ
-000011EE  B83C 0008                302          CMP.B       #$8,    D4
-000011F2  6700 051E                303          BEQ         OP_CODE_OR      *may get confused with DIVU + any other opcodes that start with 1000 (ones that we are not required to cover)
-000011F6  B83C 000C                304          CMP.B       #$C,    D4
-000011FA  6700 012C                305          BEQ         OP_CODE_AND
-000011FE  4EB9 00001336            306          JSR         OP_CODE_BCC
-00001204  4EB9 00001740            307          JSR         OP_CODE_SHIFT_ROTATE
-0000120A  4EB9 000013CA            308          JSR         OP_CODE_ADDA
-00001210  4EB9 0000148C            309          JSR         OP_CODE_ADDQ
-00001216  4EB9 0000151C            310          JSR         OP_CODE_ADD
-0000121C  4EB9 0000153C            311          JSR         OP_CODE_SUB
-00001222  4EB9 00001286            312          JSR         OP_CODE_LEA
-00001228  4E75                     313          RTS
-0000122A                           314  
-0000122A                           315  
-0000122A                           316  
-0000122A                           317  OP_CODE_NOT:
-0000122A  43F9 000020D0            318          LEA         NOT_MSG, A1
-00001230  103C 000E                319          MOVE.B      #14, D0
-00001234  4E4F                     320          TRAP        #15
-00001236                           321          
-00001236  4E75                     322          RTS 
-00001238                           323  OP_CODE_BRA:
-00001238  48E7 0600                324          MOVEM.L    D5-D6, -(A7)
-0000123C  7A0C                     325          MOVE.L     #12, D5
-0000123E  7C0F                     326          MOVE.L     #15, D6
-00001240  4EB9 00001892            327          JSR        GET_BIT
-00001246  4CDF 0060                328          MOVEM.L    (A7)+, D5-D6
-0000124A  B8BC 00000006            329          CMP.L       #%0110, D4
-00001250  6600 0654                330          BNE         INSTRUCTION_DECODE_FAILURE
-00001254  43F9 000020D4            331          LEA         BRA_MSG, A1
-0000125A  103C 000E                332          MOVE.B      #14, D0
-0000125E  4E4F                     333          TRAP        #15
-00001260  4EB9 000019DE            334          JSR         BR_EA_SIZE_AND_DISPLACEMENT
-00001266  7C01                     335          MOVE.L      #1, D6
-00001268  4E75                     336          RTS 
-0000126A                           337  OP_CODE_JSR:
-0000126A  43F9 000020D8            338          LEA         JSR_MSG, A1
-00001270  103C 000E                339          MOVE.B      #14, D0
-00001274  4E4F                     340          TRAP        #15
-00001276                           341          
-00001276  4E75                     342          RTS
-00001278                           343  OP_CODE_MOVEQ:
-00001278  43F9 000020DC            344          LEA         MOVEQ_MSG, A1
-0000127E  103C 000E                345          MOVE.B      #14, D0
-00001282  4E4F                     346          TRAP        #15
-00001284                           347          
-00001284  4E75                     348          RTS
-00001286                           349  
-00001286                           350  OP_CODE_LEA:
-00001286  48E7 0600                351          MOVEM.L    D5-D6, -(A7)
-0000128A  7A0C                     352          MOVE.L     #12, D5
-0000128C  7C0F                     353          MOVE.L     #15, D6
-0000128E  4EB9 00001892            354          JSR        GET_BIT
-00001294  4CDF 0060                355          MOVEM.L    (A7)+, D5-D6
-00001298  B8BC 00000004            356          CMP.L      #%0100, D4
-0000129E  6600 0606                357          BNE        INSTRUCTION_DECODE_FAILURE
-000012A2  48E7 0600                358          MOVEM.L    D5-D6, -(A7)
-000012A6  7A06                     359          MOVE.L     #6, D5
-000012A8  7C08                     360          MOVE.L     #8, D6
-000012AA  4EB9 00001892            361          JSR        GET_BIT
-000012B0  4CDF 0060                362          MOVEM.L    (A7)+, D5-D6
-000012B4  B8BC 00000007            363          CMP.L      #7, D4
-000012BA  6600 05EA                364          BNE        INSTRUCTION_DECODE_FAILURE
-000012BE  48E7 0600                365          MOVEM.L    D5-D6, -(A7)
-000012C2  7A00                     366          MOVE.L     #0, D5
-000012C4  7C05                     367          MOVE.L     #5, D6
-000012C6  4EB9 00001892            368          JSR        GET_BIT
-000012CC  4CDF 0060                369          MOVEM.L    (A7)+, D5-D6
-000012D0  B8BC 00000039            370          CMP.L      #%111001, D4
-000012D6  6700 002E                371          BEQ        OP_CODE_LEA_PRINT
-000012DA  B8BC 00000038            372          CMP.L      #%111000, D4
-000012E0  6700 0024                373          BEQ        OP_CODE_LEA_PRINT
-000012E4  48E7 0600                374          MOVEM.L    D5-D6, -(A7)
-000012E8  7A03                     375          MOVE.L     #3, D5
-000012EA  7C05                     376          MOVE.L     #5, D6
-000012EC  4EB9 00001892            377          JSR        GET_BIT
-000012F2  4CDF 0060                378          MOVEM.L    (A7)+, D5-D6
-000012F6  B8BC 00000002            379          CMP.L      #%010, D4
-000012FC  6700 0008                380          BEQ        OP_CODE_LEA_PRINT
-00001300  6000 05A4                381          BRA        INSTRUCTION_DECODE_FAILURE
-00001304                           382          *Unreachable
-00001304  4E75                     383          RTS
-00001306                           384  OP_CODE_LEA_PRINT
-00001306  43F9 000020E6            385          LEA         LEA_MSG, A1
-0000130C  103C 000E                386          MOVE.B      #14, D0
-00001310  4E4F                     387          TRAP        #15
-00001312  43F9 000020A8            388          LEA         SPACE_MSG, A1
-00001318  103C 000E                389          MOVE.B      #14, D0
-0000131C  4E4F                     390          TRAP        #15
-0000131E  4EB9 00001A9C            391          JSR         LEA_EA
-00001324  7C01                     392          MOVE.L      #1, D6
-00001326  4E75                     393          RTS
-00001328                           394  
-00001328                           395  
-00001328                           396  OP_CODE_AND:
-00001328  43F9 000020E2            397          LEA         AND_MSG, A1
-0000132E  103C 000E                398          MOVE.B      #14, D0
-00001332  4E4F                     399          TRAP        #15
-00001334                           400          
-00001334  4E75                     401          RTS
-00001336                           402  
-00001336                           403  OP_CODE_BCC
-00001336  48E7 0600                404          MOVEM.L    D5-D6, -(A7)
-0000133A  7A0C                     405          MOVE.L     #12, D5
-0000133C  7C0F                     406          MOVE.L     #15, D6
-0000133E  4EB9 00001892            407          JSR        GET_BIT
-00001344  4CDF 0060                408          MOVEM.L    (A7)+, D5-D6
-00001348  B8BC 00000006            409          CMP.L      #%0110, D4
-0000134E  6600 0556                410          BNE        INSTRUCTION_DECODE_FAILURE
-00001352                           411          *Get bits from 8-11 to get the condition
-00001352                           412          *Only checking for (BGT, BLE, BEQ). Rest are considered
-00001352                           413          *invalid
-00001352  48E7 0600                414          MOVEM.L    D5-D6, -(A7)
-00001356  7A08                     415          MOVE.L     #8, D5
-00001358  7C0B                     416          MOVE.L     #11, D6
-0000135A  4EB9 00001892            417          JSR        GET_BIT
-00001360  4CDF 0060                418          MOVEM.L    (A7)+, D5-D6
-00001364  B8BC 0000000F            419          CMP.L      #15, D4
-0000136A  6700 001C                420          BEQ        OP_CODE_BLE
-0000136E  B8BC 0000000E            421          CMP.L      #14, D4
-00001374  6700 0028                422          BEQ        OP_CODE_BGT
-00001378  B8BC 00000007            423          CMP.L      #7,  D4
-0000137E  6700 0034                424          BEQ        OP_CODE_BEQ
-00001382  6000 0522                425          BRA        INSTRUCTION_DECODE_FAILURE
-00001386  4E75                     426          RTS
-00001388                           427  
-00001388                           428  
-00001388                           429  OP_CODE_BLE
-00001388  43F9 00002114            430          LEA         BLE_MSG, A1
-0000138E  103C 000E                431          MOVE.B      #14, D0
-00001392  4E4F                     432          TRAP        #15
-00001394  4EB9 000019DE            433          JSR         BR_EA_SIZE_AND_DISPLACEMENT
-0000139A  7C01                     434          MOVE.L      #1, D6
-0000139C  4E75                     435          RTS
-0000139E                           436  
-0000139E                           437  OP_CODE_BGT
-0000139E  43F9 00002118            438          LEA         BGT_MSG, A1
-000013A4  103C 000E                439          MOVE.B      #14, D0
-000013A8  4E4F                     440          TRAP        #15
-000013AA  4EB9 000019DE            441          JSR         BR_EA_SIZE_AND_DISPLACEMENT
-000013B0  7C01                     442          MOVE.L      #1, D6
-000013B2  4E75                     443          RTS
-000013B4                           444  
-000013B4                           445  
-000013B4                           446  OP_CODE_BEQ
-000013B4  43F9 0000211C            447          LEA         BEQ_MSG, A1
-000013BA  103C 000E                448          MOVE.B      #14, D0
-000013BE  4E4F                     449          TRAP        #15
-000013C0  4EB9 000019DE            450          JSR         BR_EA_SIZE_AND_DISPLACEMENT
-000013C6  7C01                     451          MOVE.L      #1, D6
-000013C8  4E75                     452          RTS
-000013CA                           453  
-000013CA                           454  
-000013CA                           455  OP_CODE_ADDA
-000013CA  48E7 0600                456          MOVEM.L    D5-D6, -(A7)
-000013CE  7A0C                     457          MOVE.L     #12, D5
-000013D0  7C0F                     458          MOVE.L     #15, D6
-000013D2  4EB9 00001892            459          JSR        GET_BIT
-000013D8  4CDF 0060                460          MOVEM.L    (A7)+, D5-D6
-000013DC  B8BC 0000000D            461          CMP.L      #%1101, D4
-000013E2  6600 04C2                462          BNE        INSTRUCTION_DECODE_FAILURE
-000013E6  48E7 0600                463          MOVEM.L    D5-D6, -(A7)
-000013EA  7A06                     464          MOVE.L     #6, D5
-000013EC  7C08                     465          MOVE.L     #8, D6
-000013EE  4EB9 00001892            466          JSR        GET_BIT
-000013F4  4CDF 0060                467          MOVEM.L    (A7)+, D5-D6
-000013F8  B8BC 00000002            468          CMP.L      #%010, D4
-000013FE  6F00 04A6                469          BLE        INSTRUCTION_DECODE_FAILURE
-00001402  B8BC 00000004            470          CMP.L      #%100, D4
-00001408  6700 049C                471          BEQ        INSTRUCTION_DECODE_FAILURE
-0000140C  B8BC 00000005            472          CMP.L      #%101, D4
-00001412  6700 0492                473          BEQ        INSTRUCTION_DECODE_FAILURE
-00001416  B8BC 00000006            474          CMP.L      #%110, D4
-0000141C  6700 0488                475          BEQ        INSTRUCTION_DECODE_FAILURE
-00001420  48E7 0600                476          MOVEM.L    D5-D6, -(A7)
-00001424  7A00                     477          MOVE.L     #0, D5
-00001426  7C05                     478          MOVE.L     #5, D6
-00001428  4EB9 00001892            479          JSR        GET_BIT
-0000142E  4CDF 0060                480          MOVEM.L    (A7)+, D5-D6
-00001432  B8BC 0000003A            481          CMP.L      #%111010, D4
-00001438  6700 046C                482          BEQ        INSTRUCTION_DECODE_FAILURE
-0000143C  B8BC 0000003B            483          CMP.L      #%111011, D4
-00001442  6700 0462                484          BEQ        INSTRUCTION_DECODE_FAILURE
-00001446  B8BC 0000003C            485          CMP.L      #%111100, D4
-0000144C  6E00 0458                486          BGT        INSTRUCTION_DECODE_FAILURE
-00001450  48E7 0600                487          MOVEM.L    D5-D6, -(A7)
-00001454  7A03                     488          MOVE.L     #3, D5
-00001456  7C05                     489          MOVE.L     #5, D6
-00001458  4EB9 00001892            490          JSR        GET_BIT
-0000145E  4CDF 0060                491          MOVEM.L    (A7)+, D5-D6
-00001462  B8BC 00000005            492          CMP.L      #%101, D4
-00001468  6700 043C                493          BEQ        INSTRUCTION_DECODE_FAILURE
-0000146C  B8BC 00000006            494          CMP.L      #%110, D4
-00001472  6700 0432                495          BEQ        INSTRUCTION_DECODE_FAILURE
-00001476  43F9 00002125            496          LEA        ADDA_MSG, A1
-0000147C  103C 000E                497          MOVE.B      #14, D0
-00001480  4E4F                     498          TRAP        #15
-00001482  4EB9 00001AF8            499          JSR        ADDA_EA_SIZE_AND_EA  
-00001488  7C01                     500          MOVE.L      #1, D6
-0000148A  4E75                     501          RTS
-0000148C                           502  
-0000148C                           503  OP_CODE_ADDQ
-0000148C  48E7 0600                504          MOVEM.L    D5-D6, -(A7)
-00001490  7A0C                     505          MOVE.L     #12, D5
-00001492  7C0F                     506          MOVE.L     #15, D6
-00001494  4EB9 00001892            507          JSR        GET_BIT
-0000149A  4CDF 0060                508          MOVEM.L    (A7)+, D5-D6
-0000149E  B8BC 00000005            509          CMP.L      #%0101, D4
-000014A4  6600 0400                510          BNE        INSTRUCTION_DECODE_FAILURE
-000014A8  48E7 0600                511          MOVEM.L    D5-D6, -(A7)
-000014AC  7A06                     512          MOVE.L     #6, D5
-000014AE  7C07                     513          MOVE.L     #7, D6
-000014B0  4EB9 00001892            514          JSR        GET_BIT
-000014B6  4CDF 0060                515          MOVEM.L    (A7)+, D5-D6
-000014BA  B8BC 00000003            516          CMP.L      #%11, D4
-000014C0  6700 03E4                517          BEQ        INSTRUCTION_DECODE_FAILURE
-000014C4  48E7 0600                518          MOVEM.L    D5-D6, -(A7)
-000014C8  7A00                     519          MOVE.L     #0, D5
-000014CA  7C05                     520          MOVE.L     #5, D6
-000014CC  4EB9 00001892            521          JSR        GET_BIT
-000014D2  4CDF 0060                522          MOVEM.L    (A7)+, D5-D6
-000014D6  B8BC 00000039            523          CMP.L      #%111001, D4
-000014DC  6E00 03C8                524          BGT        INSTRUCTION_DECODE_FAILURE
-000014E0  48E7 0600                525          MOVEM.L    D5-D6, -(A7)
-000014E4  7A03                     526          MOVE.L     #3, D5
-000014E6  7C05                     527          MOVE.L     #5, D6
-000014E8  4EB9 00001892            528          JSR        GET_BIT
-000014EE  4CDF 0060                529          MOVEM.L    (A7)+, D5-D6
-000014F2  B8BC 00000005            530          CMP.L      #%101, D4
-000014F8  6700 03AC                531          BEQ        INSTRUCTION_DECODE_FAILURE
-000014FC  B8BC 00000006            532          CMP.L      #%110, D4
-00001502  6700 03A2                533          BEQ        INSTRUCTION_DECODE_FAILURE
-00001506  43F9 00002120            534          LEA        ADDQ_MSG, A1
-0000150C  103C 000E                535          MOVE.B      #14, D0
-00001510  4E4F                     536          TRAP        #15
-00001512  4EB9 00001BF2            537          JSR        ADDQ_EA_SIZE_AND_EA
-00001518  7C01                     538          MOVE.L      #1, D6
-0000151A  4E75                     539          RTS
-0000151C                           540  
-0000151C                           541  OP_CODE_ADD
-0000151C  48E7 0600                542          MOVEM.L    D5-D6, -(A7)
-00001520  7A0C                     543          MOVE.L     #12, D5
-00001522  7C0F                     544          MOVE.L     #15, D6
-00001524  4EB9 00001892            545          JSR        GET_BIT
-0000152A  4CDF 0060                546          MOVEM.L    (A7)+, D5-D6
-0000152E  B8BC 0000000D            547          CMP.L      #%1101, D4
-00001534  6600 0370                548          BNE        INSTRUCTION_DECODE_FAILURE
-00001538  6000 0022                549          BRA        OP_CODE_ADD_SUB
-0000153C                           550  
-0000153C                           551  OP_CODE_SUB  
-0000153C  48E7 0600                552          MOVEM.L    D5-D6, -(A7)
-00001540  7A0C                     553          MOVE.L     #12, D5
-00001542  7C0F                     554          MOVE.L     #15, D6
-00001544  4EB9 00001892            555          JSR        GET_BIT
-0000154A  4CDF 0060                556          MOVEM.L    (A7)+, D5-D6 
-0000154E  B8BC 00000009            557          CMP.L       #%1001, D4
-00001554  6600 0350                558          BNE        INSTRUCTION_DECODE_FAILURE
-00001558  6000 0002                559          BRA     OP_CODE_ADD_SUB
-0000155C                           560  
-0000155C                           561  OP_CODE_ADD_SUB
-0000155C  48E7 0600                562          MOVEM.L    D5-D6, -(A7)
-00001560  7A06                     563          MOVE.L     #6, D5
-00001562  7C08                     564          MOVE.L     #8, D6
-00001564  4EB9 00001892            565          JSR        GET_BIT
-0000156A  4CDF 0060                566          MOVEM.L    (A7)+, D5-D6
-0000156E  B8BC 00000002            567          CMP.L      #%010, D4
-00001574  6E00 0006                568          BGT        OP_CODE_ADD_SUB_SOURCE_REG
-00001578  6000 00D2                569          BRA        OP_CODE_ADD_SUB_DEST_REG
-0000157C                           570  
-0000157C                           571  
-0000157C                           572  OP_CODE_ADD_SUB_SOURCE_REG      
-0000157C  48E7 0600                573          MOVEM.L    D5-D6, -(A7)
-00001580  7A00                     574          MOVE.L     #0, D5
-00001582  7C05                     575          MOVE.L     #5, D6
-00001584  4EB9 00001892            576          JSR        GET_BIT
-0000158A  4CDF 0060                577          MOVEM.L    (A7)+, D5-D6
-0000158E  B8BC 00000039            578          CMP.L      #%111001, D4
-00001594  6E00 0310                579          BGT        INSTRUCTION_DECODE_FAILURE
-00001598  48E7 0600                580          MOVEM.L    D5-D6, -(A7)
-0000159C  7A03                     581          MOVE.L     #3, D5
-0000159E  7C05                     582          MOVE.L     #5, D6
-000015A0  4EB9 00001892            583          JSR        GET_BIT
-000015A6  4CDF 0060                584          MOVEM.L    (A7)+, D5-D6
-000015AA  B8BC 00000005            585          CMP.L      #%101, D4
-000015B0  6700 02F4                586          BEQ        INSTRUCTION_DECODE_FAILURE
-000015B4  B8BC 00000006            587          CMP.L      #%110, D4
-000015BA  6700 02EA                588          BEQ        INSTRUCTION_DECODE_FAILURE
-000015BE  B8BC 00000000            589          CMP.L      #%000, D4
-000015C4  6700 02E0                590          BEQ        INSTRUCTION_DECODE_FAILURE
-000015C8  B8BC 00000001            591          CMP.L      #%001, D4
-000015CE  6700 02D6                592          BEQ        INSTRUCTION_DECODE_FAILURE
-000015D2  48E7 0600                593          MOVEM.L    D5-D6, -(A7)
-000015D6  7A06                     594          MOVE.L     #6, D5
-000015D8  7C08                     595          MOVE.L     #8, D6
-000015DA  4EB9 00001892            596          JSR        GET_BIT
-000015E0  4CDF 0060                597          MOVEM.L    (A7)+, D5-D6
-000015E4  B8BC 00000007            598          CMP.L      #%111, D4
-000015EA  6700 02BA                599          BEQ        INSTRUCTION_DECODE_FAILURE
-000015EE  B8BC 00000003            600          CMP.L      #%011, D4
-000015F4  6700 02B0                601          BEQ        INSTRUCTION_DECODE_FAILURE
-000015F8  43F9 0000212A            602          LEA        SUB_MSG, A1
-000015FE  48E7 0600                603          MOVEM.L    D5-D6, -(A7)
-00001602  7A0C                     604          MOVE.L     #12, D5
-00001604  7C0F                     605          MOVE.L     #15, D6
-00001606  4EB9 00001892            606          JSR        GET_BIT
-0000160C  4CDF 0060                607          MOVEM.L    (A7)+, D5-D6
-00001610  0484 00000009            608          SUBI.L      #%1001, D4
-00001616  D3C4                     609          ADDA.L     D4, A1
-00001618  103C 000E                610          MOVE.B      #14, D0
-0000161C  4E4F                     611          TRAP        #15
-0000161E  4EB9 00001CCC            612          JSR        ADD_SUB_EA_SIZE
-00001624                           613  
-00001624  43F9 000020A8            614          LEA         SPACE_MSG,   A1
-0000162A  103C 000E                615          MOVE.B      #14,   D0    
-0000162E  4E4F                     616          TRAP        #15
-00001630                           617  
-00001630  4EB9 00001CF6            618          JSR        ADD_SUB_EA_REG
-00001636                           619  
-00001636  43F9 0000213B            620          LEA         COMMA_MSG,   A1
-0000163C  103C 000E                621          MOVE.B      #14,   D0    
-00001640  4E4F                     622          TRAP        #15
-00001642  4EB9 00001D26            623          JSR        ADD_SUB_EA_EA
-00001648  7C01                     624          MOVE.L      #1, D6
-0000164A  4E75                     625          RTS
-0000164C                           626  
-0000164C                           627  
-0000164C                           628  OP_CODE_ADD_SUB_DEST_REG
-0000164C  48E7 0600                629          MOVEM.L    D5-D6, -(A7)
-00001650  7A00                     630          MOVE.L     #0, D5
-00001652  7C05                     631          MOVE.L     #5, D6
-00001654  4EB9 00001892            632          JSR        GET_BIT
-0000165A  4CDF 0060                633          MOVEM.L    (A7)+, D5-D6
-0000165E  B8BC 0000003A            634          CMP.L      #%111010, D4
-00001664  6700 0240                635          BEQ        INSTRUCTION_DECODE_FAILURE
-00001668  B8BC 0000003B            636          CMP.L      #%111011, D4
-0000166E  6700 0236                637          BEQ        INSTRUCTION_DECODE_FAILURE
-00001672  48E7 0600                638          MOVEM.L    D5-D6, -(A7)
-00001676  7A03                     639          MOVE.L     #3, D5
-00001678  7C05                     640          MOVE.L     #5, D6
-0000167A  4EB9 00001892            641          JSR        GET_BIT
-00001680  4CDF 0060                642          MOVEM.L    (A7)+, D5-D6
-00001684  B8BC 00000005            643          CMP.L      #%101, D4
-0000168A  6700 021A                644          BEQ        INSTRUCTION_DECODE_FAILURE
-0000168E  B8BC 00000006            645          CMP.L      #%110, D4
-00001694  6700 0210                646          BEQ        INSTRUCTION_DECODE_FAILURE
-00001698  48E7 0600                647          MOVEM.L    D5-D6, -(A7)
-0000169C  7A06                     648          MOVE.L     #6, D5
-0000169E  7C08                     649          MOVE.L     #8, D6
-000016A0  4EB9 00001892            650          JSR        GET_BIT
-000016A6  4CDF 0060                651          MOVEM.L    (A7)+, D5-D6
-000016AA  B8BC 00000007            652          CMP.L      #%111, D4
-000016B0  6700 01F4                653          BEQ        INSTRUCTION_DECODE_FAILURE
-000016B4  B8BC 00000003            654          CMP.L      #%011, D4
-000016BA  6700 01EA                655          BEQ        INSTRUCTION_DECODE_FAILURE
-000016BE  43F9 0000212A            656          LEA        SUB_MSG, A1
-000016C4  48E7 0600                657          MOVEM.L    D5-D6, -(A7)
-000016C8  7A0C                     658          MOVE.L     #12, D5
-000016CA  7C0F                     659          MOVE.L     #15, D6
-000016CC  4EB9 00001892            660          JSR        GET_BIT
-000016D2  4CDF 0060                661          MOVEM.L    (A7)+, D5-D6
-000016D6  0484 00000009            662          SUBI.L      #%1001, D4
-000016DC  D3C4                     663          ADDA.L     D4, A1
-000016DE  103C 000E                664          MOVE.B      #14, D0
-000016E2  4E4F                     665          TRAP        #15
-000016E4  4EB9 00001CCC            666          JSR        ADD_SUB_EA_SIZE
-000016EA                           667  
-000016EA  43F9 000020A8            668          LEA         SPACE_MSG,   A1
-000016F0  103C 000E                669          MOVE.B      #14,   D0    
-000016F4  4E4F                     670          TRAP        #15
-000016F6                           671          
-000016F6  4EB9 00001D26            672          JSR        ADD_SUB_EA_EA
-000016FC                           673  
-000016FC  43F9 0000213B            674          LEA         COMMA_MSG,   A1
-00001702  103C 000E                675          MOVE.B      #14,   D0    
-00001706  4E4F                     676          TRAP        #15
-00001708  4EB9 00001CF6            677          JSR        ADD_SUB_EA_REG
-0000170E  7C01                     678          MOVE.L      #1, D6
-00001710  4E75                     679          RTS
-00001712                           680  
-00001712                           681  
-00001712                           682  OP_CODE_OR:
-00001712                           683          *check for divu/other opcodes that start with 1000
-00001712                           684          *isolate bits 8-6 to check for DIVU
-00001712  2803                     685          MOVE.L      D3,     D4
-00001714  7407                     686          MOVE.L      #7,     D2
-00001716  E56C                     687          LSL.W       D2,     D4
-00001718  740D                     688          MOVE.L      #13,    D2
-0000171A  E46C                     689          LSR.W       D2,     D4
-0000171C                           690          
-0000171C  B83C 0003                691          CMP.B       #$3,    D4
-00001720  6700 0010                692          BEQ         OP_CODE_DATA
-00001724                           693          
-00001724  43F9 0000210A            694          LEA         OR_MSG, A1
-0000172A  103C 000E                695          MOVE.B      #14, D0
-0000172E  4E4F                     696          TRAP        #15
-00001730                           697          
-00001730  4E75                     698          RTS
-00001732                           699  OP_CODE_DATA:
-00001732  43F9 0000210D            700          LEA         DATA_MSG, A1
-00001738  103C 000E                701          MOVE.B      #14, D0
-0000173C  4E4F                     702          TRAP        #15
-0000173E                           703          
-0000173E  4E75                     704          RTS   
-00001740                           705  
-00001740                           706  
-00001740                           707  OP_CODE_SHIFT_ROTATE
-00001740  48E7 0600                708          MOVEM.L    D5-D6, -(A7)
-00001744  7A0C                     709          MOVE.L     #12, D5
-00001746  7C0F                     710          MOVE.L     #15, D6
-00001748  4EB9 00001892            711          JSR        GET_BIT
-0000174E  4CDF 0060                712          MOVEM.L    (A7)+, D5-D6
-00001752  B8BC 0000000E            713          CMP.L      #%1110, D4
-00001758  6600 014C                714          BNE        INSTRUCTION_DECODE_FAILURE
-0000175C                           715          *Now check whether it is register shift or memory shift
-0000175C                           716          *If the 6-7 bit is 11, then it is a memory else register shift
-0000175C  48E7 0600                717          MOVEM.L    D5-D6, -(A7)
-00001760  7A06                     718          MOVE.L     #6, D5
-00001762  7C07                     719          MOVE.L     #7, D6
-00001764  4EB9 00001892            720          JSR        GET_BIT
-0000176A  4CDF 0060                721          MOVEM.L    (A7)+, D5-D6
-0000176E  B8BC 00000003            722          CMP.L      #3, D4
-00001774  6700 0058                723          BEQ        OP_CODE_MEMORY_SHIFT_ROTATE
-00001778  6000 0002                724          BRA        OP_CODE_REGISTER_SHIFT_ROTATE
-0000177C                           725  
-0000177C                           726  
-0000177C                           727  OP_CODE_REGISTER_SHIFT_ROTATE
-0000177C                           728          *Messages are loaded in the order of -ASR, ASL, LSR, LSL, RORX, RORL, ROR, ROL where
-0000177C                           729          *each message is of 4 bytes. Essentially using a combination of (9-11) bit + dr(8th bit) we
-0000177C                           730          *can index the appropriate message. Mathy and unreadable code but prevents lot of rebudency
-0000177C  43F9 000020EA            731          LEA        ASR_MSG, A1
-00001782  48E7 0600                732          MOVEM.L    D5-D6, -(A7)
-00001786  7A08                     733          MOVE.L     #8, D5
-00001788  7C08                     734          MOVE.L     #8, D6
-0000178A  4EB9 00001892            735          JSR        GET_BIT
-00001790  4CDF 0060                736          MOVEM.L    (A7)+, D5-D6
-00001794  C8FC 0004                737          MULU         #4,            D4
-00001798  D3C4                     738          ADDA.L       D4,            A1
-0000179A                           739          *Check (3, 11) bit 
-0000179A                           740          *000->ASR/ASL, 001->LSR/LSL, 011->ROR/ROL
-0000179A  48E7 0600                741          MOVEM.L    D5-D6, -(A7)
-0000179E  7A03                     742          MOVE.L     #3, D5
-000017A0  7C04                     743          MOVE.L     #4, D6
-000017A2  4EB9 00001892            744          JSR        GET_BIT
-000017A8  B8BC 00000002            745          CMP.L      #2, D4
-000017AE  4CDF 0060                746          MOVEM.L    (A7)+, D5-D6
-000017B2  C8FC 0008                747          MULU        #8,      D4
-000017B6  D3C4                     748          ADDA.L       D4,            A1
-000017B8  103C 000E                749          MOVE.B      #14, D0
-000017BC  4E4F                     750          TRAP        #15
-000017BE  4EB9 000018A8            751          JSR         SHIFT_ROTATE_EA_SIZE
-000017C4  4EB9 000018D8            752          JSR         SHIFT_ROTATE_EA_REGISTER
-000017CA  7C01                     753          MOVE.L      #1, D6
-000017CC  4E75                     754          RTS
-000017CE                           755  
-000017CE                           756  
-000017CE                           757  OP_CODE_MEMORY_SHIFT_ROTATE
-000017CE                           758          *If mode bits are less than 010, then invalid instruction so just RTS
-000017CE  48E7 0600                759          MOVEM.L    D5-D6, -(A7)
-000017D2  7A03                     760          MOVE.L     #3, D5
-000017D4  7C05                     761          MOVE.L     #5, D6
-000017D6  4EB9 00001892            762          JSR        GET_BIT
-000017DC  4CDF 0060                763          MOVEM.L    (A7)+, D5-D6
-000017E0  B8BC 00000002            764          CMP.L      #2, D4
-000017E6  6B00 00BE                765          BMI        INSTRUCTION_DECODE_FAILURE
-000017EA                           766          *If mode bits are 101 or 110, then it is dispacement address register EA which is invalid
-000017EA                           767          *for the current scope
-000017EA  B8BC 00000005            768          CMP.L      #5, D4
-000017F0  6700 00B4                769          BEQ        INSTRUCTION_DECODE_FAILURE
-000017F4  B8BC 00000006            770          CMP.L      #6, D4
-000017FA  6700 00AA                771          BEQ        INSTRUCTION_DECODE_FAILURE
-000017FE                           772          *If mode bits+register bits are greater than 111001, then invalid instruction
-000017FE  48E7 0600                773          MOVEM.L    D5-D6, -(A7)
-00001802  7A00                     774          MOVE.L     #0, D5
-00001804  7C05                     775          MOVE.L     #5, D6
-00001806  4EB9 00001892            776          JSR        GET_BIT
-0000180C  4CDF 0060                777          MOVEM.L    (A7)+, D5-D6
-00001810  B8BC 00000039            778          CMP.L      #%111001, D4
-00001816  6E00 008E                779          BGT        INSTRUCTION_DECODE_FAILURE
-0000181A  7A09                     780          MOVE.L     #9, D5
-0000181C  7C0B                     781          MOVE.L     #11, D6
-0000181E  4EB9 00001892            782          JSR        GET_BIT
-00001824  B8BC 00000002            783          CMP.L      #2, D4
-0000182A  6700 007A                784          BEQ        INSTRUCTION_DECODE_FAILURE *If the 9-11 are 010(RORX, ROLX), instruction decode error.
-0000182E                           785          *Messages are loaded in the order of -ASR, ASL, LSR, LSL, RORX, RORL, ROR, ROL where
-0000182E                           786          *each message is of 4 bytes. Essentially using a combination of (9-11) bit + dr(8th bit) we
-0000182E                           787          *can index the appropriate message. Mathy and unreadable code but prevents lot of rebudency
-0000182E  43F9 000020EA            788          LEA        ASR_MSG, A1
-00001834  48E7 0600                789          MOVEM.L    D5-D6, -(A7)
-00001838  7A08                     790          MOVE.L     #8, D5
-0000183A  7C08                     791          MOVE.L     #8, D6
-0000183C  4EB9 00001892            792          JSR        GET_BIT
-00001842  4CDF 0060                793          MOVEM.L    (A7)+, D5-D6
-00001846  C8FC 0004                794          MULU         #4,            D4
-0000184A  D3C4                     795          ADDA.L       D4,            A1
-0000184C                           796          *Check (9, 11) bit 
-0000184C                           797          *000->ASR/ASL, 001->LSR/LSL, 011->ROR/ROL
-0000184C  48E7 0600                798          MOVEM.L    D5-D6, -(A7)
-00001850  7A09                     799          MOVE.L     #9, D5
-00001852  7C0B                     800          MOVE.L     #11, D6
-00001854  4EB9 00001892            801          JSR        GET_BIT
-0000185A  B8BC 00000002            802          CMP.L      #2, D4
-00001860  4CDF 0060                803          MOVEM.L    (A7)+, D5-D6
-00001864  C8FC 0008                804          MULU        #8,      D4
-00001868  D3C4                     805          ADDA.L       D4,            A1
-0000186A  103C 000E                806          MOVE.B      #14, D0
-0000186E  4E4F                     807          TRAP        #15
-00001870  43F9 00002135            808          LEA        WORD_MSG, A1
-00001876  103C 000E                809          MOVE.B      #14, D0
-0000187A  4E4F                     810          TRAP        #15
-0000187C  43F9 000020A8            811          LEA         SPACE_MSG,      A1
-00001882  103C 000E                812          MOVE.B      #14,            D0    
-00001886  4E4F                     813          TRAP        #15
-00001888  4EB9 000019BC            814          JSR         SHIFT_ROTATE_EA_MEMORY
-0000188E  7C01                     815          MOVE.L      #1, D6
-00001890  4E75                     816          RTS
-00001892                           817  
-00001892                           818  
-00001892                           819  
-00001892                           820  GET_BIT
-00001892  4284                     821          CLR.L   D4
-00001894  3803                     822          MOVE.W  D3, D4   
-00001896                           823          *Shift it to left by 15-y to get rid of all the bits to the left of yth bit 
-00001896                           824          *and then shift the bits such that the xth bit is the 0th bit
-00001896  4486                     825          NEG.L   D6
-00001898  0686 0000000F            826          ADDI.L  #15, D6
-0000189E  DA86                     827          ADD.L   D6, D5
-000018A0  ED6C                     828          LSL.W   D6, D4
-000018A2  EA6C                     829          LSR.W   D5, D4
-000018A4  4E75                     830          RTS
-000018A6                           831  
-000018A6                           832  INSTRUCTION_DECODE_FAILURE
-000018A6  4E75                     833          RTS
-000018A8                           834  
-000018A8                           835  
-000018A8                           836  
-000018A8                           837  -------------------- end include --------------------
-000018A8                           838      *INCLUDE         'demo_test.x68'
-000018A8                           839      INCLUDE          'Disassembler_EA.x68'
-000018A8                           840  
-000018A8                           841  
-000018A8                           842  
-000018A8                           843  
-000018A8                           844  SHIFT_ROTATE_EA_SIZE
-000018A8  48E7 0600                845      MOVEM.L    D5-D6, -(A7)
-000018AC  7A06                     846      MOVE.L     #6, D5
-000018AE  7C07                     847      MOVE.L     #7, D6
-000018B0  4EB8 1892                848      JSR        GET_BIT
-000018B4  4CDF 0060                849      MOVEM.L    (A7)+, D5-D6
-000018B8  43F9 00002132            850      LEA        BYTE_MSG, A1
-000018BE  C8FC 0003                851      MULU       #3, D4
-000018C2  D3C4                     852      ADDA.L       D4,  A1
-000018C4  103C 000E                853      MOVE.B      #14, D0
-000018C8  4E4F                     854      TRAP        #15
-000018CA  43F9 000020A8            855      LEA         SPACE_MSG,      A1
-000018D0  103C 000E                856      MOVE.B      #14,            D0    
-000018D4  4E4F                     857      TRAP        #15
-000018D6  4E75                     858      RTS
-000018D8                           859  
-000018D8                           860  
-000018D8                           861  
-000018D8                           862  
-000018D8                           863  SHIFT_ROTATE_EA_REGISTER
-000018D8  48E7 0600                864      MOVEM.L    D5-D6, -(A7)
-000018DC  7A05                     865      MOVE.L     #5, D5
-000018DE  7C05                     866      MOVE.L     #5, D6
-000018E0  4EB8 1892                867      JSR        GET_BIT
-000018E4  4CDF 0060                868      MOVEM.L    (A7)+, D5-D6
-000018E8  B8BC 00000001            869      CMP.L      #1,  D4
-000018EE  6600 0070                870      BNE        SHIFT_ROTATE_IMM_SOURCE
-000018F2                           871  
-000018F2                           872  SHIFT_ROTATE_REGISTER_SOURCE
-000018F2  43F9 000020C5            873      LEA        D_MSG, A1
-000018F8  103C 000E                874      MOVE.B      #14,   D0    
-000018FC  4E4F                     875      TRAP        #15
-000018FE  48E7 0600                876      MOVEM.L    D5-D6, -(A7)
-00001902  7A09                     877      MOVE.L     #9, D5
-00001904  7C0B                     878      MOVE.L     #11, D6
-00001906  4EB8 1892                879      JSR        GET_BIT
-0000190A  4CDF 0060                880      MOVEM.L    (A7)+, D5-D6
-0000190E  43F9 000020AB            881      LEA       ZERO_MSG, A1
-00001914  C8FC 0002                882      MULU      #2, D4    
-00001918  D3C4                     883      ADDA.L    D4, A1
-0000191A  103C 000E                884      MOVE.B      #14,   D0    
-0000191E  4E4F                     885      TRAP        #15
-00001920  6000 0002                886      BRA       SHIFT_ROTATE_REGISTER_DEST
-00001924                           887  
-00001924                           888  SHIFT_ROTATE_REGISTER_DEST
-00001924  43F9 0000213B            889      LEA        COMMA_MSG, A1    
-0000192A  103C 000E                890      MOVE.B      #14,   D0    
-0000192E  4E4F                     891      TRAP        #15
-00001930  43F9 000020C5            892      LEA        D_MSG, A1
-00001936  103C 000E                893      MOVE.B      #14,   D0    
-0000193A  4E4F                     894      TRAP        #15
-0000193C  48E7 0600                895      MOVEM.L    D5-D6, -(A7)
-00001940  7A00                     896      MOVE.L     #0, D5
-00001942  7C02                     897      MOVE.L     #2, D6
-00001944  4EB8 1892                898      JSR        GET_BIT
-00001948  4CDF 0060                899      MOVEM.L    (A7)+, D5-D6
-0000194C  43F9 000020AB            900      LEA       ZERO_MSG, A1
-00001952  C8FC 0002                901      MULU      #2, D4    
-00001956  D3C4                     902      ADDA.L    D4, A1
-00001958  103C 000E                903      MOVE.B      #14,   D0    
-0000195C  4E4F                     904      TRAP        #15
-0000195E  4E75                     905      RTS
-00001960                           906  
-00001960                           907  SHIFT_ROTATE_IMM_SOURCE
-00001960  43F9 0000213F            908      LEA        HASH_MSG, A1
-00001966  103C 000E                909      MOVE.B      #14,   D0    
-0000196A  4E4F                     910      TRAP        #15
-0000196C  43F9 0000213D            911      LEA        DOLLAR_MSG, A1
-00001972  103C 000E                912      MOVE.B      #14,   D0    
-00001976  4E4F                     913      TRAP        #15
-00001978  48E7 0600                914      MOVEM.L    D5-D6, -(A7)
-0000197C  7A09                     915      MOVE.L     #9, D5
-0000197E  7C0B                     916      MOVE.L     #11, D6
-00001980  4EB8 1892                917      JSR        GET_BIT
-00001984  4CDF 0060                918      MOVEM.L    (A7)+, D5-D6
-00001988  B8BC 00000000            919      CMP.L      #0, D4
-0000198E  6700 001C                920      BEQ       SHIFT_ROTATE_COUNT_8
-00001992  6000 0002                921      BRA       SHIFT_ROTATE_COUNT_1_7
-00001996                           922   
-00001996                           923  SHIFT_ROTATE_COUNT_1_7
-00001996  43F9 000020AB            924      LEA       ZERO_MSG, A1
-0000199C  C8FC 0002                925      MULU      #2, D4    
-000019A0  D3C4                     926      ADDA.L    D4, A1
-000019A2  103C 000E                927      MOVE.B      #14,   D0    
-000019A6  4E4F                     928      TRAP        #15
-000019A8  6000 FF7A                929      BRA       SHIFT_ROTATE_REGISTER_DEST
-000019AC                           930  
-000019AC                           931  SHIFT_ROTATE_COUNT_8
-000019AC  43F9 000020BB            932      LEA       EIGHT_MSG, A1
-000019B2  103C 000E                933      MOVE.B      #14,   D0    
-000019B6  4E4F                     934      TRAP        #15
-000019B8  6000 FF6A                935      BRA       SHIFT_ROTATE_REGISTER_DEST
-000019BC                           936  
-000019BC                           937  
-000019BC                           938  
-000019BC                           939  
-000019BC                           940  
-000019BC                           941  SHIFT_ROTATE_EA_MEMORY
-000019BC  48E7 0600                942      MOVEM.L    D5-D6, -(A7)
-000019C0  7A00                     943      MOVE.L     #0, D5
-000019C2  7C05                     944      MOVE.L     #5, D6
-000019C4  4EB8 1892                945      JSR        GET_BIT
-000019C8  4CDF 0060                946      MOVEM.L    (A7)+, D5-D6
-000019CC  48E7 1600                947      MOVEM.L    D3/D5-D6, -(A7)
-000019D0  2604                     948      MOVE.L     D4, D3
-000019D2  4EB9 00001D9E            949      JSR        GET_EA
-000019D8  4CDF 0068                950      MOVEM.L    (A7)+, D3/D5-D6
-000019DC  4E75                     951      RTS
-000019DE                           952  
-000019DE                           953  
-000019DE                           954  
-000019DE                           955  BR_EA_SIZE_AND_DISPLACEMENT
-000019DE  48E7 0600                956      MOVEM.L    D5-D6, -(A7)
-000019E2  7A00                     957      MOVE.L     #0, D5
-000019E4  7C07                     958      MOVE.L     #7, D6
-000019E6  4EB8 1892                959      JSR        GET_BIT
-000019EA  4CDF 0060                960      MOVEM.L    (A7)+, D5-D6
-000019EE  B8BC 00000000            961      CMP.L      #0, D4
-000019F4  6700 0050                962      BEQ        BR_WORD_DISPLACEMENT
-000019F8                           963  BR_BYTE_DISPLACEMENT
-000019F8  43F9 00002132            964      LEA         BYTE_MSG, A1
-000019FE  103C 000E                965      MOVE.B      #14, D0
-00001A02  4E4F                     966      TRAP        #15
-00001A04  43F9 000020A8            967      LEA         SPACE_MSG,   A1
-00001A0A  103C 000E                968      MOVE.B      #14,   D0    
-00001A0E  4E4F                     969      TRAP        #15
-00001A10  48E7 0400                970      MOVEM.L     D5, -(A7)
-00001A14  2A04                     971      MOVE.L      D4, D5
-00001A16  E31D                     972      ROL.B       #1, D5
-00001A18  0285 00000001            973      ANDI.L      #1, D5
-00001A1E  BA3C 0001                974      CMP.B       #1, D5
-00001A22  6700 0010                975      BEQ         NEG_BYTE_DISPLACEMENT
-00001A26  4CDF 0020                976      MOVEM.L    (A7)+, D5
-00001A2A  D88B                     977      ADD.L       A3, D4
-00001A2C  4EB9 00001FA6            978      JSR         PRINT_LONG_VALUE
-00001A32  4E75                     979      RTS
-00001A34                           980  NEG_BYTE_DISPLACEMENT
-00001A34  4CDF 0020                981      MOVEM.L    (A7)+, D5
-00001A38  4404                     982      NEG.B       D4
-00001A3A  988B                     983      SUB.L       A3, D4
-00001A3C  4484                     984      NEG.L       D4
-00001A3E  4EB9 00001FA6            985      JSR         PRINT_LONG_VALUE
-00001A44  4E75                     986      RTS
-00001A46                           987  BR_WORD_DISPLACEMENT
-00001A46  43F9 00002135            988      LEA         WORD_MSG, A1
-00001A4C  103C 000E                989      MOVE.B      #14, D0
-00001A50  4E4F                     990      TRAP        #15
-00001A52  43F9 000020A8            991      LEA         SPACE_MSG,   A1
-00001A58  103C 000E                992      MOVE.B      #14,   D0    
-00001A5C  4E4F                     993      TRAP        #15 
-00001A5E  4284                     994      CLR.L       D4
-00001A60  381B                     995      MOVE.W      (A3)+, D4
-00001A62  48E7 0400                996      MOVEM.L     D5, -(A7)
-00001A66  2A04                     997      MOVE.L      D4, D5
-00001A68  E35D                     998      ROL.W       #1, D5
-00001A6A  0285 00000001            999      ANDI.L      #1, D5
-00001A70  BA3C 0001               1000      CMP.B       #1, D5
-00001A74  6700 0012               1001      BEQ         NEG_WORD_DISPLACEMENT
-00001A78  4CDF 0020               1002      MOVEM.L    (A7)+, D5
-00001A7C  D88B                    1003      ADD.L       A3, D4
-00001A7E  5584                    1004      SUB.L       #2, D4
-00001A80  4EB9 00001FA6           1005      JSR         PRINT_LONG_VALUE
-00001A86  4E75                    1006      RTS
-00001A88                          1007  NEG_WORD_DISPLACEMENT
-00001A88  4CDF 0020               1008      MOVEM.L    (A7)+, D5
-00001A8C  4444                    1009      NEG.W       D4
-00001A8E  988B                    1010      SUB.L       A3, D4
-00001A90  4484                    1011      NEG.L       D4
-00001A92  5584                    1012      SUB.L       #2, D4
-00001A94  4EB9 00001FA6           1013      JSR         PRINT_LONG_VALUE
-00001A9A  4E75                    1014      RTS
-00001A9C                          1015  
-00001A9C                          1016  
-00001A9C                          1017  
-00001A9C                          1018  
-00001A9C                          1019  
-00001A9C                          1020  LEA_EA
-00001A9C                          1021      *Prints the source operand
-00001A9C  48E7 0600               1022      MOVEM.L    D5-D6, -(A7)
-00001AA0  7A00                    1023      MOVE.L     #0, D5
-00001AA2  7C05                    1024      MOVE.L     #5, D6
-00001AA4  4EB8 1892               1025      JSR        GET_BIT
-00001AA8  4CDF 0060               1026      MOVEM.L    (A7)+, D5-D6
-00001AAC  48E7 1600               1027      MOVEM.L    D3/D5-D6, -(A7)
-00001AB0  2604                    1028      MOVE.L     D4, D3
-00001AB2  4EB9 00001D9E           1029      JSR        GET_EA
-00001AB8  4CDF 0068               1030      MOVEM.L    (A7)+, D3/D5-D6
-00001ABC                          1031  
-00001ABC  43F9 0000213B           1032      LEA        COMMA_MSG, A1
-00001AC2  103C 000E               1033      MOVE.B      #14,   D0    
-00001AC6  4E4F                    1034      TRAP        #15
-00001AC8                          1035  
-00001AC8                          1036      *Prints the dest operand
-00001AC8  43F9 000020BF           1037      LEA        A_MSG, A1
-00001ACE  103C 000E               1038      MOVE.B      #14,   D0    
-00001AD2  4E4F                    1039      TRAP        #15
-00001AD4  48E7 0600               1040      MOVEM.L    D5-D6, -(A7)
-00001AD8  7A09                    1041      MOVE.L     #9, D5
-00001ADA  7C0B                    1042      MOVE.L     #11, D6
-00001ADC  4EB8 1892               1043      JSR        GET_BIT
-00001AE0  4CDF 0060               1044      MOVEM.L    (A7)+, D5-D6
-00001AE4  43F9 000020AB           1045      LEA       ZERO_MSG, A1
-00001AEA  C8FC 0002               1046      MULU      #2, D4    
-00001AEE  D3C4                    1047      ADDA.L    D4, A1
-00001AF0  103C 000E               1048      MOVE.B      #14,   D0    
-00001AF4  4E4F                    1049      TRAP        #15
-00001AF6  4E75                    1050      RTS
-00001AF8                          1051  
-00001AF8                          1052  
-00001AF8                          1053  
-00001AF8                          1054  
-00001AF8                          1055  ADDA_EA_SIZE_AND_EA 
-00001AF8  48E7 0600               1056      MOVEM.L    D5-D6, -(A7)
-00001AFC  7A08                    1057      MOVE.L     #8, D5
-00001AFE  7C08                    1058      MOVE.L     #8, D6
-00001B00  4EB8 1892               1059      JSR        GET_BIT
-00001B04  4CDF 0060               1060      MOVEM.L    (A7)+, D5-D6
-00001B08  43F9 00002135           1061      LEA        WORD_MSG, A1
-00001B0E  C8FC 0003               1062      MULU       #3, D4
-00001B12  D3C4                    1063      ADDA.L     D4, A1
-00001B14  103C 000E               1064      MOVE.B      #14, D0
-00001B18  4E4F                    1065      TRAP        #15
-00001B1A                          1066  
-00001B1A  43F9 000020A8           1067      LEA         SPACE_MSG,   A1
-00001B20  103C 000E               1068      MOVE.B      #14,   D0    
-00001B24  4E4F                    1069      TRAP        #15
-00001B26                          1070  
-00001B26  48E7 0600               1071      MOVEM.L    D5-D6, -(A7)
-00001B2A  7A00                    1072      MOVE.L     #0, D5
-00001B2C  7C05                    1073      MOVE.L     #5, D6
-00001B2E  4EB8 1892               1074      JSR        GET_BIT
-00001B32  4CDF 0060               1075      MOVEM.L    (A7)+, D5-D6
-00001B36  B8BC 0000003C           1076      CMP.L      #%111100, D4
-00001B3C  6700 0022               1077      BEQ        ADDA_EA_IMM_SOURCE
-00001B40                          1078  ADDA_EA_NON_IMM_SOURCE
-00001B40  48E7 1600               1079      MOVEM.L    D3/D5-D6, -(A7)
-00001B44  2604                    1080      MOVE.L     D4, D3     
-00001B46  4EB9 00001D9E           1081      JSR        GET_EA
-00001B4C  43F9 0000213B           1082      LEA         COMMA_MSG,   A1
-00001B52  103C 000E               1083      MOVE.B      #14,   D0    
-00001B56  4E4F                    1084      TRAP        #15
-00001B58  4CDF 0068               1085      MOVEM.L    (A7)+, D3/D5-D6
-00001B5C  6000 0064               1086      BRA        ADDA_EA_DEST
-00001B60                          1087  ADDA_EA_IMM_SOURCE
-00001B60  43F9 0000213F           1088      LEA        HASH_MSG, A1
-00001B66  103C 000E               1089      MOVE.B      #14,   D0    
-00001B6A  4E4F                    1090      TRAP        #15
-00001B6C  43F9 0000213D           1091      LEA        DOLLAR_MSG, A1
-00001B72  103C 000E               1092      MOVE.B      #14,   D0    
-00001B76  4E4F                    1093      TRAP        #15
-00001B78  48E7 0600               1094      MOVEM.L    D5-D6, -(A7)
-00001B7C  7A06                    1095      MOVE.L     #6, D5
-00001B7E  7C08                    1096      MOVE.L     #8, D6
-00001B80  4EB8 1892               1097      JSR        GET_BIT
-00001B84  4CDF 0060               1098      MOVEM.L    (A7)+, D5-D6
-00001B88  B8BC 00000003           1099      CMP.L      #%011, D4
-00001B8E  6700 001A               1100      BEQ        ADDA_EA_IMM_WORD
-00001B92                          1101  ADDA_EA_IMM_LONG
-00001B92  281B                    1102      MOVE.L     (A3)+, D4
-00001B94  4EB9 00001FA6           1103      JSR        PRINT_LONG_VALUE
-00001B9A                          1104  
-00001B9A  43F9 0000213B           1105      LEA         COMMA_MSG,   A1
-00001BA0  103C 000E               1106      MOVE.B      #14,   D0    
-00001BA4  4E4F                    1107      TRAP        #15
-00001BA6  6000 001A               1108      BRA         ADDA_EA_DEST
-00001BAA                          1109  ADDA_EA_IMM_WORD
-00001BAA  381B                    1110      MOVE.W     (A3)+, D4
-00001BAC  4EB9 00001F78           1111      JSR        PRINT_WORD_VALUE
-00001BB2                          1112  
-00001BB2  43F9 0000213B           1113      LEA         COMMA_MSG,   A1
-00001BB8  103C 000E               1114      MOVE.B      #14,   D0    
-00001BBC  4E4F                    1115      TRAP        #15
-00001BBE  6000 0002               1116      BRA         ADDA_EA_DEST
-00001BC2                          1117  
-00001BC2                          1118  ADDA_EA_DEST   
-00001BC2  48E7 0600               1119      MOVEM.L    D5-D6, -(A7)
-00001BC6  7A09                    1120      MOVE.L     #9, D5
-00001BC8  7C0B                    1121      MOVE.L     #11, D6
-00001BCA  4EB8 1892               1122      JSR        GET_BIT
-00001BCE  4CDF 0060               1123      MOVEM.L    (A7)+, D5-D6
-00001BD2  43F9 000020BF           1124      LEA   A_MSG, A1
-00001BD8  103C 000E               1125      MOVE.B   #14,  D0    
-00001BDC  4E4F                    1126      TRAP     #15
-00001BDE  43F9 000020AB           1127      LEA    ZERO_MSG, A1
-00001BE4  C8FC 0002               1128      MULU       #2, D4
-00001BE8  D3C4                    1129      ADDA.L     D4, A1
-00001BEA  103C 000E               1130      MOVE.B   #14,  D0    
-00001BEE  4E4F                    1131      TRAP     #15
-00001BF0  4E75                    1132      RTS
-00001BF2                          1133  
-00001BF2                          1134  
-00001BF2                          1135  
-00001BF2                          1136  
-00001BF2                          1137  ADDQ_EA_SIZE_AND_EA
-00001BF2  48E7 0600               1138      MOVEM.L    D5-D6, -(A7)
-00001BF6  7A06                    1139      MOVE.L     #6, D5
-00001BF8  7C07                    1140      MOVE.L     #7, D6
-00001BFA  4EB8 1892               1141      JSR        GET_BIT
-00001BFE  4CDF 0060               1142      MOVEM.L    (A7)+, D5-D6
-00001C02  43F9 00002132           1143      LEA        BYTE_MSG, A1
-00001C08  C8FC 0003               1144      MULU       #3, D4
-00001C0C  D3C4                    1145      ADDA.L       D4,  A1
-00001C0E  103C 000E               1146      MOVE.B      #14, D0
-00001C12  4E4F                    1147      TRAP        #15
-00001C14  43F9 000020A8           1148      LEA         SPACE_MSG,      A1
-00001C1A  103C 000E               1149      MOVE.B      #14,            D0    
-00001C1E  4E4F                    1150      TRAP        #15
-00001C20                          1151  
-00001C20  48E7 0600               1152      MOVEM.L    D5-D6, -(A7)
-00001C24  7A09                    1153      MOVE.L     #9, D5
-00001C26  7C0B                    1154      MOVE.L     #11, D6
-00001C28  4EB8 1892               1155      JSR        GET_BIT
-00001C2C  4CDF 0060               1156      MOVEM.L    (A7)+, D5-D6
-00001C30  43F9 0000213F           1157      LEA        HASH_MSG, A1
-00001C36  103C 000E               1158      MOVE.B      #14,   D0    
-00001C3A  4E4F                    1159      TRAP        #15
-00001C3C  43F9 0000213D           1160      LEA        DOLLAR_MSG, A1
-00001C42  103C 000E               1161      MOVE.B      #14,   D0    
-00001C46  4E4F                    1162      TRAP        #15
-00001C48  B8BC 00000000           1163      CMP.L      #0, D4
-00001C4E  6700 0042               1164      BEQ       ADDQ_ADD_COUNT_8
-00001C52                          1165  
-00001C52                          1166  ADDQ_ADD_COUNT_1_7
-00001C52  43F9 000020AB           1167      LEA       ZERO_MSG, A1
-00001C58  C8FC 0002               1168      MULU      #2, D4    
-00001C5C  D3C4                    1169      ADDA.L    D4, A1
-00001C5E  103C 000E               1170      MOVE.B      #14,   D0    
-00001C62  4E4F                    1171      TRAP        #15
-00001C64  43F9 0000213B           1172      LEA         COMMA_MSG,   A1
-00001C6A  103C 000E               1173      MOVE.B      #14,   D0    
-00001C6E  4E4F                    1174      TRAP        #15
-00001C70  48E7 0600               1175      MOVEM.L    D5-D6, -(A7)
-00001C74  7A00                    1176      MOVE.L     #0, D5
-00001C76  7C05                    1177      MOVE.L     #5, D6
-00001C78  4EB8 1892               1178      JSR        GET_BIT
-00001C7C  4CDF 0060               1179      MOVEM.L    (A7)+, D5-D6
-00001C80  48E7 1600               1180      MOVEM.L    D3/D5-D6, -(A7)
-00001C84  2604                    1181      MOVE.L     D4, D3
-00001C86  4EB9 00001D9E           1182      JSR        GET_EA
-00001C8C  4CDF 0068               1183      MOVEM.L    (A7)+, D3/D5-D6
-00001C90  4E75                    1184      RTS
-00001C92                          1185  
-00001C92                          1186  ADDQ_ADD_COUNT_8
-00001C92  43F9 000020BB           1187      LEA       EIGHT_MSG, A1
-00001C98  103C 000E               1188      MOVE.B      #14,   D0    
-00001C9C  4E4F                    1189      TRAP        #15
-00001C9E  43F9 0000213B           1190      LEA         COMMA_MSG,   A1
-00001CA4  103C 000E               1191      MOVE.B      #14,   D0    
-00001CA8  4E4F                    1192      TRAP        #15
-00001CAA  48E7 0600               1193      MOVEM.L    D5-D6, -(A7)
-00001CAE  7A00                    1194      MOVE.L     #0, D5
-00001CB0  7C05                    1195      MOVE.L     #5, D6
-00001CB2  4EB8 1892               1196      JSR        GET_BIT
-00001CB6  4CDF 0060               1197      MOVEM.L    (A7)+, D5-D6
-00001CBA  48E7 1600               1198      MOVEM.L    D3/D5-D6, -(A7)
-00001CBE  2604                    1199      MOVE.L     D4, D3   
-00001CC0  4EB9 00001D9E           1200      JSR        GET_EA
-00001CC6  4CDF 0068               1201      MOVEM.L    (A7)+, D3/D5-D6
-00001CCA  4E75                    1202      RTS
-00001CCC                          1203  
-00001CCC                          1204  
-00001CCC                          1205  
-00001CCC                          1206  
-00001CCC                          1207  
-00001CCC                          1208  
-00001CCC                          1209  ADD_SUB_EA_SIZE
-00001CCC  48E7 0600               1210      MOVEM.L    D5-D6, -(A7)
-00001CD0  7A06                    1211      MOVE.L     #6, D5
-00001CD2  7C08                    1212      MOVE.L     #8, D6
-00001CD4  4EB8 1892               1213      JSR        GET_BIT
-00001CD8  4CDF 0060               1214      MOVEM.L    (A7)+, D5-D6
-00001CDC  0284 00000003           1215      ANDI.L     #%011, D4
-00001CE2  43F9 00002132           1216      LEA        BYTE_MSG, A1
-00001CE8  C8FC 0003               1217      MULU       #3, D4
-00001CEC  D3C4                    1218      ADDA.L       D4,  A1
-00001CEE  103C 000E               1219      MOVE.B      #14, D0
-00001CF2  4E4F                    1220      TRAP        #15
-00001CF4  4E75                    1221      RTS
-00001CF6                          1222  
-00001CF6                          1223  ADD_SUB_EA_REG
-00001CF6  43F9 000020C5           1224      LEA        D_MSG, A1
-00001CFC  103C 000E               1225      MOVE.B      #14,   D0    
-00001D00  4E4F                    1226      TRAP        #15
-00001D02  48E7 0600               1227      MOVEM.L    D5-D6, -(A7)
-00001D06  7A09                    1228      MOVE.L     #9, D5
-00001D08  7C0B                    1229      MOVE.L     #11, D6
-00001D0A  4EB8 1892               1230      JSR        GET_BIT
-00001D0E  4CDF 0060               1231      MOVEM.L    (A7)+, D5-D6
-00001D12  43F9 000020AB           1232      LEA       ZERO_MSG, A1
-00001D18  C8FC 0002               1233      MULU      #2, D4    
-00001D1C  D3C4                    1234      ADDA.L    D4, A1
-00001D1E  103C 000E               1235      MOVE.B      #14,   D0    
-00001D22  4E4F                    1236      TRAP        #15
-00001D24  4E75                    1237      RTS
-00001D26                          1238  
-00001D26                          1239  
-00001D26                          1240  ADD_SUB_EA_EA
-00001D26  48E7 0600               1241      MOVEM.L    D5-D6, -(A7)
-00001D2A  7A00                    1242      MOVE.L     #0, D5
-00001D2C  7C05                    1243      MOVE.L     #5, D6
-00001D2E  4EB8 1892               1244      JSR        GET_BIT
-00001D32  4CDF 0060               1245      MOVEM.L    (A7)+, D5-D6
-00001D36  B8BC 0000003C           1246      CMP.L      #%111100, D4
-00001D3C  6700 0014               1247      BEQ        ADD_SUB_EA_EA_IMM
-00001D40  48E7 1600               1248      MOVEM.L    D3/D5-D6, -(A7)
-00001D44  2604                    1249      MOVE.L     D4, D3   
-00001D46  4EB9 00001D9E           1250      JSR        GET_EA
-00001D4C  4CDF 0068               1251      MOVEM.L    (A7)+, D3/D5-D6
-00001D50  4E75                    1252      RTS
-00001D52                          1253  
-00001D52                          1254  ADD_SUB_EA_EA_IMM
-00001D52  43F9 0000213F           1255      LEA        HASH_MSG, A1
-00001D58  103C 000E               1256      MOVE.B      #14,   D0    
-00001D5C  4E4F                    1257      TRAP        #15
-00001D5E  43F9 0000213D           1258      LEA        DOLLAR_MSG, A1
-00001D64  103C 000E               1259      MOVE.B      #14,   D0    
-00001D68  4E4F                    1260      TRAP        #15
-00001D6A  48E7 0600               1261      MOVEM.L    D5-D6, -(A7)
-00001D6E  7A06                    1262      MOVE.L     #6, D5
-00001D70  7C08                    1263      MOVE.L     #8, D6
-00001D72  4EB8 1892               1264      JSR        GET_BIT
-00001D76  4CDF 0060               1265      MOVEM.L    (A7)+, D5-D6
-00001D7A  0284 00000003           1266      ANDI.L     #%011, D4
-00001D80  B8BC 00000002           1267      CMP.L      #%010, D4
-00001D86  6600 000C               1268      BNE        ADD_SUB_EA_EA_IMM_WORD
-00001D8A                          1269  ADD_SUB_EA_EA_IMM_LONG
-00001D8A  281B                    1270      MOVE.L     (A3)+, D4
-00001D8C  4EB9 00001FA6           1271      JSR         PRINT_LONG_VALUE
-00001D92  4E75                    1272      RTS
-00001D94                          1273  ADD_SUB_EA_EA_IMM_WORD
-00001D94  381B                    1274      MOVE.W     (A3)+, D4
-00001D96  4EB9 00001F78           1275      JSR        PRINT_WORD_VALUE
-00001D9C  4E75                    1276      RTS
-00001D9E                          1277  
-00001D9E                          1278  
-00001D9E                          1279  
-00001D9E                          1280  
-00001D9E                          1281  
-00001D9E                          1282  
-00001D9E                          1283  
-00001D9E                          1284  
-00001D9E                          1285  
-00001D9E                          1286  
-00001D9E                          1287  
-00001D9E                          1288  
-00001D9E                          1289  
-00001D9E                          1290  
-00001D9E                          1291  
-00001D9E                          1292  
-00001D9E                          1293  
-00001D9E                          1294  
-00001D9E                          1295  
-00001D9E                          1296  
-00001D9E                          1297  GET_EA
-00001D9E  7A03                    1298      MOVE.L     #3, D5
-00001DA0  7C05                    1299      MOVE.L     #5, D6
-00001DA2  4EB8 1892               1300      JSR        GET_BIT
-00001DA6  B8BC 00000000           1301      CMP.L      #0, D4
-00001DAC  6700 0048               1302      BEQ        EA_DATA_REGISTER
-00001DB0  B8BC 00000001           1303      CMP.L      #1, D4
-00001DB6  6700 0066               1304      BEQ        EA_ADDR_REGISTER
-00001DBA  B8BC 00000002           1305      CMP.L      #2, D4
-00001DC0  6700 0084               1306      BEQ        EA_INDIRECT
-00001DC4  B8BC 00000003           1307      CMP.L      #3, D4
-00001DCA  6700 00BA               1308      BEQ        EA_INDIRECT_INCREMENT
-00001DCE  B8BC 00000004           1309      CMP.L      #4, D4
-00001DD4  6700 00FC               1310      BEQ        EA_INDIRECT_DECREMENT
-00001DD8                          1311      *101, and 110 mode bits should be detected in disassembler_OPCodes 
-00001DD8  7A00                    1312      MOVE.L     #0, D5
-00001DDA  7C02                    1313      MOVE.L     #2, D6
-00001DDC  4EB8 1892               1314      JSR        GET_BIT
-00001DE0  B8BC 00000000           1315      CMP.L      #0, D4
-00001DE6  6700 0136               1316      BEQ        EA_ABS_WORD
-00001DEA  B8BC 00000001           1317      CMP.L      #1, D4
-00001DF0  6700 0144               1318      BEQ        EA_ABS_LONG
-00001DF4                          1319      *Unreachable
-00001DF4  4E75                    1320      RTS
-00001DF6                          1321      
-00001DF6                          1322  
-00001DF6                          1323  EA_DATA_REGISTER
-00001DF6  43F9 000020C5           1324      LEA   D_MSG, A1
-00001DFC  103C 000E               1325      MOVE.B   #14,  D0    
-00001E00  4E4F                    1326      TRAP     #15
-00001E02  43F9 000020AB           1327      LEA    ZERO_MSG, A1
-00001E08  7A00                    1328      MOVE.L     #0, D5
-00001E0A  7C02                    1329      MOVE.L     #2, D6
-00001E0C  4EB8 1892               1330      JSR        GET_BIT
-00001E10  C8FC 0002               1331      MULU       #2, D4
-00001E14  D3C4                    1332      ADDA.L     D4, A1
-00001E16  103C 000E               1333      MOVE.B   #14,  D0    
-00001E1A  4E4F                    1334      TRAP     #15
-00001E1C  4E75                    1335      RTS
-00001E1E                          1336  
-00001E1E                          1337  
-00001E1E                          1338  EA_ADDR_REGISTER
-00001E1E  43F9 000020BF           1339      LEA   A_MSG, A1
-00001E24  103C 000E               1340      MOVE.B   #14,  D0    
-00001E28  4E4F                    1341      TRAP     #15
-00001E2A  43F9 000020AB           1342      LEA    ZERO_MSG, A1
-00001E30  7A00                    1343      MOVE.L     #0, D5
-00001E32  7C02                    1344      MOVE.L     #2, D6
-00001E34  4EB8 1892               1345      JSR        GET_BIT
-00001E38  C8FC 0002               1346      MULU       #2, D4
-00001E3C  D3C4                    1347      ADDA.L     D4, A1
-00001E3E  103C 000E               1348      MOVE.B   #14,  D0    
-00001E42  4E4F                    1349      TRAP     #15
-00001E44  4E75                    1350      RTS
-00001E46                          1351  
-00001E46                          1352  
-00001E46                          1353  EA_INDIRECT
-00001E46  43F9 00002145           1354      LEA   OPEN_PARENTHESIS_MSG, A1
-00001E4C  103C 000E               1355      MOVE.B   #14,  D0    
-00001E50  4E4F                    1356      TRAP     #15
-00001E52  43F9 000020BF           1357      LEA   A_MSG, A1
-00001E58  103C 000E               1358      MOVE.B   #14,  D0    
-00001E5C  4E4F                    1359      TRAP     #15
-00001E5E  43F9 000020AB           1360      LEA    ZERO_MSG, A1
-00001E64  7A00                    1361      MOVE.L     #0, D5
-00001E66  7C02                    1362      MOVE.L     #2, D6
-00001E68  4EB8 1892               1363      JSR        GET_BIT
-00001E6C  C8FC 0002               1364      MULU       #2, D4
-00001E70  D3C4                    1365      ADDA.L     D4, A1
-00001E72  103C 000E               1366      MOVE.B   #14,  D0    
-00001E76  4E4F                    1367      TRAP     #15
-00001E78  43F9 00002147           1368      LEA   CLOSE_PARENTHESIS_MSG, A1
-00001E7E  103C 000E               1369      MOVE.B   #14,  D0    
-00001E82  4E4F                    1370      TRAP     #15
-00001E84  4E75                    1371      RTS
-00001E86                          1372  
-00001E86                          1373  
-00001E86                          1374  
-00001E86                          1375  EA_INDIRECT_INCREMENT
-00001E86  43F9 00002145           1376      LEA   OPEN_PARENTHESIS_MSG, A1
-00001E8C  103C 000E               1377      MOVE.B   #14,  D0    
-00001E90  4E4F                    1378      TRAP     #15
-00001E92  43F9 000020BF           1379      LEA   A_MSG, A1
-00001E98  103C 000E               1380      MOVE.B   #14,  D0    
-00001E9C  4E4F                    1381      TRAP     #15
-00001E9E  43F9 000020AB           1382      LEA    ZERO_MSG, A1
-00001EA4  7A00                    1383      MOVE.L     #0, D5
-00001EA6  7C02                    1384      MOVE.L     #2, D6
-00001EA8  4EB8 1892               1385      JSR        GET_BIT
-00001EAC  C8FC 0002               1386      MULU       #2, D4
-00001EB0  D3C4                    1387      ADDA.L     D4, A1
-00001EB2  103C 000E               1388      MOVE.B   #14,  D0    
-00001EB6  4E4F                    1389      TRAP     #15
-00001EB8  43F9 00002147           1390      LEA   CLOSE_PARENTHESIS_MSG, A1
-00001EBE  103C 000E               1391      MOVE.B   #14,  D0    
-00001EC2  4E4F                    1392      TRAP     #15
-00001EC4  43F9 00002141           1393      LEA   PLUS_MSG, A1
-00001ECA  103C 000E               1394      MOVE.B   #14,  D0    
-00001ECE  4E4F                    1395      TRAP     #15
-00001ED0  4E75                    1396      RTS
-00001ED2                          1397  
-00001ED2                          1398  
-00001ED2                          1399  EA_INDIRECT_DECREMENT
-00001ED2  43F9 00002143           1400      LEA   MINUS_MSG, A1
-00001ED8  103C 000E               1401      MOVE.B   #14,  D0    
-00001EDC  4E4F                    1402      TRAP     #15
-00001EDE  43F9 00002145           1403      LEA   OPEN_PARENTHESIS_MSG, A1
-00001EE4  103C 000E               1404      MOVE.B   #14,  D0    
-00001EE8  4E4F                    1405      TRAP     #15
-00001EEA  43F9 000020BF           1406      LEA   A_MSG, A1
-00001EF0  103C 000E               1407      MOVE.B   #14,  D0    
-00001EF4  4E4F                    1408      TRAP     #15
-00001EF6  43F9 000020AB           1409      LEA    ZERO_MSG, A1
-00001EFC  7A00                    1410      MOVE.L     #0, D5
-00001EFE  7C02                    1411      MOVE.L     #2, D6
-00001F00  4EB8 1892               1412      JSR        GET_BIT
-00001F04  C8FC 0002               1413      MULU       #2, D4
-00001F08  D3C4                    1414      ADDA.L     D4, A1
-00001F0A  103C 000E               1415      MOVE.B   #14,  D0    
-00001F0E  4E4F                    1416      TRAP     #15
-00001F10  43F9 00002147           1417      LEA   CLOSE_PARENTHESIS_MSG, A1
-00001F16  103C 000E               1418      MOVE.B   #14,  D0    
-00001F1A  4E4F                    1419      TRAP     #15
-00001F1C  4E75                    1420      RTS
-00001F1E                          1421  
-00001F1E                          1422  
-00001F1E                          1423  
-00001F1E                          1424  EA_ABS_WORD
-00001F1E  4284                    1425      CLR.L      D4
-00001F20  381B                    1426      MOVE.W     (A3)+, D4
-00001F22  43F9 0000213D           1427      LEA        DOLLAR_MSG,       A1
-00001F28  103C 000E               1428      MOVE.B      #14,            D0    
-00001F2C  4E4F                    1429      TRAP        #15
-00001F2E  4EB9 00001F78           1430      JSR        PRINT_WORD_VALUE
-00001F34  4E75                    1431      RTS
-00001F36                          1432  
-00001F36                          1433  EA_ABS_LONG
-00001F36  281B                    1434      MOVE.L    (A3)+, D4
-00001F38  43F9 0000213D           1435      LEA        DOLLAR_MSG,       A1
-00001F3E  103C 000E               1436      MOVE.B      #14,            D0    
-00001F42  4E4F                    1437      TRAP        #15
-00001F44  4EB9 00001FA6           1438      JSR        PRINT_LONG_VALUE
-00001F4A  4E75                    1439      RTS
-00001F4C                          1440  
-00001F4C                          1441  
-00001F4C                          1442  
-00001F4C                          1443  
-00001F4C                          1444  PRINT_BYTE_VALUE
-00001F4C  48E7 0600               1445          MOVEM.L    D5-D6, -(A7)
-00001F50  7C02                    1446          MOVE.L     #2, D6
-00001F52                          1447  PRINT_BYTE_VALUE_LOOP
-00001F52                          1448          *Gets the most significant bit basically
-00001F52                          1449          *Could use GET_BIT subroutine but it is 
-00001F52                          1450          *costly in terms of registers used
-00001F52  1A04                    1451          MOVE.B     D4, D5
-00001F54  E80D                    1452          LSR.B      #4, D5
-00001F56  E90C                    1453          LSL.B      #4, D4
-00001F58  43F9 000020AB           1454          LEA        ZERO_MSG,      A1
-00001F5E                          1455          * load the address of Zero_msg
-00001F5E                          1456          * because all of the msgs are stored next to each other in order
-00001F5E                          1457          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
-00001F5E                          1458          * and then add it to the address starting at zero_msg
-00001F5E  CAFC 0002               1459          MULU         #2,            D5
-00001F62  D3C5                    1460          ADDA.L       D5,            A1
-00001F64  103C 000E               1461          MOVE.B      #14, D0
-00001F68  4E4F                    1462          TRAP        #15
-00001F6A  5386                    1463          SUBI.L      #1, D6
-00001F6C  BC3C 0000               1464          CMP.B       #0, D6
-00001F70  66E0                    1465          BNE         PRINT_BYTE_VALUE_LOOP
-00001F72  4CDF 0060               1466          MOVEM.L    (A7)+, D5-D6
-00001F76  4E75                    1467          RTS
-00001F78                          1468  
-00001F78                          1469  
-00001F78                          1470  
-00001F78                          1471  PRINT_WORD_VALUE
-00001F78  48E7 0600               1472          MOVEM.L    D5-D6, -(A7)
-00001F7C  7C04                    1473          MOVE.L     #4, D6
-00001F7E                          1474  PRINT_WORD_VALUE_LOOP
-00001F7E                          1475          *Gets the most significant bit basically
-00001F7E                          1476          *Could use GET_BIT subroutine but it is 
-00001F7E                          1477          *costly in terms of registers used
-00001F7E  3A04                    1478          MOVE.W     D4, D5
-00001F80  EC4D                    1479          LSR.W      #6, D5
-00001F82  EC4D                    1480          LSR.W      #6, D5
-00001F84  E94C                    1481          LSL.W      #4, D4
-00001F86  43F9 000020AB           1482          LEA        ZERO_MSG,      A1
-00001F8C                          1483          * load the address of Zero_msg
-00001F8C                          1484          * because all of the msgs are stored next to each other in order
-00001F8C                          1485          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
-00001F8C                          1486          * and then add it to the address starting at zero_msg
-00001F8C  CAFC 0002               1487          MULU         #2,            D5
-00001F90  D3C5                    1488          ADDA.L       D5,            A1
-00001F92  103C 000E               1489          MOVE.B      #14, D0
-00001F96  4E4F                    1490          TRAP        #15
-00001F98  5386                    1491          SUBI.L      #1, D6
-00001F9A  BC3C 0000               1492          CMP.B       #0, D6
-00001F9E  66DE                    1493          BNE         PRINT_WORD_VALUE_LOOP
-00001FA0  4CDF 0060               1494          MOVEM.L    (A7)+, D5-D6
-00001FA4  4E75                    1495          RTS
-00001FA6                          1496  
-00001FA6                          1497  
-00001FA6                          1498  PRINT_LONG_VALUE
-00001FA6  48E7 0600               1499          MOVEM.L    D5-D6, -(A7)
-00001FAA  7C08                    1500          MOVE.L     #8, D6
-00001FAC                          1501  PRINT_LONG_VALUE_LOOP
-00001FAC                          1502          *Gets the most significant bit basically
-00001FAC                          1503          *Could use GET_BIT subroutine but it is 
-00001FAC                          1504          *costly in terms of registers used
-00001FAC  2A04                    1505          MOVE.L     D4, D5
-00001FAE  E08D                    1506          LSR.L      #8, D5
-00001FB0  E08D                    1507          LSR.L      #8, D5
-00001FB2  E08D                    1508          LSR.L      #8, D5
-00001FB4  E88D                    1509          LSR.L      #4, D5
-00001FB6  E98C                    1510          LSL.L      #4, D4
-00001FB8  43F9 000020AB           1511          LEA        ZERO_MSG,      A1
-00001FBE                          1512          * load the address of Zero_msg
-00001FBE                          1513          * because all of the msgs are stored next to each other in order
-00001FBE                          1514          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
-00001FBE                          1515          * and then add it to the address starting at zero_msg
-00001FBE  CAFC 0002               1516          MULU         #2,            D5
-00001FC2  D3C5                    1517          ADDA.L       D5,            A1
-00001FC4  103C 000E               1518          MOVE.B      #14, D0
-00001FC8  4E4F                    1519          TRAP        #15
-00001FCA  5386                    1520          SUBI.L      #1, D6
-00001FCC  BC3C 0000               1521          CMP.B       #0, D6
-00001FD0  66DA                    1522          BNE         PRINT_LONG_VALUE_LOOP
-00001FD2  4CDF 0060               1523          MOVEM.L    (A7)+, D5-D6
-00001FD6  4E75                    1524          RTS
-00001FD8                          1525  
-00001FD8                          1526  
-00001FD8                          1527   
-00001FD8                          1528  -------------------- end include --------------------
-00001FD8                          1529  
-00001FD8                          1530  
-00001FD8                          1531  * Put variables and constants here
-00001FD8                          1532  
-00001FD8= 57 65 6C 63 6F 6D ...   1533  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
-00001FFE= 50 6C 65 61 73 65 ...   1534  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
-00002022= 50 6C 65 61 73 65 ...   1535  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
-00002044= 44 6F 6E 65 20 52 ...   1536  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
-00002058                          1537  * CR and LF for strings above because we want to go to next line after printing message
-00002058                          1538  
-00002058                          1539  STA_ADDR         DS.B        40
-00002080                          1540  END_ADDR         DS.B        40
-000020A8                          1541  
-000020A8                          1542  * no CR and LF for strings below because we want to print each number and letter
-000020A8                          1543  
-000020A8= 20 20 00                1544  SPACE_MSG:       DC.B        '  ',0
-000020AB                          1545  
-000020AB= 30 00                   1546  ZERO_MSG:        DC.B        '0',0
-000020AD= 31 00                   1547  ONE_MSG:         DC.B        '1',0
-000020AF= 32 00                   1548  TWO_MSG:         DC.B        '2',0
-000020B1= 33 00                   1549  THREE_MSG:       DC.B        '3',0
-000020B3= 34 00                   1550  FOUR_MSG:        DC.B        '4',0
-000020B5= 35 00                   1551  FIVE_MSG:        DC.B        '5',0
-000020B7= 36 00                   1552  SIX_MSG:         DC.B        '6',0
-000020B9= 37 00                   1553  SEVEN_MSG:       DC.B        '7',0
-000020BB= 38 00                   1554  EIGHT_MSG:       DC.B        '8',0
-000020BD= 39 00                   1555  NINE_MSG:        DC.B        '9',0
-000020BF= 41 00                   1556  A_MSG:           DC.B        'A',0
-000020C1= 42 00                   1557  B_MSG:           DC.B        'B',0
-000020C3= 43 00                   1558  C_MSG:           DC.B        'C',0
-000020C5= 44 00                   1559  D_MSG:           DC.B        'D',0
-000020C7= 45 00                   1560  E_MSG:           DC.B        'E',0
-000020C9= 46 00                   1561  F_MSG:           DC.B        'F',0 
-000020CB                          1562  
-000020CB                          1563  * opcodes
-000020CB= 4A 53 52 20 00          1564  JSRMSG:             DC.B        'JSR ',0
-000020D0= 4E 4F 54 00             1565  NOT_MSG:        DC.B        'NOT',0
-000020D4= 42 52 41 00             1566  BRA_MSG:        DC.B        'BRA',0
-000020D8= 4A 53 52 00             1567  JSR_MSG:        DC.B        'JSR',0
-000020DC= 4D 4F 56 45 51 00       1568  MOVEQ_MSG:      DC.B        'MOVEQ',0
-000020E2= 41 4E 44 00             1569  AND_MSG:        DC.B        'AND',0
-000020E6= 4C 45 41 00             1570  LEA_MSG         DC.B        'LEA',0
-000020EA= 41 53 52 00             1571  ASR_MSG         DC.B        'ASR',0
-000020EE= 41 53 4C 00             1572  ASL_MSG         DC.B        'ASL',0
-000020F2= 4C 53 52 00             1573  LSR_MSG         DC.B        'LSR',0
-000020F6= 4C 53 4C 00             1574  LSL_MSG         DC.B        'LSL',0
-000020FA= 52 4F 58 00             1575  ROXR_MSG        DC.B        'ROX',0  *Unused messages but present because helps in indexing, DONT USE IT
-000020FE= 52 4F 58 00             1576  ROXL_MSG        DC.B        'ROX',0  *Unused messages but present because helps in indexing, DONT USE IT
-00002102= 52 4F 52 00             1577  ROR_MSG         DC.B        'ROR',0
-00002106= 52 4F 4C 00             1578  ROL_MSG         DC.B        'ROL',0
-0000210A= 4F 52 00                1579  OR_MSG:         DC.B        'OR',0
-0000210D= 44 41 54 41 00          1580  DATA_MSG:       DC.B        'DATA',0
-00002112= 42 00                   1581  BCC_MSG         DC.B        'B', 0
-00002114= 42 4C 45 00             1582  BLE_MSG         DC.B        'BLE', 0
-00002118= 42 47 54 00             1583  BGT_MSG         DC.B        'BGT',0
-0000211C= 42 45 51 00             1584  BEQ_MSG         DC.B        'BEQ',0
-00002120= 41 44 44 51 00          1585  ADDQ_MSG        DC.B        'ADDQ',0
-00002125= 41 44 44 41 00          1586  ADDA_MSG        DC.B        'ADDA',0
-0000212A= 53 55 42 00             1587  SUB_MSG         DC.B        'SUB', 0
-0000212E= 41 44 44 00             1588  ADD_MSG         DC.B        'ADD', 0
-00002132= 2E 42 00                1589  BYTE_MSG        DC.B        '.B', 0
-00002135= 2E 57 00                1590  WORD_MSG        DC.B        '.W', 0
-00002138= 2E 4C 00                1591  LONG_MSG        DC.B        '.L', 0
-0000213B                          1592  
-0000213B= 2C 00                   1593  COMMA_MSG       DC.B        ',', 0
-0000213D= 24 00                   1594  DOLLAR_MSG      DC.B        '$', 0
-0000213F= 23 00                   1595  HASH_MSG        DC.B        '#', 0
-00002141= 2B 00                   1596  PLUS_MSG        DC.B        '+', 0
-00002143= 2D 00                   1597  MINUS_MSG       DC.B        '-', 0
-00002145= 28 00                   1598  OPEN_PARENTHESIS_MSG  DC.B   '(', 0
-00002147= 29 00                   1599  CLOSE_PARENTHESIS_MSG DC.B  ')', 0
-00002149                          1600  *-----Carriage Return
-00002149  =0000000D               1601  CR              EQU          $0D
-00002149                          1602  *-----------Line Feed
-00002149  =0000000A               1603  LF              EQU          $0A
-00002149                          1604  
-00002149= 0D 0A 00                1605  NEW_LINE:       DC.B         '',CR,LF,0
-0000214C                          1606  
-0000214C                          1607      END    START        ; last line of source
+0000116C  4EB9 000011BE            248          JSR     ISOLATE_15_6
+00001172  4EB9 000011CE            249          JSR     ISOLATE_15_8
+00001178  4EB9 000011E6            250          JSR     ISOLATE_15_12
+0000117E  4EB9 00001230            251          JSR     ISOLATE_15_0
+00001184  BCBC 00000001            252          CMP.L   #1, D6
+0000118A  6600 0004                253          BNE     TOTAL_DECODE_FAILURE
+0000118E  4E75                     254          RTS
+00001190                           255          
+00001190                           256  
+00001190                           257  TOTAL_DECODE_FAILURE
+00001190  3803                     258          MOVE.W  D3, D4
+00001192  43F9 00002155            259          LEA DATA_MSG, A1
+00001198  103C 000E                260          MOVE.B      #14, D0
+0000119C  4E4F                     261          TRAP        #15
+0000119E  43F9 000020F0            262          LEA SPACE_MSG, A1
+000011A4  103C 000E                263          MOVE.B      #14, D0
+000011A8  4E4F                     264          TRAP        #15
+000011AA  43F9 0000218D            265          LEA DOLLAR_MSG, A1
+000011B0  103C 000E                266          MOVE.B      #14, D0
+000011B4  4E4F                     267          TRAP        #15
+000011B6  4EB9 00001FC0            268          JSR PRINT_WORD_VALUE
+000011BC  4E75                     269          RTS
+000011BE                           270  
+000011BE                           271  ISOLATE_15_6:
+000011BE                           272          
+000011BE  2803                     273          MOVE.L      D3,     D4
+000011C0  7406                     274          MOVE.L      #6,     D2
+000011C2  E4AC                     275          LSR.L       D2,     D4
+000011C4                           276          
+000011C4  B87C 013A                277          CMP.W       #$13A,  D4
+000011C8  6700 00E8                278          BEQ         OP_CODE_JSR
+000011CC                           279          
+000011CC  4E75                     280          RTS
+000011CE                           281  
+000011CE                           282  
+000011CE                           283  ISOLATE_15_8:
+000011CE                           284          *SIMHALT
+000011CE  2803                     285          MOVE.L      D3,     D4
+000011D0  7408                     286          MOVE.L      #8,     D2
+000011D2  E4AC                     287          LSR.L       D2,     D4
+000011D4                           288          
+000011D4  B83C 0046                289          CMP.B       #$46,   D4
+000011D8  6700 0064                290          BEQ         OP_CODE_NOT
+000011DC  B83C 0060                291          CMP.B       #$60,   D4
+000011E0  6700 009E                292          BEQ         OP_CODE_BRA
+000011E4                           293  
+000011E4  4E75                     294          RTS
+000011E6                           295          
+000011E6                           296  ISOLATE_15_12:
+000011E6  2803                     297          MOVE.L      D3,     D4
+000011E8  740C                     298          MOVE.L      #12,    D2
+000011EA  E4AC                     299          LSR.L       D2,     D4
+000011EC                           300          
+000011EC  B83C 0007                301          CMP.B       #$7,    D4
+000011F0  6700 00CE                302          BEQ         OP_CODE_MOVEQ
+000011F4  B83C 0008                303          CMP.B       #$8,    D4
+000011F8  6700 0560                304          BEQ         OP_CODE_OR      *may get confused with DIVU + any other opcodes that start with 1000 (ones that we are not required to cover)
+000011FC  B83C 000C                305          CMP.B       #$C,    D4
+00001200  6700 016E                306          BEQ         OP_CODE_AND
+00001204  4EB9 0000137E            307          JSR         OP_CODE_BCC
+0000120A  4EB9 00001788            308          JSR         OP_CODE_SHIFT_ROTATE
+00001210  4EB9 00001412            309          JSR         OP_CODE_ADDA
+00001216  4EB9 000014D4            310          JSR         OP_CODE_ADDQ
+0000121C  4EB9 00001564            311          JSR         OP_CODE_ADD
+00001222  4EB9 00001584            312          JSR         OP_CODE_SUB
+00001228  4EB9 000012CE            313          JSR         OP_CODE_LEA
+0000122E  4E75                     314          RTS
+00001230                           315  
+00001230                           316  
+00001230                           317  ISOLATE_15_0:
+00001230  4EB9 0000124C            318          JSR       OP_CODE_NOP
+00001236  4EB9 00001266            319          JSR       OP_CODE_RTS
+0000123C  4E75                     320          RTS
+0000123E                           321  
+0000123E                           322  
+0000123E                           323  OP_CODE_NOT:
+0000123E  43F9 00002118            324          LEA         NOT_MSG, A1
+00001244  103C 000E                325          MOVE.B      #14, D0
+00001248  4E4F                     326          TRAP        #15 
+0000124A  4E75                     327          RTS 
+0000124C                           328  
+0000124C                           329  OP_CODE_NOP:
+0000124C  B6BC 00004E71            330          CMP.L    #%0100111001110001, D3
+00001252  6600 069A                331          BNE      INSTRUCTION_DECODE_FAILURE
+00001256  43F9 0000217A            332          LEA      NOP_MSG, A1
+0000125C  103C 000E                333          MOVE.B      #14, D0
+00001260  4E4F                     334          TRAP        #15 
+00001262  7C01                     335          MOVE.L      #1, D6
+00001264  4E75                     336          RTS 
+00001266                           337  
+00001266                           338  
+00001266                           339  
+00001266                           340  OP_CODE_RTS:
+00001266  B6BC 00004E75            341          CMP.L    #%0100111001110101, D3
+0000126C  6600 0680                342          BNE      INSTRUCTION_DECODE_FAILURE
+00001270  43F9 0000217E            343          LEA      RTS_MSG, A1
+00001276  103C 000E                344          MOVE.B      #14, D0
+0000127A  4E4F                     345          TRAP        #15 
+0000127C  7C01                     346          MOVE.L      #1, D6
+0000127E  4E75                     347          RTS 
+00001280                           348  
+00001280                           349  OP_CODE_BRA:
+00001280  48E7 0600                350          MOVEM.L    D5-D6, -(A7)
+00001284  7A0C                     351          MOVE.L     #12, D5
+00001286  7C0F                     352          MOVE.L     #15, D6
+00001288  4EB9 000018DA            353          JSR        GET_BIT
+0000128E  4CDF 0060                354          MOVEM.L    (A7)+, D5-D6
+00001292  B8BC 00000006            355          CMP.L       #%0110, D4
+00001298  6600 0654                356          BNE         INSTRUCTION_DECODE_FAILURE
+0000129C  43F9 0000211C            357          LEA         BRA_MSG, A1
+000012A2  103C 000E                358          MOVE.B      #14, D0
+000012A6  4E4F                     359          TRAP        #15
+000012A8  4EB9 00001A26            360          JSR         BR_EA_SIZE_AND_DISPLACEMENT
+000012AE  7C01                     361          MOVE.L      #1, D6
+000012B0  4E75                     362          RTS 
+000012B2                           363  OP_CODE_JSR:
+000012B2  43F9 00002120            364          LEA         JSR_MSG, A1
+000012B8  103C 000E                365          MOVE.B      #14, D0
+000012BC  4E4F                     366          TRAP        #15
+000012BE                           367          
+000012BE  4E75                     368          RTS
+000012C0                           369  OP_CODE_MOVEQ:
+000012C0  43F9 00002124            370          LEA         MOVEQ_MSG, A1
+000012C6  103C 000E                371          MOVE.B      #14, D0
+000012CA  4E4F                     372          TRAP        #15
+000012CC                           373          
+000012CC  4E75                     374          RTS
+000012CE                           375  
+000012CE                           376  OP_CODE_LEA:
+000012CE  48E7 0600                377          MOVEM.L    D5-D6, -(A7)
+000012D2  7A0C                     378          MOVE.L     #12, D5
+000012D4  7C0F                     379          MOVE.L     #15, D6
+000012D6  4EB9 000018DA            380          JSR        GET_BIT
+000012DC  4CDF 0060                381          MOVEM.L    (A7)+, D5-D6
+000012E0  B8BC 00000004            382          CMP.L      #%0100, D4
+000012E6  6600 0606                383          BNE        INSTRUCTION_DECODE_FAILURE
+000012EA  48E7 0600                384          MOVEM.L    D5-D6, -(A7)
+000012EE  7A06                     385          MOVE.L     #6, D5
+000012F0  7C08                     386          MOVE.L     #8, D6
+000012F2  4EB9 000018DA            387          JSR        GET_BIT
+000012F8  4CDF 0060                388          MOVEM.L    (A7)+, D5-D6
+000012FC  B8BC 00000007            389          CMP.L      #7, D4
+00001302  6600 05EA                390          BNE        INSTRUCTION_DECODE_FAILURE
+00001306  48E7 0600                391          MOVEM.L    D5-D6, -(A7)
+0000130A  7A00                     392          MOVE.L     #0, D5
+0000130C  7C05                     393          MOVE.L     #5, D6
+0000130E  4EB9 000018DA            394          JSR        GET_BIT
+00001314  4CDF 0060                395          MOVEM.L    (A7)+, D5-D6
+00001318  B8BC 00000039            396          CMP.L      #%111001, D4
+0000131E  6700 002E                397          BEQ        OP_CODE_LEA_PRINT
+00001322  B8BC 00000038            398          CMP.L      #%111000, D4
+00001328  6700 0024                399          BEQ        OP_CODE_LEA_PRINT
+0000132C  48E7 0600                400          MOVEM.L    D5-D6, -(A7)
+00001330  7A03                     401          MOVE.L     #3, D5
+00001332  7C05                     402          MOVE.L     #5, D6
+00001334  4EB9 000018DA            403          JSR        GET_BIT
+0000133A  4CDF 0060                404          MOVEM.L    (A7)+, D5-D6
+0000133E  B8BC 00000002            405          CMP.L      #%010, D4
+00001344  6700 0008                406          BEQ        OP_CODE_LEA_PRINT
+00001348  6000 05A4                407          BRA        INSTRUCTION_DECODE_FAILURE
+0000134C                           408          *Unreachable
+0000134C  4E75                     409          RTS
+0000134E                           410  OP_CODE_LEA_PRINT
+0000134E  43F9 0000212E            411          LEA         LEA_MSG, A1
+00001354  103C 000E                412          MOVE.B      #14, D0
+00001358  4E4F                     413          TRAP        #15
+0000135A  43F9 000020F0            414          LEA         SPACE_MSG, A1
+00001360  103C 000E                415          MOVE.B      #14, D0
+00001364  4E4F                     416          TRAP        #15
+00001366  4EB9 00001AE4            417          JSR         LEA_EA
+0000136C  7C01                     418          MOVE.L      #1, D6
+0000136E  4E75                     419          RTS
+00001370                           420  
+00001370                           421  
+00001370                           422  OP_CODE_AND:
+00001370  43F9 0000212A            423          LEA         AND_MSG, A1
+00001376  103C 000E                424          MOVE.B      #14, D0
+0000137A  4E4F                     425          TRAP        #15
+0000137C                           426          
+0000137C  4E75                     427          RTS
+0000137E                           428  
+0000137E                           429  OP_CODE_BCC
+0000137E  48E7 0600                430          MOVEM.L    D5-D6, -(A7)
+00001382  7A0C                     431          MOVE.L     #12, D5
+00001384  7C0F                     432          MOVE.L     #15, D6
+00001386  4EB9 000018DA            433          JSR        GET_BIT
+0000138C  4CDF 0060                434          MOVEM.L    (A7)+, D5-D6
+00001390  B8BC 00000006            435          CMP.L      #%0110, D4
+00001396  6600 0556                436          BNE        INSTRUCTION_DECODE_FAILURE
+0000139A                           437          *Get bits from 8-11 to get the condition
+0000139A                           438          *Only checking for (BGT, BLE, BEQ). Rest are considered
+0000139A                           439          *invalid
+0000139A  48E7 0600                440          MOVEM.L    D5-D6, -(A7)
+0000139E  7A08                     441          MOVE.L     #8, D5
+000013A0  7C0B                     442          MOVE.L     #11, D6
+000013A2  4EB9 000018DA            443          JSR        GET_BIT
+000013A8  4CDF 0060                444          MOVEM.L    (A7)+, D5-D6
+000013AC  B8BC 0000000F            445          CMP.L      #15, D4
+000013B2  6700 001C                446          BEQ        OP_CODE_BLE
+000013B6  B8BC 0000000E            447          CMP.L      #14, D4
+000013BC  6700 0028                448          BEQ        OP_CODE_BGT
+000013C0  B8BC 00000007            449          CMP.L      #7,  D4
+000013C6  6700 0034                450          BEQ        OP_CODE_BEQ
+000013CA  6000 0522                451          BRA        INSTRUCTION_DECODE_FAILURE
+000013CE  4E75                     452          RTS
+000013D0                           453  
+000013D0                           454  
+000013D0                           455  OP_CODE_BLE
+000013D0  43F9 0000215C            456          LEA         BLE_MSG, A1
+000013D6  103C 000E                457          MOVE.B      #14, D0
+000013DA  4E4F                     458          TRAP        #15
+000013DC  4EB9 00001A26            459          JSR         BR_EA_SIZE_AND_DISPLACEMENT
+000013E2  7C01                     460          MOVE.L      #1, D6
+000013E4  4E75                     461          RTS
+000013E6                           462  
+000013E6                           463  OP_CODE_BGT
+000013E6  43F9 00002160            464          LEA         BGT_MSG, A1
+000013EC  103C 000E                465          MOVE.B      #14, D0
+000013F0  4E4F                     466          TRAP        #15
+000013F2  4EB9 00001A26            467          JSR         BR_EA_SIZE_AND_DISPLACEMENT
+000013F8  7C01                     468          MOVE.L      #1, D6
+000013FA  4E75                     469          RTS
+000013FC                           470  
+000013FC                           471  
+000013FC                           472  OP_CODE_BEQ
+000013FC  43F9 00002164            473          LEA         BEQ_MSG, A1
+00001402  103C 000E                474          MOVE.B      #14, D0
+00001406  4E4F                     475          TRAP        #15
+00001408  4EB9 00001A26            476          JSR         BR_EA_SIZE_AND_DISPLACEMENT
+0000140E  7C01                     477          MOVE.L      #1, D6
+00001410  4E75                     478          RTS
+00001412                           479  
+00001412                           480  
+00001412                           481  OP_CODE_ADDA
+00001412  48E7 0600                482          MOVEM.L    D5-D6, -(A7)
+00001416  7A0C                     483          MOVE.L     #12, D5
+00001418  7C0F                     484          MOVE.L     #15, D6
+0000141A  4EB9 000018DA            485          JSR        GET_BIT
+00001420  4CDF 0060                486          MOVEM.L    (A7)+, D5-D6
+00001424  B8BC 0000000D            487          CMP.L      #%1101, D4
+0000142A  6600 04C2                488          BNE        INSTRUCTION_DECODE_FAILURE
+0000142E  48E7 0600                489          MOVEM.L    D5-D6, -(A7)
+00001432  7A06                     490          MOVE.L     #6, D5
+00001434  7C08                     491          MOVE.L     #8, D6
+00001436  4EB9 000018DA            492          JSR        GET_BIT
+0000143C  4CDF 0060                493          MOVEM.L    (A7)+, D5-D6
+00001440  B8BC 00000002            494          CMP.L      #%010, D4
+00001446  6F00 04A6                495          BLE        INSTRUCTION_DECODE_FAILURE
+0000144A  B8BC 00000004            496          CMP.L      #%100, D4
+00001450  6700 049C                497          BEQ        INSTRUCTION_DECODE_FAILURE
+00001454  B8BC 00000005            498          CMP.L      #%101, D4
+0000145A  6700 0492                499          BEQ        INSTRUCTION_DECODE_FAILURE
+0000145E  B8BC 00000006            500          CMP.L      #%110, D4
+00001464  6700 0488                501          BEQ        INSTRUCTION_DECODE_FAILURE
+00001468  48E7 0600                502          MOVEM.L    D5-D6, -(A7)
+0000146C  7A00                     503          MOVE.L     #0, D5
+0000146E  7C05                     504          MOVE.L     #5, D6
+00001470  4EB9 000018DA            505          JSR        GET_BIT
+00001476  4CDF 0060                506          MOVEM.L    (A7)+, D5-D6
+0000147A  B8BC 0000003A            507          CMP.L      #%111010, D4
+00001480  6700 046C                508          BEQ        INSTRUCTION_DECODE_FAILURE
+00001484  B8BC 0000003B            509          CMP.L      #%111011, D4
+0000148A  6700 0462                510          BEQ        INSTRUCTION_DECODE_FAILURE
+0000148E  B8BC 0000003C            511          CMP.L      #%111100, D4
+00001494  6E00 0458                512          BGT        INSTRUCTION_DECODE_FAILURE
+00001498  48E7 0600                513          MOVEM.L    D5-D6, -(A7)
+0000149C  7A03                     514          MOVE.L     #3, D5
+0000149E  7C05                     515          MOVE.L     #5, D6
+000014A0  4EB9 000018DA            516          JSR        GET_BIT
+000014A6  4CDF 0060                517          MOVEM.L    (A7)+, D5-D6
+000014AA  B8BC 00000005            518          CMP.L      #%101, D4
+000014B0  6700 043C                519          BEQ        INSTRUCTION_DECODE_FAILURE
+000014B4  B8BC 00000006            520          CMP.L      #%110, D4
+000014BA  6700 0432                521          BEQ        INSTRUCTION_DECODE_FAILURE
+000014BE  43F9 0000216D            522          LEA        ADDA_MSG, A1
+000014C4  103C 000E                523          MOVE.B      #14, D0
+000014C8  4E4F                     524          TRAP        #15
+000014CA  4EB9 00001B40            525          JSR        ADDA_EA_SIZE_AND_EA  
+000014D0  7C01                     526          MOVE.L      #1, D6
+000014D2  4E75                     527          RTS
+000014D4                           528  
+000014D4                           529  OP_CODE_ADDQ
+000014D4  48E7 0600                530          MOVEM.L    D5-D6, -(A7)
+000014D8  7A0C                     531          MOVE.L     #12, D5
+000014DA  7C0F                     532          MOVE.L     #15, D6
+000014DC  4EB9 000018DA            533          JSR        GET_BIT
+000014E2  4CDF 0060                534          MOVEM.L    (A7)+, D5-D6
+000014E6  B8BC 00000005            535          CMP.L      #%0101, D4
+000014EC  6600 0400                536          BNE        INSTRUCTION_DECODE_FAILURE
+000014F0  48E7 0600                537          MOVEM.L    D5-D6, -(A7)
+000014F4  7A06                     538          MOVE.L     #6, D5
+000014F6  7C07                     539          MOVE.L     #7, D6
+000014F8  4EB9 000018DA            540          JSR        GET_BIT
+000014FE  4CDF 0060                541          MOVEM.L    (A7)+, D5-D6
+00001502  B8BC 00000003            542          CMP.L      #%11, D4
+00001508  6700 03E4                543          BEQ        INSTRUCTION_DECODE_FAILURE
+0000150C  48E7 0600                544          MOVEM.L    D5-D6, -(A7)
+00001510  7A00                     545          MOVE.L     #0, D5
+00001512  7C05                     546          MOVE.L     #5, D6
+00001514  4EB9 000018DA            547          JSR        GET_BIT
+0000151A  4CDF 0060                548          MOVEM.L    (A7)+, D5-D6
+0000151E  B8BC 00000039            549          CMP.L      #%111001, D4
+00001524  6E00 03C8                550          BGT        INSTRUCTION_DECODE_FAILURE
+00001528  48E7 0600                551          MOVEM.L    D5-D6, -(A7)
+0000152C  7A03                     552          MOVE.L     #3, D5
+0000152E  7C05                     553          MOVE.L     #5, D6
+00001530  4EB9 000018DA            554          JSR        GET_BIT
+00001536  4CDF 0060                555          MOVEM.L    (A7)+, D5-D6
+0000153A  B8BC 00000005            556          CMP.L      #%101, D4
+00001540  6700 03AC                557          BEQ        INSTRUCTION_DECODE_FAILURE
+00001544  B8BC 00000006            558          CMP.L      #%110, D4
+0000154A  6700 03A2                559          BEQ        INSTRUCTION_DECODE_FAILURE
+0000154E  43F9 00002168            560          LEA        ADDQ_MSG, A1
+00001554  103C 000E                561          MOVE.B      #14, D0
+00001558  4E4F                     562          TRAP        #15
+0000155A  4EB9 00001C3A            563          JSR        ADDQ_EA_SIZE_AND_EA
+00001560  7C01                     564          MOVE.L      #1, D6
+00001562  4E75                     565          RTS
+00001564                           566  
+00001564                           567  OP_CODE_ADD
+00001564  48E7 0600                568          MOVEM.L    D5-D6, -(A7)
+00001568  7A0C                     569          MOVE.L     #12, D5
+0000156A  7C0F                     570          MOVE.L     #15, D6
+0000156C  4EB9 000018DA            571          JSR        GET_BIT
+00001572  4CDF 0060                572          MOVEM.L    (A7)+, D5-D6
+00001576  B8BC 0000000D            573          CMP.L      #%1101, D4
+0000157C  6600 0370                574          BNE        INSTRUCTION_DECODE_FAILURE
+00001580  6000 0022                575          BRA        OP_CODE_ADD_SUB
+00001584                           576  
+00001584                           577  OP_CODE_SUB  
+00001584  48E7 0600                578          MOVEM.L    D5-D6, -(A7)
+00001588  7A0C                     579          MOVE.L     #12, D5
+0000158A  7C0F                     580          MOVE.L     #15, D6
+0000158C  4EB9 000018DA            581          JSR        GET_BIT
+00001592  4CDF 0060                582          MOVEM.L    (A7)+, D5-D6 
+00001596  B8BC 00000009            583          CMP.L       #%1001, D4
+0000159C  6600 0350                584          BNE        INSTRUCTION_DECODE_FAILURE
+000015A0  6000 0002                585          BRA     OP_CODE_ADD_SUB
+000015A4                           586  
+000015A4                           587  OP_CODE_ADD_SUB
+000015A4  48E7 0600                588          MOVEM.L    D5-D6, -(A7)
+000015A8  7A06                     589          MOVE.L     #6, D5
+000015AA  7C08                     590          MOVE.L     #8, D6
+000015AC  4EB9 000018DA            591          JSR        GET_BIT
+000015B2  4CDF 0060                592          MOVEM.L    (A7)+, D5-D6
+000015B6  B8BC 00000002            593          CMP.L      #%010, D4
+000015BC  6E00 0006                594          BGT        OP_CODE_ADD_SUB_SOURCE_REG
+000015C0  6000 00D2                595          BRA        OP_CODE_ADD_SUB_DEST_REG
+000015C4                           596  
+000015C4                           597  
+000015C4                           598  OP_CODE_ADD_SUB_SOURCE_REG      
+000015C4  48E7 0600                599          MOVEM.L    D5-D6, -(A7)
+000015C8  7A00                     600          MOVE.L     #0, D5
+000015CA  7C05                     601          MOVE.L     #5, D6
+000015CC  4EB9 000018DA            602          JSR        GET_BIT
+000015D2  4CDF 0060                603          MOVEM.L    (A7)+, D5-D6
+000015D6  B8BC 00000039            604          CMP.L      #%111001, D4
+000015DC  6E00 0310                605          BGT        INSTRUCTION_DECODE_FAILURE
+000015E0  48E7 0600                606          MOVEM.L    D5-D6, -(A7)
+000015E4  7A03                     607          MOVE.L     #3, D5
+000015E6  7C05                     608          MOVE.L     #5, D6
+000015E8  4EB9 000018DA            609          JSR        GET_BIT
+000015EE  4CDF 0060                610          MOVEM.L    (A7)+, D5-D6
+000015F2  B8BC 00000005            611          CMP.L      #%101, D4
+000015F8  6700 02F4                612          BEQ        INSTRUCTION_DECODE_FAILURE
+000015FC  B8BC 00000006            613          CMP.L      #%110, D4
+00001602  6700 02EA                614          BEQ        INSTRUCTION_DECODE_FAILURE
+00001606  B8BC 00000000            615          CMP.L      #%000, D4
+0000160C  6700 02E0                616          BEQ        INSTRUCTION_DECODE_FAILURE
+00001610  B8BC 00000001            617          CMP.L      #%001, D4
+00001616  6700 02D6                618          BEQ        INSTRUCTION_DECODE_FAILURE
+0000161A  48E7 0600                619          MOVEM.L    D5-D6, -(A7)
+0000161E  7A06                     620          MOVE.L     #6, D5
+00001620  7C08                     621          MOVE.L     #8, D6
+00001622  4EB9 000018DA            622          JSR        GET_BIT
+00001628  4CDF 0060                623          MOVEM.L    (A7)+, D5-D6
+0000162C  B8BC 00000007            624          CMP.L      #%111, D4
+00001632  6700 02BA                625          BEQ        INSTRUCTION_DECODE_FAILURE
+00001636  B8BC 00000003            626          CMP.L      #%011, D4
+0000163C  6700 02B0                627          BEQ        INSTRUCTION_DECODE_FAILURE
+00001640  43F9 00002172            628          LEA        SUB_MSG, A1
+00001646  48E7 0600                629          MOVEM.L    D5-D6, -(A7)
+0000164A  7A0C                     630          MOVE.L     #12, D5
+0000164C  7C0F                     631          MOVE.L     #15, D6
+0000164E  4EB9 000018DA            632          JSR        GET_BIT
+00001654  4CDF 0060                633          MOVEM.L    (A7)+, D5-D6
+00001658  0484 00000009            634          SUBI.L      #%1001, D4
+0000165E  D3C4                     635          ADDA.L     D4, A1
+00001660  103C 000E                636          MOVE.B      #14, D0
+00001664  4E4F                     637          TRAP        #15
+00001666  4EB9 00001D14            638          JSR        ADD_SUB_EA_SIZE
+0000166C                           639  
+0000166C  43F9 000020F0            640          LEA         SPACE_MSG,   A1
+00001672  103C 000E                641          MOVE.B      #14,   D0    
+00001676  4E4F                     642          TRAP        #15
+00001678                           643  
+00001678  4EB9 00001D3E            644          JSR        ADD_SUB_EA_REG
+0000167E                           645  
+0000167E  43F9 0000218B            646          LEA         COMMA_MSG,   A1
+00001684  103C 000E                647          MOVE.B      #14,   D0    
+00001688  4E4F                     648          TRAP        #15
+0000168A  4EB9 00001D6E            649          JSR        ADD_SUB_EA_EA
+00001690  7C01                     650          MOVE.L      #1, D6
+00001692  4E75                     651          RTS
+00001694                           652  
+00001694                           653  
+00001694                           654  OP_CODE_ADD_SUB_DEST_REG
+00001694  48E7 0600                655          MOVEM.L    D5-D6, -(A7)
+00001698  7A00                     656          MOVE.L     #0, D5
+0000169A  7C05                     657          MOVE.L     #5, D6
+0000169C  4EB9 000018DA            658          JSR        GET_BIT
+000016A2  4CDF 0060                659          MOVEM.L    (A7)+, D5-D6
+000016A6  B8BC 0000003A            660          CMP.L      #%111010, D4
+000016AC  6700 0240                661          BEQ        INSTRUCTION_DECODE_FAILURE
+000016B0  B8BC 0000003B            662          CMP.L      #%111011, D4
+000016B6  6700 0236                663          BEQ        INSTRUCTION_DECODE_FAILURE
+000016BA  48E7 0600                664          MOVEM.L    D5-D6, -(A7)
+000016BE  7A03                     665          MOVE.L     #3, D5
+000016C0  7C05                     666          MOVE.L     #5, D6
+000016C2  4EB9 000018DA            667          JSR        GET_BIT
+000016C8  4CDF 0060                668          MOVEM.L    (A7)+, D5-D6
+000016CC  B8BC 00000005            669          CMP.L      #%101, D4
+000016D2  6700 021A                670          BEQ        INSTRUCTION_DECODE_FAILURE
+000016D6  B8BC 00000006            671          CMP.L      #%110, D4
+000016DC  6700 0210                672          BEQ        INSTRUCTION_DECODE_FAILURE
+000016E0  48E7 0600                673          MOVEM.L    D5-D6, -(A7)
+000016E4  7A06                     674          MOVE.L     #6, D5
+000016E6  7C08                     675          MOVE.L     #8, D6
+000016E8  4EB9 000018DA            676          JSR        GET_BIT
+000016EE  4CDF 0060                677          MOVEM.L    (A7)+, D5-D6
+000016F2  B8BC 00000007            678          CMP.L      #%111, D4
+000016F8  6700 01F4                679          BEQ        INSTRUCTION_DECODE_FAILURE
+000016FC  B8BC 00000003            680          CMP.L      #%011, D4
+00001702  6700 01EA                681          BEQ        INSTRUCTION_DECODE_FAILURE
+00001706  43F9 00002172            682          LEA        SUB_MSG, A1
+0000170C  48E7 0600                683          MOVEM.L    D5-D6, -(A7)
+00001710  7A0C                     684          MOVE.L     #12, D5
+00001712  7C0F                     685          MOVE.L     #15, D6
+00001714  4EB9 000018DA            686          JSR        GET_BIT
+0000171A  4CDF 0060                687          MOVEM.L    (A7)+, D5-D6
+0000171E  0484 00000009            688          SUBI.L      #%1001, D4
+00001724  D3C4                     689          ADDA.L     D4, A1
+00001726  103C 000E                690          MOVE.B      #14, D0
+0000172A  4E4F                     691          TRAP        #15
+0000172C  4EB9 00001D14            692          JSR        ADD_SUB_EA_SIZE
+00001732                           693  
+00001732  43F9 000020F0            694          LEA         SPACE_MSG,   A1
+00001738  103C 000E                695          MOVE.B      #14,   D0    
+0000173C  4E4F                     696          TRAP        #15
+0000173E                           697          
+0000173E  4EB9 00001D6E            698          JSR        ADD_SUB_EA_EA
+00001744                           699  
+00001744  43F9 0000218B            700          LEA         COMMA_MSG,   A1
+0000174A  103C 000E                701          MOVE.B      #14,   D0    
+0000174E  4E4F                     702          TRAP        #15
+00001750  4EB9 00001D3E            703          JSR        ADD_SUB_EA_REG
+00001756  7C01                     704          MOVE.L      #1, D6
+00001758  4E75                     705          RTS
+0000175A                           706  
+0000175A                           707  
+0000175A                           708  OP_CODE_OR:
+0000175A                           709          *check for divu/other opcodes that start with 1000
+0000175A                           710          *isolate bits 8-6 to check for DIVU
+0000175A  2803                     711          MOVE.L      D3,     D4
+0000175C  7407                     712          MOVE.L      #7,     D2
+0000175E  E56C                     713          LSL.W       D2,     D4
+00001760  740D                     714          MOVE.L      #13,    D2
+00001762  E46C                     715          LSR.W       D2,     D4
+00001764                           716          
+00001764  B83C 0003                717          CMP.B       #$3,    D4
+00001768  6700 0010                718          BEQ         OP_CODE_DATA
+0000176C                           719          
+0000176C  43F9 00002152            720          LEA         OR_MSG, A1
+00001772  103C 000E                721          MOVE.B      #14, D0
+00001776  4E4F                     722          TRAP        #15
+00001778                           723          
+00001778  4E75                     724          RTS
+0000177A                           725  OP_CODE_DATA:
+0000177A  43F9 00002155            726          LEA         DATA_MSG, A1
+00001780  103C 000E                727          MOVE.B      #14, D0
+00001784  4E4F                     728          TRAP        #15
+00001786                           729          
+00001786  4E75                     730          RTS   
+00001788                           731  
+00001788                           732  
+00001788                           733  OP_CODE_SHIFT_ROTATE
+00001788  48E7 0600                734          MOVEM.L    D5-D6, -(A7)
+0000178C  7A0C                     735          MOVE.L     #12, D5
+0000178E  7C0F                     736          MOVE.L     #15, D6
+00001790  4EB9 000018DA            737          JSR        GET_BIT
+00001796  4CDF 0060                738          MOVEM.L    (A7)+, D5-D6
+0000179A  B8BC 0000000E            739          CMP.L      #%1110, D4
+000017A0  6600 014C                740          BNE        INSTRUCTION_DECODE_FAILURE
+000017A4                           741          *Now check whether it is register shift or memory shift
+000017A4                           742          *If the 6-7 bit is 11, then it is a memory else register shift
+000017A4  48E7 0600                743          MOVEM.L    D5-D6, -(A7)
+000017A8  7A06                     744          MOVE.L     #6, D5
+000017AA  7C07                     745          MOVE.L     #7, D6
+000017AC  4EB9 000018DA            746          JSR        GET_BIT
+000017B2  4CDF 0060                747          MOVEM.L    (A7)+, D5-D6
+000017B6  B8BC 00000003            748          CMP.L      #3, D4
+000017BC  6700 0058                749          BEQ        OP_CODE_MEMORY_SHIFT_ROTATE
+000017C0  6000 0002                750          BRA        OP_CODE_REGISTER_SHIFT_ROTATE
+000017C4                           751  
+000017C4                           752  
+000017C4                           753  OP_CODE_REGISTER_SHIFT_ROTATE
+000017C4                           754          *Messages are loaded in the order of -ASR, ASL, LSR, LSL, RORX, RORL, ROR, ROL where
+000017C4                           755          *each message is of 4 bytes. Essentially using a combination of (9-11) bit + dr(8th bit) we
+000017C4                           756          *can index the appropriate message. Mathy and unreadable code but prevents lot of rebudency
+000017C4  43F9 00002132            757          LEA        ASR_MSG, A1
+000017CA  48E7 0600                758          MOVEM.L    D5-D6, -(A7)
+000017CE  7A08                     759          MOVE.L     #8, D5
+000017D0  7C08                     760          MOVE.L     #8, D6
+000017D2  4EB9 000018DA            761          JSR        GET_BIT
+000017D8  4CDF 0060                762          MOVEM.L    (A7)+, D5-D6
+000017DC  C8FC 0004                763          MULU         #4,            D4
+000017E0  D3C4                     764          ADDA.L       D4,            A1
+000017E2                           765          *Check (3, 11) bit 
+000017E2                           766          *000->ASR/ASL, 001->LSR/LSL, 011->ROR/ROL
+000017E2  48E7 0600                767          MOVEM.L    D5-D6, -(A7)
+000017E6  7A03                     768          MOVE.L     #3, D5
+000017E8  7C04                     769          MOVE.L     #4, D6
+000017EA  4EB9 000018DA            770          JSR        GET_BIT
+000017F0  B8BC 00000002            771          CMP.L      #2, D4
+000017F6  4CDF 0060                772          MOVEM.L    (A7)+, D5-D6
+000017FA  C8FC 0008                773          MULU        #8,      D4
+000017FE  D3C4                     774          ADDA.L       D4,            A1
+00001800  103C 000E                775          MOVE.B      #14, D0
+00001804  4E4F                     776          TRAP        #15
+00001806  4EB9 000018F0            777          JSR         SHIFT_ROTATE_EA_SIZE
+0000180C  4EB9 00001920            778          JSR         SHIFT_ROTATE_EA_REGISTER
+00001812  7C01                     779          MOVE.L      #1, D6
+00001814  4E75                     780          RTS
+00001816                           781  
+00001816                           782  
+00001816                           783  OP_CODE_MEMORY_SHIFT_ROTATE
+00001816                           784          *If mode bits are less than 010, then invalid instruction so just RTS
+00001816  48E7 0600                785          MOVEM.L    D5-D6, -(A7)
+0000181A  7A03                     786          MOVE.L     #3, D5
+0000181C  7C05                     787          MOVE.L     #5, D6
+0000181E  4EB9 000018DA            788          JSR        GET_BIT
+00001824  4CDF 0060                789          MOVEM.L    (A7)+, D5-D6
+00001828  B8BC 00000002            790          CMP.L      #2, D4
+0000182E  6B00 00BE                791          BMI        INSTRUCTION_DECODE_FAILURE
+00001832                           792          *If mode bits are 101 or 110, then it is dispacement address register EA which is invalid
+00001832                           793          *for the current scope
+00001832  B8BC 00000005            794          CMP.L      #5, D4
+00001838  6700 00B4                795          BEQ        INSTRUCTION_DECODE_FAILURE
+0000183C  B8BC 00000006            796          CMP.L      #6, D4
+00001842  6700 00AA                797          BEQ        INSTRUCTION_DECODE_FAILURE
+00001846                           798          *If mode bits+register bits are greater than 111001, then invalid instruction
+00001846  48E7 0600                799          MOVEM.L    D5-D6, -(A7)
+0000184A  7A00                     800          MOVE.L     #0, D5
+0000184C  7C05                     801          MOVE.L     #5, D6
+0000184E  4EB9 000018DA            802          JSR        GET_BIT
+00001854  4CDF 0060                803          MOVEM.L    (A7)+, D5-D6
+00001858  B8BC 00000039            804          CMP.L      #%111001, D4
+0000185E  6E00 008E                805          BGT        INSTRUCTION_DECODE_FAILURE
+00001862  7A09                     806          MOVE.L     #9, D5
+00001864  7C0B                     807          MOVE.L     #11, D6
+00001866  4EB9 000018DA            808          JSR        GET_BIT
+0000186C  B8BC 00000002            809          CMP.L      #2, D4
+00001872  6700 007A                810          BEQ        INSTRUCTION_DECODE_FAILURE *If the 9-11 are 010(RORX, ROLX), instruction decode error.
+00001876                           811          *Messages are loaded in the order of -ASR, ASL, LSR, LSL, RORX, RORL, ROR, ROL where
+00001876                           812          *each message is of 4 bytes. Essentially using a combination of (9-11) bit + dr(8th bit) we
+00001876                           813          *can index the appropriate message. Mathy and unreadable code but prevents lot of rebudency
+00001876  43F9 00002132            814          LEA        ASR_MSG, A1
+0000187C  48E7 0600                815          MOVEM.L    D5-D6, -(A7)
+00001880  7A08                     816          MOVE.L     #8, D5
+00001882  7C08                     817          MOVE.L     #8, D6
+00001884  4EB9 000018DA            818          JSR        GET_BIT
+0000188A  4CDF 0060                819          MOVEM.L    (A7)+, D5-D6
+0000188E  C8FC 0004                820          MULU         #4,            D4
+00001892  D3C4                     821          ADDA.L       D4,            A1
+00001894                           822          *Check (9, 11) bit 
+00001894                           823          *000->ASR/ASL, 001->LSR/LSL, 011->ROR/ROL
+00001894  48E7 0600                824          MOVEM.L    D5-D6, -(A7)
+00001898  7A09                     825          MOVE.L     #9, D5
+0000189A  7C0B                     826          MOVE.L     #11, D6
+0000189C  4EB9 000018DA            827          JSR        GET_BIT
+000018A2  B8BC 00000002            828          CMP.L      #2, D4
+000018A8  4CDF 0060                829          MOVEM.L    (A7)+, D5-D6
+000018AC  C8FC 0008                830          MULU        #8,      D4
+000018B0  D3C4                     831          ADDA.L       D4,            A1
+000018B2  103C 000E                832          MOVE.B      #14, D0
+000018B6  4E4F                     833          TRAP        #15
+000018B8  43F9 00002185            834          LEA        WORD_MSG, A1
+000018BE  103C 000E                835          MOVE.B      #14, D0
+000018C2  4E4F                     836          TRAP        #15
+000018C4  43F9 000020F0            837          LEA         SPACE_MSG,      A1
+000018CA  103C 000E                838          MOVE.B      #14,            D0    
+000018CE  4E4F                     839          TRAP        #15
+000018D0  4EB9 00001A04            840          JSR         SHIFT_ROTATE_EA_MEMORY
+000018D6  7C01                     841          MOVE.L      #1, D6
+000018D8  4E75                     842          RTS
+000018DA                           843  
+000018DA                           844  
+000018DA                           845  
+000018DA                           846  GET_BIT
+000018DA  4284                     847          CLR.L   D4
+000018DC  3803                     848          MOVE.W  D3, D4   
+000018DE                           849          *Shift it to left by 15-y to get rid of all the bits to the left of yth bit 
+000018DE                           850          *and then shift the bits such that the xth bit is the 0th bit
+000018DE  4486                     851          NEG.L   D6
+000018E0  0686 0000000F            852          ADDI.L  #15, D6
+000018E6  DA86                     853          ADD.L   D6, D5
+000018E8  ED6C                     854          LSL.W   D6, D4
+000018EA  EA6C                     855          LSR.W   D5, D4
+000018EC  4E75                     856          RTS
+000018EE                           857  
+000018EE                           858  INSTRUCTION_DECODE_FAILURE
+000018EE  4E75                     859          RTS
+000018F0                           860  
+000018F0                           861  
+000018F0                           862  
+000018F0                           863  -------------------- end include --------------------
+000018F0                           864      *INCLUDE         'demo_test.x68'
+000018F0                           865      INCLUDE          'Disassembler_EA.x68'
+000018F0                           866  
+000018F0                           867  
+000018F0                           868  
+000018F0                           869  
+000018F0                           870  SHIFT_ROTATE_EA_SIZE
+000018F0  48E7 0600                871      MOVEM.L    D5-D6, -(A7)
+000018F4  7A06                     872      MOVE.L     #6, D5
+000018F6  7C07                     873      MOVE.L     #7, D6
+000018F8  4EB8 18DA                874      JSR        GET_BIT
+000018FC  4CDF 0060                875      MOVEM.L    (A7)+, D5-D6
+00001900  43F9 00002182            876      LEA        BYTE_MSG, A1
+00001906  C8FC 0003                877      MULU       #3, D4
+0000190A  D3C4                     878      ADDA.L       D4,  A1
+0000190C  103C 000E                879      MOVE.B      #14, D0
+00001910  4E4F                     880      TRAP        #15
+00001912  43F9 000020F0            881      LEA         SPACE_MSG,      A1
+00001918  103C 000E                882      MOVE.B      #14,            D0    
+0000191C  4E4F                     883      TRAP        #15
+0000191E  4E75                     884      RTS
+00001920                           885  
+00001920                           886  
+00001920                           887  
+00001920                           888  
+00001920                           889  SHIFT_ROTATE_EA_REGISTER
+00001920  48E7 0600                890      MOVEM.L    D5-D6, -(A7)
+00001924  7A05                     891      MOVE.L     #5, D5
+00001926  7C05                     892      MOVE.L     #5, D6
+00001928  4EB8 18DA                893      JSR        GET_BIT
+0000192C  4CDF 0060                894      MOVEM.L    (A7)+, D5-D6
+00001930  B8BC 00000001            895      CMP.L      #1,  D4
+00001936  6600 0070                896      BNE        SHIFT_ROTATE_IMM_SOURCE
+0000193A                           897  
+0000193A                           898  SHIFT_ROTATE_REGISTER_SOURCE
+0000193A  43F9 0000210D            899      LEA        D_MSG, A1
+00001940  103C 000E                900      MOVE.B      #14,   D0    
+00001944  4E4F                     901      TRAP        #15
+00001946  48E7 0600                902      MOVEM.L    D5-D6, -(A7)
+0000194A  7A09                     903      MOVE.L     #9, D5
+0000194C  7C0B                     904      MOVE.L     #11, D6
+0000194E  4EB8 18DA                905      JSR        GET_BIT
+00001952  4CDF 0060                906      MOVEM.L    (A7)+, D5-D6
+00001956  43F9 000020F3            907      LEA       ZERO_MSG, A1
+0000195C  C8FC 0002                908      MULU      #2, D4    
+00001960  D3C4                     909      ADDA.L    D4, A1
+00001962  103C 000E                910      MOVE.B      #14,   D0    
+00001966  4E4F                     911      TRAP        #15
+00001968  6000 0002                912      BRA       SHIFT_ROTATE_REGISTER_DEST
+0000196C                           913  
+0000196C                           914  SHIFT_ROTATE_REGISTER_DEST
+0000196C  43F9 0000218B            915      LEA        COMMA_MSG, A1    
+00001972  103C 000E                916      MOVE.B      #14,   D0    
+00001976  4E4F                     917      TRAP        #15
+00001978  43F9 0000210D            918      LEA        D_MSG, A1
+0000197E  103C 000E                919      MOVE.B      #14,   D0    
+00001982  4E4F                     920      TRAP        #15
+00001984  48E7 0600                921      MOVEM.L    D5-D6, -(A7)
+00001988  7A00                     922      MOVE.L     #0, D5
+0000198A  7C02                     923      MOVE.L     #2, D6
+0000198C  4EB8 18DA                924      JSR        GET_BIT
+00001990  4CDF 0060                925      MOVEM.L    (A7)+, D5-D6
+00001994  43F9 000020F3            926      LEA       ZERO_MSG, A1
+0000199A  C8FC 0002                927      MULU      #2, D4    
+0000199E  D3C4                     928      ADDA.L    D4, A1
+000019A0  103C 000E                929      MOVE.B      #14,   D0    
+000019A4  4E4F                     930      TRAP        #15
+000019A6  4E75                     931      RTS
+000019A8                           932  
+000019A8                           933  SHIFT_ROTATE_IMM_SOURCE
+000019A8  43F9 0000218F            934      LEA        HASH_MSG, A1
+000019AE  103C 000E                935      MOVE.B      #14,   D0    
+000019B2  4E4F                     936      TRAP        #15
+000019B4  43F9 0000218D            937      LEA        DOLLAR_MSG, A1
+000019BA  103C 000E                938      MOVE.B      #14,   D0    
+000019BE  4E4F                     939      TRAP        #15
+000019C0  48E7 0600                940      MOVEM.L    D5-D6, -(A7)
+000019C4  7A09                     941      MOVE.L     #9, D5
+000019C6  7C0B                     942      MOVE.L     #11, D6
+000019C8  4EB8 18DA                943      JSR        GET_BIT
+000019CC  4CDF 0060                944      MOVEM.L    (A7)+, D5-D6
+000019D0  B8BC 00000000            945      CMP.L      #0, D4
+000019D6  6700 001C                946      BEQ       SHIFT_ROTATE_COUNT_8
+000019DA  6000 0002                947      BRA       SHIFT_ROTATE_COUNT_1_7
+000019DE                           948   
+000019DE                           949  SHIFT_ROTATE_COUNT_1_7
+000019DE  43F9 000020F3            950      LEA       ZERO_MSG, A1
+000019E4  C8FC 0002                951      MULU      #2, D4    
+000019E8  D3C4                     952      ADDA.L    D4, A1
+000019EA  103C 000E                953      MOVE.B      #14,   D0    
+000019EE  4E4F                     954      TRAP        #15
+000019F0  6000 FF7A                955      BRA       SHIFT_ROTATE_REGISTER_DEST
+000019F4                           956  
+000019F4                           957  SHIFT_ROTATE_COUNT_8
+000019F4  43F9 00002103            958      LEA       EIGHT_MSG, A1
+000019FA  103C 000E                959      MOVE.B      #14,   D0    
+000019FE  4E4F                     960      TRAP        #15
+00001A00  6000 FF6A                961      BRA       SHIFT_ROTATE_REGISTER_DEST
+00001A04                           962  
+00001A04                           963  
+00001A04                           964  
+00001A04                           965  
+00001A04                           966  
+00001A04                           967  SHIFT_ROTATE_EA_MEMORY
+00001A04  48E7 0600                968      MOVEM.L    D5-D6, -(A7)
+00001A08  7A00                     969      MOVE.L     #0, D5
+00001A0A  7C05                     970      MOVE.L     #5, D6
+00001A0C  4EB8 18DA                971      JSR        GET_BIT
+00001A10  4CDF 0060                972      MOVEM.L    (A7)+, D5-D6
+00001A14  48E7 1600                973      MOVEM.L    D3/D5-D6, -(A7)
+00001A18  2604                     974      MOVE.L     D4, D3
+00001A1A  4EB9 00001DE6            975      JSR        GET_EA
+00001A20  4CDF 0068                976      MOVEM.L    (A7)+, D3/D5-D6
+00001A24  4E75                     977      RTS
+00001A26                           978  
+00001A26                           979  
+00001A26                           980  
+00001A26                           981  BR_EA_SIZE_AND_DISPLACEMENT
+00001A26  48E7 0600                982      MOVEM.L    D5-D6, -(A7)
+00001A2A  7A00                     983      MOVE.L     #0, D5
+00001A2C  7C07                     984      MOVE.L     #7, D6
+00001A2E  4EB8 18DA                985      JSR        GET_BIT
+00001A32  4CDF 0060                986      MOVEM.L    (A7)+, D5-D6
+00001A36  B8BC 00000000            987      CMP.L      #0, D4
+00001A3C  6700 0050                988      BEQ        BR_WORD_DISPLACEMENT
+00001A40                           989  BR_BYTE_DISPLACEMENT
+00001A40  43F9 00002182            990      LEA         BYTE_MSG, A1
+00001A46  103C 000E                991      MOVE.B      #14, D0
+00001A4A  4E4F                     992      TRAP        #15
+00001A4C  43F9 000020F0            993      LEA         SPACE_MSG,   A1
+00001A52  103C 000E                994      MOVE.B      #14,   D0    
+00001A56  4E4F                     995      TRAP        #15
+00001A58  48E7 0400                996      MOVEM.L     D5, -(A7)
+00001A5C  2A04                     997      MOVE.L      D4, D5
+00001A5E  E31D                     998      ROL.B       #1, D5
+00001A60  0285 00000001            999      ANDI.L      #1, D5
+00001A66  BA3C 0001               1000      CMP.B       #1, D5
+00001A6A  6700 0010               1001      BEQ         NEG_BYTE_DISPLACEMENT
+00001A6E  4CDF 0020               1002      MOVEM.L    (A7)+, D5
+00001A72  D88B                    1003      ADD.L       A3, D4
+00001A74  4EB9 00001FEE           1004      JSR         PRINT_LONG_VALUE
+00001A7A  4E75                    1005      RTS
+00001A7C                          1006  NEG_BYTE_DISPLACEMENT
+00001A7C  4CDF 0020               1007      MOVEM.L    (A7)+, D5
+00001A80  4404                    1008      NEG.B       D4
+00001A82  988B                    1009      SUB.L       A3, D4
+00001A84  4484                    1010      NEG.L       D4
+00001A86  4EB9 00001FEE           1011      JSR         PRINT_LONG_VALUE
+00001A8C  4E75                    1012      RTS
+00001A8E                          1013  BR_WORD_DISPLACEMENT
+00001A8E  43F9 00002185           1014      LEA         WORD_MSG, A1
+00001A94  103C 000E               1015      MOVE.B      #14, D0
+00001A98  4E4F                    1016      TRAP        #15
+00001A9A  43F9 000020F0           1017      LEA         SPACE_MSG,   A1
+00001AA0  103C 000E               1018      MOVE.B      #14,   D0    
+00001AA4  4E4F                    1019      TRAP        #15 
+00001AA6  4284                    1020      CLR.L       D4
+00001AA8  381B                    1021      MOVE.W      (A3)+, D4
+00001AAA  48E7 0400               1022      MOVEM.L     D5, -(A7)
+00001AAE  2A04                    1023      MOVE.L      D4, D5
+00001AB0  E35D                    1024      ROL.W       #1, D5
+00001AB2  0285 00000001           1025      ANDI.L      #1, D5
+00001AB8  BA3C 0001               1026      CMP.B       #1, D5
+00001ABC  6700 0012               1027      BEQ         NEG_WORD_DISPLACEMENT
+00001AC0  4CDF 0020               1028      MOVEM.L    (A7)+, D5
+00001AC4  D88B                    1029      ADD.L       A3, D4
+00001AC6  5584                    1030      SUB.L       #2, D4
+00001AC8  4EB9 00001FEE           1031      JSR         PRINT_LONG_VALUE
+00001ACE  4E75                    1032      RTS
+00001AD0                          1033  NEG_WORD_DISPLACEMENT
+00001AD0  4CDF 0020               1034      MOVEM.L    (A7)+, D5
+00001AD4  4444                    1035      NEG.W       D4
+00001AD6  988B                    1036      SUB.L       A3, D4
+00001AD8  4484                    1037      NEG.L       D4
+00001ADA  5584                    1038      SUB.L       #2, D4
+00001ADC  4EB9 00001FEE           1039      JSR         PRINT_LONG_VALUE
+00001AE2  4E75                    1040      RTS
+00001AE4                          1041  
+00001AE4                          1042  
+00001AE4                          1043  
+00001AE4                          1044  
+00001AE4                          1045  
+00001AE4                          1046  LEA_EA
+00001AE4                          1047      *Prints the source operand
+00001AE4  48E7 0600               1048      MOVEM.L    D5-D6, -(A7)
+00001AE8  7A00                    1049      MOVE.L     #0, D5
+00001AEA  7C05                    1050      MOVE.L     #5, D6
+00001AEC  4EB8 18DA               1051      JSR        GET_BIT
+00001AF0  4CDF 0060               1052      MOVEM.L    (A7)+, D5-D6
+00001AF4  48E7 1600               1053      MOVEM.L    D3/D5-D6, -(A7)
+00001AF8  2604                    1054      MOVE.L     D4, D3
+00001AFA  4EB9 00001DE6           1055      JSR        GET_EA
+00001B00  4CDF 0068               1056      MOVEM.L    (A7)+, D3/D5-D6
+00001B04                          1057  
+00001B04  43F9 0000218B           1058      LEA        COMMA_MSG, A1
+00001B0A  103C 000E               1059      MOVE.B      #14,   D0    
+00001B0E  4E4F                    1060      TRAP        #15
+00001B10                          1061  
+00001B10                          1062      *Prints the dest operand
+00001B10  43F9 00002107           1063      LEA        A_MSG, A1
+00001B16  103C 000E               1064      MOVE.B      #14,   D0    
+00001B1A  4E4F                    1065      TRAP        #15
+00001B1C  48E7 0600               1066      MOVEM.L    D5-D6, -(A7)
+00001B20  7A09                    1067      MOVE.L     #9, D5
+00001B22  7C0B                    1068      MOVE.L     #11, D6
+00001B24  4EB8 18DA               1069      JSR        GET_BIT
+00001B28  4CDF 0060               1070      MOVEM.L    (A7)+, D5-D6
+00001B2C  43F9 000020F3           1071      LEA       ZERO_MSG, A1
+00001B32  C8FC 0002               1072      MULU      #2, D4    
+00001B36  D3C4                    1073      ADDA.L    D4, A1
+00001B38  103C 000E               1074      MOVE.B      #14,   D0    
+00001B3C  4E4F                    1075      TRAP        #15
+00001B3E  4E75                    1076      RTS
+00001B40                          1077  
+00001B40                          1078  
+00001B40                          1079  
+00001B40                          1080  
+00001B40                          1081  ADDA_EA_SIZE_AND_EA 
+00001B40  48E7 0600               1082      MOVEM.L    D5-D6, -(A7)
+00001B44  7A08                    1083      MOVE.L     #8, D5
+00001B46  7C08                    1084      MOVE.L     #8, D6
+00001B48  4EB8 18DA               1085      JSR        GET_BIT
+00001B4C  4CDF 0060               1086      MOVEM.L    (A7)+, D5-D6
+00001B50  43F9 00002185           1087      LEA        WORD_MSG, A1
+00001B56  C8FC 0003               1088      MULU       #3, D4
+00001B5A  D3C4                    1089      ADDA.L     D4, A1
+00001B5C  103C 000E               1090      MOVE.B      #14, D0
+00001B60  4E4F                    1091      TRAP        #15
+00001B62                          1092  
+00001B62  43F9 000020F0           1093      LEA         SPACE_MSG,   A1
+00001B68  103C 000E               1094      MOVE.B      #14,   D0    
+00001B6C  4E4F                    1095      TRAP        #15
+00001B6E                          1096  
+00001B6E  48E7 0600               1097      MOVEM.L    D5-D6, -(A7)
+00001B72  7A00                    1098      MOVE.L     #0, D5
+00001B74  7C05                    1099      MOVE.L     #5, D6
+00001B76  4EB8 18DA               1100      JSR        GET_BIT
+00001B7A  4CDF 0060               1101      MOVEM.L    (A7)+, D5-D6
+00001B7E  B8BC 0000003C           1102      CMP.L      #%111100, D4
+00001B84  6700 0022               1103      BEQ        ADDA_EA_IMM_SOURCE
+00001B88                          1104  ADDA_EA_NON_IMM_SOURCE
+00001B88  48E7 1600               1105      MOVEM.L    D3/D5-D6, -(A7)
+00001B8C  2604                    1106      MOVE.L     D4, D3     
+00001B8E  4EB9 00001DE6           1107      JSR        GET_EA
+00001B94  43F9 0000218B           1108      LEA         COMMA_MSG,   A1
+00001B9A  103C 000E               1109      MOVE.B      #14,   D0    
+00001B9E  4E4F                    1110      TRAP        #15
+00001BA0  4CDF 0068               1111      MOVEM.L    (A7)+, D3/D5-D6
+00001BA4  6000 0064               1112      BRA        ADDA_EA_DEST
+00001BA8                          1113  ADDA_EA_IMM_SOURCE
+00001BA8  43F9 0000218F           1114      LEA        HASH_MSG, A1
+00001BAE  103C 000E               1115      MOVE.B      #14,   D0    
+00001BB2  4E4F                    1116      TRAP        #15
+00001BB4  43F9 0000218D           1117      LEA        DOLLAR_MSG, A1
+00001BBA  103C 000E               1118      MOVE.B      #14,   D0    
+00001BBE  4E4F                    1119      TRAP        #15
+00001BC0  48E7 0600               1120      MOVEM.L    D5-D6, -(A7)
+00001BC4  7A06                    1121      MOVE.L     #6, D5
+00001BC6  7C08                    1122      MOVE.L     #8, D6
+00001BC8  4EB8 18DA               1123      JSR        GET_BIT
+00001BCC  4CDF 0060               1124      MOVEM.L    (A7)+, D5-D6
+00001BD0  B8BC 00000003           1125      CMP.L      #%011, D4
+00001BD6  6700 001A               1126      BEQ        ADDA_EA_IMM_WORD
+00001BDA                          1127  ADDA_EA_IMM_LONG
+00001BDA  281B                    1128      MOVE.L     (A3)+, D4
+00001BDC  4EB9 00001FEE           1129      JSR        PRINT_LONG_VALUE
+00001BE2                          1130  
+00001BE2  43F9 0000218B           1131      LEA         COMMA_MSG,   A1
+00001BE8  103C 000E               1132      MOVE.B      #14,   D0    
+00001BEC  4E4F                    1133      TRAP        #15
+00001BEE  6000 001A               1134      BRA         ADDA_EA_DEST
+00001BF2                          1135  ADDA_EA_IMM_WORD
+00001BF2  381B                    1136      MOVE.W     (A3)+, D4
+00001BF4  4EB9 00001FC0           1137      JSR        PRINT_WORD_VALUE
+00001BFA                          1138  
+00001BFA  43F9 0000218B           1139      LEA         COMMA_MSG,   A1
+00001C00  103C 000E               1140      MOVE.B      #14,   D0    
+00001C04  4E4F                    1141      TRAP        #15
+00001C06  6000 0002               1142      BRA         ADDA_EA_DEST
+00001C0A                          1143  
+00001C0A                          1144  ADDA_EA_DEST   
+00001C0A  48E7 0600               1145      MOVEM.L    D5-D6, -(A7)
+00001C0E  7A09                    1146      MOVE.L     #9, D5
+00001C10  7C0B                    1147      MOVE.L     #11, D6
+00001C12  4EB8 18DA               1148      JSR        GET_BIT
+00001C16  4CDF 0060               1149      MOVEM.L    (A7)+, D5-D6
+00001C1A  43F9 00002107           1150      LEA   A_MSG, A1
+00001C20  103C 000E               1151      MOVE.B   #14,  D0    
+00001C24  4E4F                    1152      TRAP     #15
+00001C26  43F9 000020F3           1153      LEA    ZERO_MSG, A1
+00001C2C  C8FC 0002               1154      MULU       #2, D4
+00001C30  D3C4                    1155      ADDA.L     D4, A1
+00001C32  103C 000E               1156      MOVE.B   #14,  D0    
+00001C36  4E4F                    1157      TRAP     #15
+00001C38  4E75                    1158      RTS
+00001C3A                          1159  
+00001C3A                          1160  
+00001C3A                          1161  
+00001C3A                          1162  
+00001C3A                          1163  ADDQ_EA_SIZE_AND_EA
+00001C3A  48E7 0600               1164      MOVEM.L    D5-D6, -(A7)
+00001C3E  7A06                    1165      MOVE.L     #6, D5
+00001C40  7C07                    1166      MOVE.L     #7, D6
+00001C42  4EB8 18DA               1167      JSR        GET_BIT
+00001C46  4CDF 0060               1168      MOVEM.L    (A7)+, D5-D6
+00001C4A  43F9 00002182           1169      LEA        BYTE_MSG, A1
+00001C50  C8FC 0003               1170      MULU       #3, D4
+00001C54  D3C4                    1171      ADDA.L       D4,  A1
+00001C56  103C 000E               1172      MOVE.B      #14, D0
+00001C5A  4E4F                    1173      TRAP        #15
+00001C5C  43F9 000020F0           1174      LEA         SPACE_MSG,      A1
+00001C62  103C 000E               1175      MOVE.B      #14,            D0    
+00001C66  4E4F                    1176      TRAP        #15
+00001C68                          1177  
+00001C68  48E7 0600               1178      MOVEM.L    D5-D6, -(A7)
+00001C6C  7A09                    1179      MOVE.L     #9, D5
+00001C6E  7C0B                    1180      MOVE.L     #11, D6
+00001C70  4EB8 18DA               1181      JSR        GET_BIT
+00001C74  4CDF 0060               1182      MOVEM.L    (A7)+, D5-D6
+00001C78  43F9 0000218F           1183      LEA        HASH_MSG, A1
+00001C7E  103C 000E               1184      MOVE.B      #14,   D0    
+00001C82  4E4F                    1185      TRAP        #15
+00001C84  43F9 0000218D           1186      LEA        DOLLAR_MSG, A1
+00001C8A  103C 000E               1187      MOVE.B      #14,   D0    
+00001C8E  4E4F                    1188      TRAP        #15
+00001C90  B8BC 00000000           1189      CMP.L      #0, D4
+00001C96  6700 0042               1190      BEQ       ADDQ_ADD_COUNT_8
+00001C9A                          1191  
+00001C9A                          1192  ADDQ_ADD_COUNT_1_7
+00001C9A  43F9 000020F3           1193      LEA       ZERO_MSG, A1
+00001CA0  C8FC 0002               1194      MULU      #2, D4    
+00001CA4  D3C4                    1195      ADDA.L    D4, A1
+00001CA6  103C 000E               1196      MOVE.B      #14,   D0    
+00001CAA  4E4F                    1197      TRAP        #15
+00001CAC  43F9 0000218B           1198      LEA         COMMA_MSG,   A1
+00001CB2  103C 000E               1199      MOVE.B      #14,   D0    
+00001CB6  4E4F                    1200      TRAP        #15
+00001CB8  48E7 0600               1201      MOVEM.L    D5-D6, -(A7)
+00001CBC  7A00                    1202      MOVE.L     #0, D5
+00001CBE  7C05                    1203      MOVE.L     #5, D6
+00001CC0  4EB8 18DA               1204      JSR        GET_BIT
+00001CC4  4CDF 0060               1205      MOVEM.L    (A7)+, D5-D6
+00001CC8  48E7 1600               1206      MOVEM.L    D3/D5-D6, -(A7)
+00001CCC  2604                    1207      MOVE.L     D4, D3
+00001CCE  4EB9 00001DE6           1208      JSR        GET_EA
+00001CD4  4CDF 0068               1209      MOVEM.L    (A7)+, D3/D5-D6
+00001CD8  4E75                    1210      RTS
+00001CDA                          1211  
+00001CDA                          1212  ADDQ_ADD_COUNT_8
+00001CDA  43F9 00002103           1213      LEA       EIGHT_MSG, A1
+00001CE0  103C 000E               1214      MOVE.B      #14,   D0    
+00001CE4  4E4F                    1215      TRAP        #15
+00001CE6  43F9 0000218B           1216      LEA         COMMA_MSG,   A1
+00001CEC  103C 000E               1217      MOVE.B      #14,   D0    
+00001CF0  4E4F                    1218      TRAP        #15
+00001CF2  48E7 0600               1219      MOVEM.L    D5-D6, -(A7)
+00001CF6  7A00                    1220      MOVE.L     #0, D5
+00001CF8  7C05                    1221      MOVE.L     #5, D6
+00001CFA  4EB8 18DA               1222      JSR        GET_BIT
+00001CFE  4CDF 0060               1223      MOVEM.L    (A7)+, D5-D6
+00001D02  48E7 1600               1224      MOVEM.L    D3/D5-D6, -(A7)
+00001D06  2604                    1225      MOVE.L     D4, D3   
+00001D08  4EB9 00001DE6           1226      JSR        GET_EA
+00001D0E  4CDF 0068               1227      MOVEM.L    (A7)+, D3/D5-D6
+00001D12  4E75                    1228      RTS
+00001D14                          1229  
+00001D14                          1230  
+00001D14                          1231  
+00001D14                          1232  
+00001D14                          1233  
+00001D14                          1234  
+00001D14                          1235  ADD_SUB_EA_SIZE
+00001D14  48E7 0600               1236      MOVEM.L    D5-D6, -(A7)
+00001D18  7A06                    1237      MOVE.L     #6, D5
+00001D1A  7C08                    1238      MOVE.L     #8, D6
+00001D1C  4EB8 18DA               1239      JSR        GET_BIT
+00001D20  4CDF 0060               1240      MOVEM.L    (A7)+, D5-D6
+00001D24  0284 00000003           1241      ANDI.L     #%011, D4
+00001D2A  43F9 00002182           1242      LEA        BYTE_MSG, A1
+00001D30  C8FC 0003               1243      MULU       #3, D4
+00001D34  D3C4                    1244      ADDA.L       D4,  A1
+00001D36  103C 000E               1245      MOVE.B      #14, D0
+00001D3A  4E4F                    1246      TRAP        #15
+00001D3C  4E75                    1247      RTS
+00001D3E                          1248  
+00001D3E                          1249  ADD_SUB_EA_REG
+00001D3E  43F9 0000210D           1250      LEA        D_MSG, A1
+00001D44  103C 000E               1251      MOVE.B      #14,   D0    
+00001D48  4E4F                    1252      TRAP        #15
+00001D4A  48E7 0600               1253      MOVEM.L    D5-D6, -(A7)
+00001D4E  7A09                    1254      MOVE.L     #9, D5
+00001D50  7C0B                    1255      MOVE.L     #11, D6
+00001D52  4EB8 18DA               1256      JSR        GET_BIT
+00001D56  4CDF 0060               1257      MOVEM.L    (A7)+, D5-D6
+00001D5A  43F9 000020F3           1258      LEA       ZERO_MSG, A1
+00001D60  C8FC 0002               1259      MULU      #2, D4    
+00001D64  D3C4                    1260      ADDA.L    D4, A1
+00001D66  103C 000E               1261      MOVE.B      #14,   D0    
+00001D6A  4E4F                    1262      TRAP        #15
+00001D6C  4E75                    1263      RTS
+00001D6E                          1264  
+00001D6E                          1265  
+00001D6E                          1266  ADD_SUB_EA_EA
+00001D6E  48E7 0600               1267      MOVEM.L    D5-D6, -(A7)
+00001D72  7A00                    1268      MOVE.L     #0, D5
+00001D74  7C05                    1269      MOVE.L     #5, D6
+00001D76  4EB8 18DA               1270      JSR        GET_BIT
+00001D7A  4CDF 0060               1271      MOVEM.L    (A7)+, D5-D6
+00001D7E  B8BC 0000003C           1272      CMP.L      #%111100, D4
+00001D84  6700 0014               1273      BEQ        ADD_SUB_EA_EA_IMM
+00001D88  48E7 1600               1274      MOVEM.L    D3/D5-D6, -(A7)
+00001D8C  2604                    1275      MOVE.L     D4, D3   
+00001D8E  4EB9 00001DE6           1276      JSR        GET_EA
+00001D94  4CDF 0068               1277      MOVEM.L    (A7)+, D3/D5-D6
+00001D98  4E75                    1278      RTS
+00001D9A                          1279  
+00001D9A                          1280  ADD_SUB_EA_EA_IMM
+00001D9A  43F9 0000218F           1281      LEA        HASH_MSG, A1
+00001DA0  103C 000E               1282      MOVE.B      #14,   D0    
+00001DA4  4E4F                    1283      TRAP        #15
+00001DA6  43F9 0000218D           1284      LEA        DOLLAR_MSG, A1
+00001DAC  103C 000E               1285      MOVE.B      #14,   D0    
+00001DB0  4E4F                    1286      TRAP        #15
+00001DB2  48E7 0600               1287      MOVEM.L    D5-D6, -(A7)
+00001DB6  7A06                    1288      MOVE.L     #6, D5
+00001DB8  7C08                    1289      MOVE.L     #8, D6
+00001DBA  4EB8 18DA               1290      JSR        GET_BIT
+00001DBE  4CDF 0060               1291      MOVEM.L    (A7)+, D5-D6
+00001DC2  0284 00000003           1292      ANDI.L     #%011, D4
+00001DC8  B8BC 00000002           1293      CMP.L      #%010, D4
+00001DCE  6600 000C               1294      BNE        ADD_SUB_EA_EA_IMM_WORD
+00001DD2                          1295  ADD_SUB_EA_EA_IMM_LONG
+00001DD2  281B                    1296      MOVE.L     (A3)+, D4
+00001DD4  4EB9 00001FEE           1297      JSR         PRINT_LONG_VALUE
+00001DDA  4E75                    1298      RTS
+00001DDC                          1299  ADD_SUB_EA_EA_IMM_WORD
+00001DDC  381B                    1300      MOVE.W     (A3)+, D4
+00001DDE  4EB9 00001FC0           1301      JSR        PRINT_WORD_VALUE
+00001DE4  4E75                    1302      RTS
+00001DE6                          1303  
+00001DE6                          1304  
+00001DE6                          1305  
+00001DE6                          1306  
+00001DE6                          1307  
+00001DE6                          1308  
+00001DE6                          1309  
+00001DE6                          1310  
+00001DE6                          1311  
+00001DE6                          1312  
+00001DE6                          1313  
+00001DE6                          1314  
+00001DE6                          1315  
+00001DE6                          1316  
+00001DE6                          1317  
+00001DE6                          1318  
+00001DE6                          1319  
+00001DE6                          1320  
+00001DE6                          1321  
+00001DE6                          1322  
+00001DE6                          1323  GET_EA
+00001DE6  7A03                    1324      MOVE.L     #3, D5
+00001DE8  7C05                    1325      MOVE.L     #5, D6
+00001DEA  4EB8 18DA               1326      JSR        GET_BIT
+00001DEE  B8BC 00000000           1327      CMP.L      #0, D4
+00001DF4  6700 0048               1328      BEQ        EA_DATA_REGISTER
+00001DF8  B8BC 00000001           1329      CMP.L      #1, D4
+00001DFE  6700 0066               1330      BEQ        EA_ADDR_REGISTER
+00001E02  B8BC 00000002           1331      CMP.L      #2, D4
+00001E08  6700 0084               1332      BEQ        EA_INDIRECT
+00001E0C  B8BC 00000003           1333      CMP.L      #3, D4
+00001E12  6700 00BA               1334      BEQ        EA_INDIRECT_INCREMENT
+00001E16  B8BC 00000004           1335      CMP.L      #4, D4
+00001E1C  6700 00FC               1336      BEQ        EA_INDIRECT_DECREMENT
+00001E20                          1337      *101, and 110 mode bits should be detected in disassembler_OPCodes 
+00001E20  7A00                    1338      MOVE.L     #0, D5
+00001E22  7C02                    1339      MOVE.L     #2, D6
+00001E24  4EB8 18DA               1340      JSR        GET_BIT
+00001E28  B8BC 00000000           1341      CMP.L      #0, D4
+00001E2E  6700 0136               1342      BEQ        EA_ABS_WORD
+00001E32  B8BC 00000001           1343      CMP.L      #1, D4
+00001E38  6700 0144               1344      BEQ        EA_ABS_LONG
+00001E3C                          1345      *Unreachable
+00001E3C  4E75                    1346      RTS
+00001E3E                          1347      
+00001E3E                          1348  
+00001E3E                          1349  EA_DATA_REGISTER
+00001E3E  43F9 0000210D           1350      LEA   D_MSG, A1
+00001E44  103C 000E               1351      MOVE.B   #14,  D0    
+00001E48  4E4F                    1352      TRAP     #15
+00001E4A  43F9 000020F3           1353      LEA    ZERO_MSG, A1
+00001E50  7A00                    1354      MOVE.L     #0, D5
+00001E52  7C02                    1355      MOVE.L     #2, D6
+00001E54  4EB8 18DA               1356      JSR        GET_BIT
+00001E58  C8FC 0002               1357      MULU       #2, D4
+00001E5C  D3C4                    1358      ADDA.L     D4, A1
+00001E5E  103C 000E               1359      MOVE.B   #14,  D0    
+00001E62  4E4F                    1360      TRAP     #15
+00001E64  4E75                    1361      RTS
+00001E66                          1362  
+00001E66                          1363  
+00001E66                          1364  EA_ADDR_REGISTER
+00001E66  43F9 00002107           1365      LEA   A_MSG, A1
+00001E6C  103C 000E               1366      MOVE.B   #14,  D0    
+00001E70  4E4F                    1367      TRAP     #15
+00001E72  43F9 000020F3           1368      LEA    ZERO_MSG, A1
+00001E78  7A00                    1369      MOVE.L     #0, D5
+00001E7A  7C02                    1370      MOVE.L     #2, D6
+00001E7C  4EB8 18DA               1371      JSR        GET_BIT
+00001E80  C8FC 0002               1372      MULU       #2, D4
+00001E84  D3C4                    1373      ADDA.L     D4, A1
+00001E86  103C 000E               1374      MOVE.B   #14,  D0    
+00001E8A  4E4F                    1375      TRAP     #15
+00001E8C  4E75                    1376      RTS
+00001E8E                          1377  
+00001E8E                          1378  
+00001E8E                          1379  EA_INDIRECT
+00001E8E  43F9 00002195           1380      LEA   OPEN_PARENTHESIS_MSG, A1
+00001E94  103C 000E               1381      MOVE.B   #14,  D0    
+00001E98  4E4F                    1382      TRAP     #15
+00001E9A  43F9 00002107           1383      LEA   A_MSG, A1
+00001EA0  103C 000E               1384      MOVE.B   #14,  D0    
+00001EA4  4E4F                    1385      TRAP     #15
+00001EA6  43F9 000020F3           1386      LEA    ZERO_MSG, A1
+00001EAC  7A00                    1387      MOVE.L     #0, D5
+00001EAE  7C02                    1388      MOVE.L     #2, D6
+00001EB0  4EB8 18DA               1389      JSR        GET_BIT
+00001EB4  C8FC 0002               1390      MULU       #2, D4
+00001EB8  D3C4                    1391      ADDA.L     D4, A1
+00001EBA  103C 000E               1392      MOVE.B   #14,  D0    
+00001EBE  4E4F                    1393      TRAP     #15
+00001EC0  43F9 00002197           1394      LEA   CLOSE_PARENTHESIS_MSG, A1
+00001EC6  103C 000E               1395      MOVE.B   #14,  D0    
+00001ECA  4E4F                    1396      TRAP     #15
+00001ECC  4E75                    1397      RTS
+00001ECE                          1398  
+00001ECE                          1399  
+00001ECE                          1400  
+00001ECE                          1401  EA_INDIRECT_INCREMENT
+00001ECE  43F9 00002195           1402      LEA   OPEN_PARENTHESIS_MSG, A1
+00001ED4  103C 000E               1403      MOVE.B   #14,  D0    
+00001ED8  4E4F                    1404      TRAP     #15
+00001EDA  43F9 00002107           1405      LEA   A_MSG, A1
+00001EE0  103C 000E               1406      MOVE.B   #14,  D0    
+00001EE4  4E4F                    1407      TRAP     #15
+00001EE6  43F9 000020F3           1408      LEA    ZERO_MSG, A1
+00001EEC  7A00                    1409      MOVE.L     #0, D5
+00001EEE  7C02                    1410      MOVE.L     #2, D6
+00001EF0  4EB8 18DA               1411      JSR        GET_BIT
+00001EF4  C8FC 0002               1412      MULU       #2, D4
+00001EF8  D3C4                    1413      ADDA.L     D4, A1
+00001EFA  103C 000E               1414      MOVE.B   #14,  D0    
+00001EFE  4E4F                    1415      TRAP     #15
+00001F00  43F9 00002197           1416      LEA   CLOSE_PARENTHESIS_MSG, A1
+00001F06  103C 000E               1417      MOVE.B   #14,  D0    
+00001F0A  4E4F                    1418      TRAP     #15
+00001F0C  43F9 00002191           1419      LEA   PLUS_MSG, A1
+00001F12  103C 000E               1420      MOVE.B   #14,  D0    
+00001F16  4E4F                    1421      TRAP     #15
+00001F18  4E75                    1422      RTS
+00001F1A                          1423  
+00001F1A                          1424  
+00001F1A                          1425  EA_INDIRECT_DECREMENT
+00001F1A  43F9 00002193           1426      LEA   MINUS_MSG, A1
+00001F20  103C 000E               1427      MOVE.B   #14,  D0    
+00001F24  4E4F                    1428      TRAP     #15
+00001F26  43F9 00002195           1429      LEA   OPEN_PARENTHESIS_MSG, A1
+00001F2C  103C 000E               1430      MOVE.B   #14,  D0    
+00001F30  4E4F                    1431      TRAP     #15
+00001F32  43F9 00002107           1432      LEA   A_MSG, A1
+00001F38  103C 000E               1433      MOVE.B   #14,  D0    
+00001F3C  4E4F                    1434      TRAP     #15
+00001F3E  43F9 000020F3           1435      LEA    ZERO_MSG, A1
+00001F44  7A00                    1436      MOVE.L     #0, D5
+00001F46  7C02                    1437      MOVE.L     #2, D6
+00001F48  4EB8 18DA               1438      JSR        GET_BIT
+00001F4C  C8FC 0002               1439      MULU       #2, D4
+00001F50  D3C4                    1440      ADDA.L     D4, A1
+00001F52  103C 000E               1441      MOVE.B   #14,  D0    
+00001F56  4E4F                    1442      TRAP     #15
+00001F58  43F9 00002197           1443      LEA   CLOSE_PARENTHESIS_MSG, A1
+00001F5E  103C 000E               1444      MOVE.B   #14,  D0    
+00001F62  4E4F                    1445      TRAP     #15
+00001F64  4E75                    1446      RTS
+00001F66                          1447  
+00001F66                          1448  
+00001F66                          1449  
+00001F66                          1450  EA_ABS_WORD
+00001F66  4284                    1451      CLR.L      D4
+00001F68  381B                    1452      MOVE.W     (A3)+, D4
+00001F6A  43F9 0000218D           1453      LEA        DOLLAR_MSG,       A1
+00001F70  103C 000E               1454      MOVE.B      #14,            D0    
+00001F74  4E4F                    1455      TRAP        #15
+00001F76  4EB9 00001FC0           1456      JSR        PRINT_WORD_VALUE
+00001F7C  4E75                    1457      RTS
+00001F7E                          1458  
+00001F7E                          1459  EA_ABS_LONG
+00001F7E  281B                    1460      MOVE.L    (A3)+, D4
+00001F80  43F9 0000218D           1461      LEA        DOLLAR_MSG,       A1
+00001F86  103C 000E               1462      MOVE.B      #14,            D0    
+00001F8A  4E4F                    1463      TRAP        #15
+00001F8C  4EB9 00001FEE           1464      JSR        PRINT_LONG_VALUE
+00001F92  4E75                    1465      RTS
+00001F94                          1466  
+00001F94                          1467  
+00001F94                          1468  
+00001F94                          1469  
+00001F94                          1470  PRINT_BYTE_VALUE
+00001F94  48E7 0600               1471          MOVEM.L    D5-D6, -(A7)
+00001F98  7C02                    1472          MOVE.L     #2, D6
+00001F9A                          1473  PRINT_BYTE_VALUE_LOOP
+00001F9A                          1474          *Gets the most significant bit basically
+00001F9A                          1475          *Could use GET_BIT subroutine but it is 
+00001F9A                          1476          *costly in terms of registers used
+00001F9A  1A04                    1477          MOVE.B     D4, D5
+00001F9C  E80D                    1478          LSR.B      #4, D5
+00001F9E  E90C                    1479          LSL.B      #4, D4
+00001FA0  43F9 000020F3           1480          LEA        ZERO_MSG,      A1
+00001FA6                          1481          * load the address of Zero_msg
+00001FA6                          1482          * because all of the msgs are stored next to each other in order
+00001FA6                          1483          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+00001FA6                          1484          * and then add it to the address starting at zero_msg
+00001FA6  CAFC 0002               1485          MULU         #2,            D5
+00001FAA  D3C5                    1486          ADDA.L       D5,            A1
+00001FAC  103C 000E               1487          MOVE.B      #14, D0
+00001FB0  4E4F                    1488          TRAP        #15
+00001FB2  5386                    1489          SUBI.L      #1, D6
+00001FB4  BC3C 0000               1490          CMP.B       #0, D6
+00001FB8  66E0                    1491          BNE         PRINT_BYTE_VALUE_LOOP
+00001FBA  4CDF 0060               1492          MOVEM.L    (A7)+, D5-D6
+00001FBE  4E75                    1493          RTS
+00001FC0                          1494  
+00001FC0                          1495  
+00001FC0                          1496  
+00001FC0                          1497  PRINT_WORD_VALUE
+00001FC0  48E7 0600               1498          MOVEM.L    D5-D6, -(A7)
+00001FC4  7C04                    1499          MOVE.L     #4, D6
+00001FC6                          1500  PRINT_WORD_VALUE_LOOP
+00001FC6                          1501          *Gets the most significant bit basically
+00001FC6                          1502          *Could use GET_BIT subroutine but it is 
+00001FC6                          1503          *costly in terms of registers used
+00001FC6  3A04                    1504          MOVE.W     D4, D5
+00001FC8  EC4D                    1505          LSR.W      #6, D5
+00001FCA  EC4D                    1506          LSR.W      #6, D5
+00001FCC  E94C                    1507          LSL.W      #4, D4
+00001FCE  43F9 000020F3           1508          LEA        ZERO_MSG,      A1
+00001FD4                          1509          * load the address of Zero_msg
+00001FD4                          1510          * because all of the msgs are stored next to each other in order
+00001FD4                          1511          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+00001FD4                          1512          * and then add it to the address starting at zero_msg
+00001FD4  CAFC 0002               1513          MULU         #2,            D5
+00001FD8  D3C5                    1514          ADDA.L       D5,            A1
+00001FDA  103C 000E               1515          MOVE.B      #14, D0
+00001FDE  4E4F                    1516          TRAP        #15
+00001FE0  5386                    1517          SUBI.L      #1, D6
+00001FE2  BC3C 0000               1518          CMP.B       #0, D6
+00001FE6  66DE                    1519          BNE         PRINT_WORD_VALUE_LOOP
+00001FE8  4CDF 0060               1520          MOVEM.L    (A7)+, D5-D6
+00001FEC  4E75                    1521          RTS
+00001FEE                          1522  
+00001FEE                          1523  
+00001FEE                          1524  PRINT_LONG_VALUE
+00001FEE  48E7 0600               1525          MOVEM.L    D5-D6, -(A7)
+00001FF2  7C08                    1526          MOVE.L     #8, D6
+00001FF4                          1527  PRINT_LONG_VALUE_LOOP
+00001FF4                          1528          *Gets the most significant bit basically
+00001FF4                          1529          *Could use GET_BIT subroutine but it is 
+00001FF4                          1530          *costly in terms of registers used
+00001FF4  2A04                    1531          MOVE.L     D4, D5
+00001FF6  E08D                    1532          LSR.L      #8, D5
+00001FF8  E08D                    1533          LSR.L      #8, D5
+00001FFA  E08D                    1534          LSR.L      #8, D5
+00001FFC  E88D                    1535          LSR.L      #4, D5
+00001FFE  E98C                    1536          LSL.L      #4, D4
+00002000  43F9 000020F3           1537          LEA        ZERO_MSG,      A1
+00002006                          1538          * load the address of Zero_msg
+00002006                          1539          * because all of the msgs are stored next to each other in order
+00002006                          1540          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+00002006                          1541          * and then add it to the address starting at zero_msg
+00002006  CAFC 0002               1542          MULU         #2,            D5
+0000200A  D3C5                    1543          ADDA.L       D5,            A1
+0000200C  103C 000E               1544          MOVE.B      #14, D0
+00002010  4E4F                    1545          TRAP        #15
+00002012  5386                    1546          SUBI.L      #1, D6
+00002014  BC3C 0000               1547          CMP.B       #0, D6
+00002018  66DA                    1548          BNE         PRINT_LONG_VALUE_LOOP
+0000201A  4CDF 0060               1549          MOVEM.L    (A7)+, D5-D6
+0000201E  4E75                    1550          RTS
+00002020                          1551  
+00002020                          1552  
+00002020                          1553   
+00002020                          1554  -------------------- end include --------------------
+00002020                          1555  
+00002020                          1556  
+00002020                          1557  * Put variables and constants here
+00002020                          1558  
+00002020= 57 65 6C 63 6F 6D ...   1559  INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
+00002046= 50 6C 65 61 73 65 ...   1560  STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
+0000206A= 50 6C 65 61 73 65 ...   1561  ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
+0000208C= 44 6F 6E 65 20 52 ...   1562  GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
+000020A0                          1563  * CR and LF for strings above because we want to go to next line after printing message
+000020A0                          1564  
+000020A0                          1565  STA_ADDR         DS.B        40
+000020C8                          1566  END_ADDR         DS.B        40
+000020F0                          1567  
+000020F0                          1568  * no CR and LF for strings below because we want to print each number and letter
+000020F0                          1569  
+000020F0= 20 20 00                1570  SPACE_MSG:       DC.B        '  ',0
+000020F3                          1571  
+000020F3= 30 00                   1572  ZERO_MSG:        DC.B        '0',0
+000020F5= 31 00                   1573  ONE_MSG:         DC.B        '1',0
+000020F7= 32 00                   1574  TWO_MSG:         DC.B        '2',0
+000020F9= 33 00                   1575  THREE_MSG:       DC.B        '3',0
+000020FB= 34 00                   1576  FOUR_MSG:        DC.B        '4',0
+000020FD= 35 00                   1577  FIVE_MSG:        DC.B        '5',0
+000020FF= 36 00                   1578  SIX_MSG:         DC.B        '6',0
+00002101= 37 00                   1579  SEVEN_MSG:       DC.B        '7',0
+00002103= 38 00                   1580  EIGHT_MSG:       DC.B        '8',0
+00002105= 39 00                   1581  NINE_MSG:        DC.B        '9',0
+00002107= 41 00                   1582  A_MSG:           DC.B        'A',0
+00002109= 42 00                   1583  B_MSG:           DC.B        'B',0
+0000210B= 43 00                   1584  C_MSG:           DC.B        'C',0
+0000210D= 44 00                   1585  D_MSG:           DC.B        'D',0
+0000210F= 45 00                   1586  E_MSG:           DC.B        'E',0
+00002111= 46 00                   1587  F_MSG:           DC.B        'F',0 
+00002113                          1588  
+00002113                          1589  * opcodes
+00002113= 4A 53 52 20 00          1590  JSRMSG:             DC.B        'JSR ',0
+00002118= 4E 4F 54 00             1591  NOT_MSG:        DC.B        'NOT',0
+0000211C= 42 52 41 00             1592  BRA_MSG:        DC.B        'BRA',0
+00002120= 4A 53 52 00             1593  JSR_MSG:        DC.B        'JSR',0
+00002124= 4D 4F 56 45 51 00       1594  MOVEQ_MSG:      DC.B        'MOVEQ',0
+0000212A= 41 4E 44 00             1595  AND_MSG:        DC.B        'AND',0
+0000212E= 4C 45 41 00             1596  LEA_MSG         DC.B        'LEA',0
+00002132= 41 53 52 00             1597  ASR_MSG         DC.B        'ASR',0
+00002136= 41 53 4C 00             1598  ASL_MSG         DC.B        'ASL',0
+0000213A= 4C 53 52 00             1599  LSR_MSG         DC.B        'LSR',0
+0000213E= 4C 53 4C 00             1600  LSL_MSG         DC.B        'LSL',0
+00002142= 52 4F 58 00             1601  ROXR_MSG        DC.B        'ROX',0  *Unused messages but present because helps in indexing, DONT USE IT
+00002146= 52 4F 58 00             1602  ROXL_MSG        DC.B        'ROX',0  *Unused messages but present because helps in indexing, DONT USE IT
+0000214A= 52 4F 52 00             1603  ROR_MSG         DC.B        'ROR',0
+0000214E= 52 4F 4C 00             1604  ROL_MSG         DC.B        'ROL',0
+00002152= 4F 52 00                1605  OR_MSG:         DC.B        'OR',0
+00002155= 44 41 54 41 00          1606  DATA_MSG:       DC.B        'DATA',0
+0000215A= 42 00                   1607  BCC_MSG         DC.B        'B', 0
+0000215C= 42 4C 45 00             1608  BLE_MSG         DC.B        'BLE', 0
+00002160= 42 47 54 00             1609  BGT_MSG         DC.B        'BGT',0
+00002164= 42 45 51 00             1610  BEQ_MSG         DC.B        'BEQ',0
+00002168= 41 44 44 51 00          1611  ADDQ_MSG        DC.B        'ADDQ',0
+0000216D= 41 44 44 41 00          1612  ADDA_MSG        DC.B        'ADDA',0
+00002172= 53 55 42 00             1613  SUB_MSG         DC.B        'SUB', 0
+00002176= 41 44 44 00             1614  ADD_MSG         DC.B        'ADD', 0
+0000217A= 4E 4F 50 00             1615  NOP_MSG         DC.B        'NOP',0
+0000217E= 52 54 53 00             1616  RTS_MSG         DC.B        'RTS',0
+00002182= 2E 42 00                1617  BYTE_MSG        DC.B        '.B', 0
+00002185= 2E 57 00                1618  WORD_MSG        DC.B        '.W', 0
+00002188= 2E 4C 00                1619  LONG_MSG        DC.B        '.L', 0
+0000218B                          1620  
+0000218B= 2C 00                   1621  COMMA_MSG       DC.B        ',', 0
+0000218D= 24 00                   1622  DOLLAR_MSG      DC.B        '$', 0
+0000218F= 23 00                   1623  HASH_MSG        DC.B        '#', 0
+00002191= 2B 00                   1624  PLUS_MSG        DC.B        '+', 0
+00002193= 2D 00                   1625  MINUS_MSG       DC.B        '-', 0
+00002195= 28 00                   1626  OPEN_PARENTHESIS_MSG  DC.B   '(', 0
+00002197= 29 00                   1627  CLOSE_PARENTHESIS_MSG DC.B  ')', 0
+00002199                          1628  *-----Carriage Return
+00002199  =0000000D               1629  CR              EQU          $0D
+00002199                          1630  *-----------Line Feed
+00002199  =0000000A               1631  LF              EQU          $0A
+00002199                          1632  
+00002199= 0D 0A 00                1633  NEW_LINE:       DC.B         '',CR,LF,0
+0000219C                          1634  
+0000219C                          1635      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -1617,149 +1645,154 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-ADDA_EA_DEST        1BC2
-ADDA_EA_IMM_LONG    1B92
-ADDA_EA_IMM_SOURCE  1B60
-ADDA_EA_IMM_WORD    1BAA
-ADDA_EA_NON_IMM_SOURCE  1B40
-ADDA_EA_SIZE_AND_EA  1AF8
-ADDA_MSG            2125
-ADDQ_ADD_COUNT_1_7  1C52
-ADDQ_ADD_COUNT_8    1C92
-ADDQ_EA_SIZE_AND_EA  1BF2
-ADDQ_MSG            2120
-ADD_MSG             212E
-ADD_SUB_EA_EA       1D26
-ADD_SUB_EA_EA_IMM   1D52
-ADD_SUB_EA_EA_IMM_LONG  1D8A
-ADD_SUB_EA_EA_IMM_WORD  1D94
-ADD_SUB_EA_REG      1CF6
-ADD_SUB_EA_SIZE     1CCC
-AND_MSG             20E2
+ADDA_EA_DEST        1C0A
+ADDA_EA_IMM_LONG    1BDA
+ADDA_EA_IMM_SOURCE  1BA8
+ADDA_EA_IMM_WORD    1BF2
+ADDA_EA_NON_IMM_SOURCE  1B88
+ADDA_EA_SIZE_AND_EA  1B40
+ADDA_MSG            216D
+ADDQ_ADD_COUNT_1_7  1C9A
+ADDQ_ADD_COUNT_8    1CDA
+ADDQ_EA_SIZE_AND_EA  1C3A
+ADDQ_MSG            2168
+ADD_MSG             2176
+ADD_SUB_EA_EA       1D6E
+ADD_SUB_EA_EA_IMM   1D9A
+ADD_SUB_EA_EA_IMM_LONG  1DD2
+ADD_SUB_EA_EA_IMM_WORD  1DDC
+ADD_SUB_EA_REG      1D3E
+ADD_SUB_EA_SIZE     1D14
+AND_MSG             212A
 ASCII_DONE          106E
-ASL_MSG             20EE
-ASR_MSG             20EA
-A_MSG               20BF
-BCC_MSG             2112
-BEQ_MSG             211C
-BGT_MSG             2118
-BLE_MSG             2114
-BRA_MSG             20D4
-BR_BYTE_DISPLACEMENT  19F8
-BR_EA_SIZE_AND_DISPLACEMENT  19DE
-BR_WORD_DISPLACEMENT  1A46
-BYTE_MSG            2132
-B_MSG               20C1
+ASL_MSG             2136
+ASR_MSG             2132
+A_MSG               2107
+BCC_MSG             215A
+BEQ_MSG             2164
+BGT_MSG             2160
+BLE_MSG             215C
+BRA_MSG             211C
+BR_BYTE_DISPLACEMENT  1A40
+BR_EA_SIZE_AND_DISPLACEMENT  1A26
+BR_WORD_DISPLACEMENT  1A8E
+BYTE_MSG            2182
+B_MSG               2109
 CHECK_OPCODES       116A
-CLOSE_PARENTHESIS_MSG  2147
-COMMA_MSG           213B
+CLOSE_PARENTHESIS_MSG  2197
+COMMA_MSG           218B
 CONVERT_TO_ASCII    1056
 CR                  D
-C_MSG               20C3
-DATA_MSG            210D
-DOLLAR_MSG          213D
+C_MSG               210B
+DATA_MSG            2155
+DOLLAR_MSG          218D
 DONE                1158
-D_MSG               20C5
-EA_ABS_LONG         1F36
-EA_ABS_WORD         1F1E
-EA_ADDR_REGISTER    1E1E
-EA_DATA_REGISTER    1DF6
-EA_INDIRECT         1E46
-EA_INDIRECT_DECREMENT  1ED2
-EA_INDIRECT_INCREMENT  1E86
-EIGHT_MSG           20BB
-ENDING_MSG          2022
-END_ADDR            2080
-E_MSG               20C7
-FIVE_MSG            20B5
-FOUR_MSG            20B3
-F_MSG               20C9
-GET_BIT             1892
-GET_EA              1D9E
-GOODBYE_MSG         2044
-HASH_MSG            213F
-INSTRUCTION_DECODE_FAILURE  18A6
-INTRO_MSG           1FD8
-ISOLATE_15_12       11E0
-ISOLATE_15_6        11B8
-ISOLATE_15_8        11C8
-JSRMSG              20CB
-JSR_MSG             20D8
-LEA_EA              1A9C
-LEA_MSG             20E6
+D_MSG               210D
+EA_ABS_LONG         1F7E
+EA_ABS_WORD         1F66
+EA_ADDR_REGISTER    1E66
+EA_DATA_REGISTER    1E3E
+EA_INDIRECT         1E8E
+EA_INDIRECT_DECREMENT  1F1A
+EA_INDIRECT_INCREMENT  1ECE
+EIGHT_MSG           2103
+ENDING_MSG          206A
+END_ADDR            20C8
+E_MSG               210F
+FIVE_MSG            20FD
+FOUR_MSG            20FB
+F_MSG               2111
+GET_BIT             18DA
+GET_EA              1DE6
+GOODBYE_MSG         208C
+HASH_MSG            218F
+INSTRUCTION_DECODE_FAILURE  18EE
+INTRO_MSG           2020
+ISOLATE_15_0        1230
+ISOLATE_15_12       11E6
+ISOLATE_15_6        11BE
+ISOLATE_15_8        11CE
+JSRMSG              2113
+JSR_MSG             2120
+LEA_EA              1AE4
+LEA_MSG             212E
 LETTER_ASCII        1084
 LF                  A
-LONG_MSG            2138
-LSL_MSG             20F6
-LSR_MSG             20F2
-MINUS_MSG           2143
-MOVEQ_MSG           20DC
-NEG_BYTE_DISPLACEMENT  1A34
-NEG_WORD_DISPLACEMENT  1A88
-NEW_LINE            2149
-NINE_MSG            20BD
-NOT_MSG             20D0
+LONG_MSG            2188
+LSL_MSG             213E
+LSR_MSG             213A
+MINUS_MSG           2193
+MOVEQ_MSG           2124
+NEG_BYTE_DISPLACEMENT  1A7C
+NEG_WORD_DISPLACEMENT  1AD0
+NEW_LINE            2199
+NINE_MSG            2105
+NOP_MSG             217A
+NOT_MSG             2118
 NUMBER_ASCII        1070
-ONE_MSG             20AD
-OPEN_PARENTHESIS_MSG  2145
-OP_CODE_ADD         151C
-OP_CODE_ADDA        13CA
-OP_CODE_ADDQ        148C
-OP_CODE_ADD_SUB     155C
-OP_CODE_ADD_SUB_DEST_REG  164C
-OP_CODE_ADD_SUB_SOURCE_REG  157C
-OP_CODE_AND         1328
-OP_CODE_BCC         1336
-OP_CODE_BEQ         13B4
-OP_CODE_BGT         139E
-OP_CODE_BLE         1388
-OP_CODE_BRA         1238
-OP_CODE_DATA        1732
-OP_CODE_JSR         126A
-OP_CODE_LEA         1286
-OP_CODE_LEA_PRINT   1306
-OP_CODE_MEMORY_SHIFT_ROTATE  17CE
-OP_CODE_MOVEQ       1278
-OP_CODE_NOT         122A
-OP_CODE_OR          1712
-OP_CODE_REGISTER_SHIFT_ROTATE  177C
-OP_CODE_SHIFT_ROTATE  1740
-OP_CODE_SUB         153C
-OR_MSG              210A
-PLUS_MSG            2141
-PRINT_BYTE_VALUE    1F4C
-PRINT_BYTE_VALUE_LOOP  1F52
+ONE_MSG             20F5
+OPEN_PARENTHESIS_MSG  2195
+OP_CODE_ADD         1564
+OP_CODE_ADDA        1412
+OP_CODE_ADDQ        14D4
+OP_CODE_ADD_SUB     15A4
+OP_CODE_ADD_SUB_DEST_REG  1694
+OP_CODE_ADD_SUB_SOURCE_REG  15C4
+OP_CODE_AND         1370
+OP_CODE_BCC         137E
+OP_CODE_BEQ         13FC
+OP_CODE_BGT         13E6
+OP_CODE_BLE         13D0
+OP_CODE_BRA         1280
+OP_CODE_DATA        177A
+OP_CODE_JSR         12B2
+OP_CODE_LEA         12CE
+OP_CODE_LEA_PRINT   134E
+OP_CODE_MEMORY_SHIFT_ROTATE  1816
+OP_CODE_MOVEQ       12C0
+OP_CODE_NOP         124C
+OP_CODE_NOT         123E
+OP_CODE_OR          175A
+OP_CODE_REGISTER_SHIFT_ROTATE  17C4
+OP_CODE_RTS         1266
+OP_CODE_SHIFT_ROTATE  1788
+OP_CODE_SUB         1584
+OR_MSG              2152
+PLUS_MSG            2191
+PRINT_BYTE_VALUE    1F94
+PRINT_BYTE_VALUE_LOOP  1F9A
 PRINT_DONE          1126
-PRINT_LONG_VALUE    1FA6
-PRINT_LONG_VALUE_LOOP  1FAC
+PRINT_LONG_VALUE    1FEE
+PRINT_LONG_VALUE_LOOP  1FF4
 PRINT_LOOP          10F8
 PRINT_MEMORY_LOOP   1098
-PRINT_WORD_VALUE    1F78
-PRINT_WORD_VALUE_LOOP  1F7E
+PRINT_WORD_VALUE    1FC0
+PRINT_WORD_VALUE_LOOP  1FC6
 REVERSE_DONE        1156
 REVERSE_LOOP        1138
 REVERSE_START       1128
-ROL_MSG             2106
-ROR_MSG             2102
-ROXL_MSG            20FE
-ROXR_MSG            20FA
-SEVEN_MSG           20B9
-SHIFT_ROTATE_COUNT_1_7  1996
-SHIFT_ROTATE_COUNT_8  19AC
-SHIFT_ROTATE_EA_MEMORY  19BC
-SHIFT_ROTATE_EA_REGISTER  18D8
-SHIFT_ROTATE_EA_SIZE  18A8
-SHIFT_ROTATE_IMM_SOURCE  1960
-SHIFT_ROTATE_REGISTER_DEST  1924
-SHIFT_ROTATE_REGISTER_SOURCE  18F2
-SIX_MSG             20B7
-SPACE_MSG           20A8
+ROL_MSG             214E
+ROR_MSG             214A
+ROXL_MSG            2146
+ROXR_MSG            2142
+RTS_MSG             217E
+SEVEN_MSG           2101
+SHIFT_ROTATE_COUNT_1_7  19DE
+SHIFT_ROTATE_COUNT_8  19F4
+SHIFT_ROTATE_EA_MEMORY  1A04
+SHIFT_ROTATE_EA_REGISTER  1920
+SHIFT_ROTATE_EA_SIZE  18F0
+SHIFT_ROTATE_IMM_SOURCE  19A8
+SHIFT_ROTATE_REGISTER_DEST  196C
+SHIFT_ROTATE_REGISTER_SOURCE  193A
+SIX_MSG             20FF
+SPACE_MSG           20F0
 START               1000
-STARTING_MSG        1FFE
-STA_ADDR            2058
-SUB_MSG             212A
-THREE_MSG           20B1
-TOTAL_DECODE_FAILURE  118A
-TWO_MSG             20AF
-WORD_MSG            2135
-ZERO_MSG            20AB
+STARTING_MSG        2046
+STA_ADDR            20A0
+SUB_MSG             2172
+THREE_MSG           20F9
+TOTAL_DECODE_FAILURE  1190
+TWO_MSG             20F7
+WORD_MSG            2185
+ZERO_MSG            20F3
