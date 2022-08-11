@@ -73,22 +73,13 @@ ISOLATE_15_12:
         BEQ         OP_CODE_OR      *may get confused with DIVU + any other opcodes that start with 1000 (ones that we are not required to cover)
         CMP.B       #$C,    D4
         BEQ         OP_CODE_AND
-        *If the 15-12 are 0110
-        CMP.B       #6,     D4
-        BEQ         OP_CODE_BCC
-        *If the 15-12 are 1110, then it is a shift(LSL, LSR, ROR, ROL, ASR, ASL)
-        CMP.B       #14,   D4
-        BEQ         OP_CODE_SHIFT_ROTATE
-        CMP.B       #4,     D4
-        BEQ         OP_CODE_LEA
-        CMP.B       #%1101, D4
-        BEQ         OP_CODE_ADDA
-        CMP.B       #%0101, D4
-        BEQ         OP_CODE_ADDQ
-        CMP.B       #%1101, D4
-        BEQ         OP_CODE_ADD
-        CMP.B       #%1001, D4
-        BEQ         OP_CODE_SUB
+        JSR         OP_CODE_BCC
+        JSR         OP_CODE_SHIFT_ROTATE
+        JSR         OP_CODE_ADDA
+        JSR         OP_CODE_ADDQ
+        JSR         OP_CODE_ADD
+        JSR         OP_CODE_SUB
+        JSR         OP_CODE_LEA
         RTS
 
 
@@ -101,6 +92,13 @@ OP_CODE_NOT:
         
         RTS 
 OP_CODE_BRA:
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L       #%0110, D4
+        BNE         INSTRUCTION_DECODE_FAILURE
         LEA         BRA_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
@@ -121,6 +119,13 @@ OP_CODE_MOVEQ:
         RTS
 
 OP_CODE_LEA:
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%0100, D4
+        BNE        INSTRUCTION_DECODE_FAILURE
         MOVEM.L    D5-D6, -(A7)
         MOVE.L     #6, D5
         MOVE.L     #8, D6
@@ -167,6 +172,13 @@ OP_CODE_AND:
         RTS
 
 OP_CODE_BCC
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%0110, D4
+        BNE        INSTRUCTION_DECODE_FAILURE
         *Get bits from 8-11 to get the condition
         *Only checking for (BGT, BLE, BEQ). Rest are considered
         *invalid
@@ -213,6 +225,13 @@ OP_CODE_BEQ
 
 OP_CODE_ADDA
         MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%1101, D4
+        BNE        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
         MOVE.L     #6, D5
         MOVE.L     #8, D6
         JSR        GET_BIT
@@ -254,6 +273,13 @@ OP_CODE_ADDA
 
 OP_CODE_ADDQ
         MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%0101, D4
+        BNE        INSTRUCTION_DECODE_FAILURE
+        MOVEM.L    D5-D6, -(A7)
         MOVE.L     #6, D5
         MOVE.L     #7, D6
         JSR        GET_BIT
@@ -284,9 +310,23 @@ OP_CODE_ADDQ
         RTS
 
 OP_CODE_ADD
-        BRA     OP_CODE_ADD_SUB
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%1101, D4
+        BNE        INSTRUCTION_DECODE_FAILURE
+        BRA        OP_CODE_ADD_SUB
 
 OP_CODE_SUB  
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6 
+        CMP.L       #%1001, D4
+        BNE        INSTRUCTION_DECODE_FAILURE
         BRA     OP_CODE_ADD_SUB
 
 OP_CODE_ADD_SUB
@@ -436,6 +476,13 @@ OP_CODE_DATA:
 
 
 OP_CODE_SHIFT_ROTATE
+        MOVEM.L    D5-D6, -(A7)
+        MOVE.L     #12, D5
+        MOVE.L     #15, D6
+        JSR        GET_BIT
+        MOVEM.L    (A7)+, D5-D6
+        CMP.L      #%1110, D4
+        BNE        INSTRUCTION_DECODE_FAILURE
         *Now check whether it is register shift or memory shift
         *If the 6-7 bit is 11, then it is a memory else register shift
         MOVEM.L    D5-D6, -(A7)

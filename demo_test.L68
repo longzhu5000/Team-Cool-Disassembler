@@ -1,6 +1,6 @@
 00009000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 8/11/2022 3:59:32 AM
+Created On: 8/11/2022 3:58:01 PM
 
 00000000                             1  *****************************
 00000000                             2  *
@@ -20,114 +20,123 @@ Created On: 8/11/2022 3:59:32 AM
 00009000                            16                  ORG     start
 00009000                            17  
 00009000                            18  NOP
-00009000  9010                      19      SUB.B     (A0), D0
-00009002  9291                      20      SUB.L     (A1), D1
-00009004  93B9 0000A000             21      SUB.L     D1, $A000
-0000900A  93B9 12345678             22      SUB.L     D1, $12345678
-00009010  9378 1234                 23      SUB.W     D1, $1234
-00009014  9351                      24      SUB.W     D1, (A1)
-00009016  9390                      25      SUB.L     D1, (A0)
-00009018  9359                      26      SUB.W     D1, (A1)+
-0000901A  93A1                      27      SUB.L     D1, -(A1)
-0000901C  E32A                      28      LSL.B     D1,D2
-0000901E  E36A                      29      LSL.W     D1,D2
-00009020  E3D1                      30      LSL.W     (A1)
-00009022  E3D9                      31      LSL.W     (A1)+
-00009024  E3E1                      32      LSL.W     -(A1)
-00009026  E3AA                      33      LSL.L     D1,D2
-00009028  E22A                      34      LSR.B     D1,D2
-0000902A  E26A                      35      LSR.W     D1,D2
-0000902C  E2D1                      36      LSR.W     (A1)
-0000902E  E2D9                      37      LSR.W     (A1)+
-00009030  E2E1                      38      LSR.W     -(A1)
-00009032  E2AA                      39      LSR.L     D1,D2    
-00009034  E222                      40      ASR.B     D1,D2
-00009036  E262                      41      ASR.W     D1,D2
-00009038  E0D1                      42      ASR.W     (A1)
-0000903A  E0D9                      43      ASR.W     (A1)+
-0000903C  E0E1                      44      ASR.W     -(A1)
-0000903E  E2A2                      45      ASR.L     D1,D2
-00009040  E322                      46      ASL.B     D1,D2
-00009042  E362                      47      ASL.W     D1,D2
-00009044  E1D1                      48      ASL.W     (A1)
-00009046  E1D9                      49      ASL.W     (A1)+
-00009048  E1E1                      50      ASL.W     -(A1)
-0000904A  E3A2                      51      ASL.L     D1,D2  
-0000904C  6E12                      52      BGT.B     label1
-0000904E  6E10                      53      BGT.B     label2
-00009050  6F0E                      54      BLE.B     label1
-00009052  6F0C                      55      BLE.B     label2
-00009054  6C0A                      56      BGE.B     label1
-00009056  6708                      57      BEQ.B     label2
-00009058  6700 0006                 58      BEQ.W     label1
-0000905C  6000 0002                 59      BRA       label1
-00009060                            60  label1
-00009060                            61  
-00009060                            62  label2
-00009060                            63  
-00009060                            64  label3
-00009060                            65  
-00009060  E30A                      66      LSL.B     #$1,D2
-00009062  E54A                      67      LSL.W     #$2,D2
-00009064  E78A                      68      LSL.L     #$3,D2
-00009066  E14A                      69      LSL.W     #8, D2
-00009068  E3F8 0012                 70      LSL.W     $12
-0000906C  E3F8 1234                 71      LSL.W     $1234
-00009070  E3F9 12345678             72      LSL.W     $12345678
-00009076  E202                      73      ASR.B     #$1,D2
-00009078  E442                      74      ASR.W     #$2,D2
-0000907A  E682                      75      ASR.L     #$3,D2
-0000907C  E082                      76      ASR.L     #8, D2
-0000907E  E0F8 0012                 77      ASR.W     $12
-00009082  E0F8 1234                 78      ASR.W     $1234
-00009086  E0F9 12345678             79      ASR.W     $12345678
-0000908C                            80  label4
-0000908C  6EFE                      81      BGT.B     label4
-0000908E  6EFC                      82      BGT.B     label4
-00009090  6EFA                      83      BGT.B     label4
-00009092  6F00 FFCC                 84      BLE.W     label1
-00009096  6F00 FFC8                 85      BLE.W     label2
-0000909A  6F00 FFC4                 86      BLE.W     label3
-0000909E  6700 FFC0                 87      BEQ.W     label1
-000090A2  6700 FFBC                 88      BEQ.W     label2
-000090A6  6700 FFB8                 89      BEQ.W     label3
-000090AA  41D0                      90      LEA     (A0),A0
-000090AC  41D5                      91      LEA     (A5),A0
-000090AE  41D7                      92      LEA     (A7),A0
-000090B0  4FD0                      93      LEA     (A0),A7
-000090B2  4FD5                      94      LEA     (A5),A7
-000090B4  4FD7                      95      LEA     (A7),A7
-000090B6  D4C1                      96      ADDA.W        D1,A2
-000090B8  D4D1                      97          ADDA.W        (A1),A2
-000090BA  D4D9                      98          ADDA.W        (A1)+,A2
-000090BC  D4E1                      99          ADDA.W        -(A1),A2
-000090BE  D5C1                     100          ADDA.L        D1,A2
-000090C0  D5D1                     101          ADDA.L        (A1),A2
-000090C2  D5D9                     102          ADDA.L        (A1)+,A2
-000090C4  D5E1                     103          ADDA.L        -(A1),A2
-000090C6  D4F8 0012                104          ADDA.W    $12,A2
-000090CA  D4F8 1234                105          ADDA.W    $1234,A2
-000090CE  D4F9 12345678            106          ADDA.W    $12345678,A2
-000090D4  D4FC 1234                107          ADDA.W    #$1234,A2
-000090D8  D5F8 0012                108          ADDA.L    $12,A2
-000090DC  D5F8 1234                109          ADDA.L    $1234,A2
-000090E0  D5F9 12345678            110          ADDA.L    $12345678,A2
-000090E6  D5FC 12345678            111          ADDA.L    #$12345678,A2
-000090EC  5003                     112          ADDQ.B    #8, D3
-000090EE  5E4B                     113          ADDQ.W    #7, A3
-000090F0  529B                     114          ADDQ.L    #1, (A3)+
-000090F2  5E52                     115          ADDQ.W    #7, (A2)
-000090F4  54A2                     116          ADDQ.L    #2, -(A2)
-000090F6  50B8 0012                117          ADDQ.L    #8, $12
-000090FA  50B8 1234                118          ADDQ.L    #8, $1234
-000090FE  50B9 12345678            119          ADDQ.L    #8, $12345678
-00009104                           120  * Put program code here 
-00009104                           121  
-00009104  FFFF FFFF                122      SIMHALT             ; halt simulator
-00009108                           123  
-00009108                           124  * Put variables and constants here
-00009108                           125  
-00009108                           126      END    START        ; last line of source
+00009000  D010                      19      ADD.B     (A0), D0
+00009002  D291                      20      ADD.L     (A1), D1
+00009004  D3B9 0000A000             21      ADD.L     D1, $A000
+0000900A  D3B9 12345678             22      ADD.L     D1, $12345678
+00009010  D378 1234                 23      ADD.W     D1, $1234
+00009014  D351                      24      ADD.W     D1, (A1)
+00009016  D390                      25      ADD.L     D1, (A0)
+00009018  D359                      26      ADD.W     D1, (A1)+
+0000901A  D3A1                      27      ADD.L     D1, -(A1)
+0000901C  9010                      28      SUB.B     (A0), D0
+0000901E  9291                      29      SUB.L     (A1), D1
+00009020  93B9 0000A000             30      SUB.L     D1, $A000
+00009026  93B9 12345678             31      SUB.L     D1, $12345678
+0000902C  9378 1234                 32      SUB.W     D1, $1234
+00009030  9351                      33      SUB.W     D1, (A1)
+00009032  9390                      34      SUB.L     D1, (A0)
+00009034  9359                      35      SUB.W     D1, (A1)+
+00009036  93A1                      36      SUB.L     D1, -(A1)
+00009038  E32A                      37      LSL.B     D1,D2
+0000903A  E36A                      38      LSL.W     D1,D2
+0000903C  E3D1                      39      LSL.W     (A1)
+0000903E  E3D9                      40      LSL.W     (A1)+
+00009040  E3E1                      41      LSL.W     -(A1)
+00009042  E3AA                      42      LSL.L     D1,D2
+00009044  E22A                      43      LSR.B     D1,D2
+00009046  E26A                      44      LSR.W     D1,D2
+00009048  E2D1                      45      LSR.W     (A1)
+0000904A  E2D9                      46      LSR.W     (A1)+
+0000904C  E2E1                      47      LSR.W     -(A1)
+0000904E  E2AA                      48      LSR.L     D1,D2    
+00009050  E222                      49      ASR.B     D1,D2
+00009052  E262                      50      ASR.W     D1,D2
+00009054  E0D1                      51      ASR.W     (A1)
+00009056  E0D9                      52      ASR.W     (A1)+
+00009058  E0E1                      53      ASR.W     -(A1)
+0000905A  E2A2                      54      ASR.L     D1,D2
+0000905C  E322                      55      ASL.B     D1,D2
+0000905E  E362                      56      ASL.W     D1,D2
+00009060  E1D1                      57      ASL.W     (A1)
+00009062  E1D9                      58      ASL.W     (A1)+
+00009064  E1E1                      59      ASL.W     -(A1)
+00009066  E3A2                      60      ASL.L     D1,D2  
+00009068  6E12                      61      BGT.B     label1
+0000906A  6E10                      62      BGT.B     label2
+0000906C  6F0E                      63      BLE.B     label1
+0000906E  6F0C                      64      BLE.B     label2
+00009070  6C0A                      65      BGE.B     label1
+00009072  6708                      66      BEQ.B     label2
+00009074  6700 0006                 67      BEQ.W     label1
+00009078  6000 0002                 68      BRA       label1
+0000907C                            69  label1
+0000907C                            70  
+0000907C                            71  label2
+0000907C                            72  
+0000907C                            73  label3
+0000907C                            74  
+0000907C  E30A                      75      LSL.B     #$1,D2
+0000907E  E54A                      76      LSL.W     #$2,D2
+00009080  E78A                      77      LSL.L     #$3,D2
+00009082  E14A                      78      LSL.W     #8, D2
+00009084  E3F8 0012                 79      LSL.W     $12
+00009088  E3F8 1234                 80      LSL.W     $1234
+0000908C  E3F9 12345678             81      LSL.W     $12345678
+00009092  E202                      82      ASR.B     #$1,D2
+00009094  E442                      83      ASR.W     #$2,D2
+00009096  E682                      84      ASR.L     #$3,D2
+00009098  E082                      85      ASR.L     #8, D2
+0000909A  E0F8 0012                 86      ASR.W     $12
+0000909E  E0F8 1234                 87      ASR.W     $1234
+000090A2  E0F9 12345678             88      ASR.W     $12345678
+000090A8                            89  label4
+000090A8  6EFE                      90      BGT.B     label4
+000090AA  6EFC                      91      BGT.B     label4
+000090AC  6EFA                      92      BGT.B     label4
+000090AE  6F00 FFCC                 93      BLE.W     label1
+000090B2  6F00 FFC8                 94      BLE.W     label2
+000090B6  6F00 FFC4                 95      BLE.W     label3
+000090BA  6700 FFC0                 96      BEQ.W     label1
+000090BE  6700 FFBC                 97      BEQ.W     label2
+000090C2  6700 FFB8                 98      BEQ.W     label3
+000090C6  41D0                      99      LEA     (A0),A0
+000090C8  41D5                     100      LEA     (A5),A0
+000090CA  41D7                     101      LEA     (A7),A0
+000090CC  4FD0                     102      LEA     (A0),A7
+000090CE  4FD5                     103      LEA     (A5),A7
+000090D0  4FD7                     104      LEA     (A7),A7
+000090D2  D4C1                     105      ADDA.W        D1,A2
+000090D4  D4D1                     106          ADDA.W        (A1),A2
+000090D6  D4D9                     107          ADDA.W        (A1)+,A2
+000090D8  D4E1                     108          ADDA.W        -(A1),A2
+000090DA  D5C1                     109          ADDA.L        D1,A2
+000090DC  D5D1                     110          ADDA.L        (A1),A2
+000090DE  D5D9                     111          ADDA.L        (A1)+,A2
+000090E0  D5E1                     112          ADDA.L        -(A1),A2
+000090E2  D4F8 0012                113          ADDA.W    $12,A2
+000090E6  D4F8 1234                114          ADDA.W    $1234,A2
+000090EA  D4F9 12345678            115          ADDA.W    $12345678,A2
+000090F0  D4FC 1234                116          ADDA.W    #$1234,A2
+000090F4  D5F8 0012                117          ADDA.L    $12,A2
+000090F8  D5F8 1234                118          ADDA.L    $1234,A2
+000090FC  D5F9 12345678            119          ADDA.L    $12345678,A2
+00009102  D5FC 12345678            120          ADDA.L    #$12345678,A2
+00009108  5003                     121          ADDQ.B    #8, D3
+0000910A  5E4B                     122          ADDQ.W    #7, A3
+0000910C  529B                     123          ADDQ.L    #1, (A3)+
+0000910E  5E52                     124          ADDQ.W    #7, (A2)
+00009110  54A2                     125          ADDQ.L    #2, -(A2)
+00009112  50B8 0012                126          ADDQ.L    #8, $12
+00009116  50B8 1234                127          ADDQ.L    #8, $1234
+0000911A  50B9 12345678            128          ADDQ.L    #8, $12345678
+00009120                           129  * Put program code here 
+00009120                           130  
+00009120  FFFF FFFF                131      SIMHALT             ; halt simulator
+00009124                           132  
+00009124                           133  * Put variables and constants here
+00009124                           134  
+00009124                           135      END    START        ; last line of source
 
 No errors detected
 No warnings generated
@@ -136,9 +145,9 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-LABEL1              9060
-LABEL2              9060
-LABEL3              9060
-LABEL4              908C
+LABEL1              907C
+LABEL2              907C
+LABEL3              907C
+LABEL4              90A8
 NOP                 9000
 START               9000
