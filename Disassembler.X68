@@ -7,10 +7,24 @@
     ORG    $1000
 START:                  ; first instruction of program
 
+        BRA     INTRO_MSGS
+
 * Put program code here
 
 *------LEA = Load effective address
 *------Running Trap #15 while the number 14 is in D0 will print out whatever data is in the address stored in A1
+
+INTRO_MSGS:
+        CLR.L       D0
+        CLR.L       D1
+        CLR.L       D2
+        CLR.L       D3
+        CLR.L       D4
+        CLR.L       D5
+        CLR.L       D6
+        CLR.L       D7
+
+
 
         LEA         INTRO_MSG,      A1
         MOVE.B      #14,            D0    
@@ -102,8 +116,7 @@ PRINT_MEMORY_LOOP:
         * if equal to, or further than ending address jump to DONE
         * SIMHALT
         CMP.L       A3,             A4
-        BEQ         DONE
-        BLE         DONE
+        BLE         RESTART
         
         * We are goiong to keep track of the number of byts we have examined using D1
         * Before printing the address we have to reverse the order
@@ -228,9 +241,23 @@ REVERSE_LOOP:
 
 REVERSE_DONE:
         RTS
+
+RESTART:
+        LEA         DONE_MSG,       A1
+        MOVE.B      #14,            D0
+        TRAP        #15
+        LEA         RESTART_MSG,    A1
+        MOVE.B      #14,            D0
+        TRAP        #15
+        MOVE.B      #2,             D0
+        TRAP        #15
+        
+
+
+        BRA         DONE
 DONE:
 
-        LEA         GOODBYE_MSG,    A1
+        LEA         TY_MSG,         A1
         MOVE.B      #14,            D0
         TRAP        #15
         MOVE.B      #9,             D0
@@ -242,7 +269,7 @@ DONE:
     INCLUDE         'Disassembler_OPCodes.x68'
     INCLUDE         'Disassembler_EA.x68'
     INCLUDE         'Sample_Test.x68'
-    *INCLUDE         'demo_test.x68'
+    INCLUDE         'demo_test.x68'
 
 
 * Put variables and constants here
@@ -250,7 +277,10 @@ DONE:
 INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
 STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
 ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
-GOODBYE_MSG:     DC.B       'Done Reading data',CR,LF,0
+DONE_MSG:        DC.B       'Done Reading data',CR,LF,0
+RESTART_MSG:     DC.B       'Press 1 to restart, and 2 to exit',CR,LF,0
+TY_MSG:          DC.B       'Thank you for trying out this disassembler',CR,LF,0
+
 * CR and LF for strings above because we want to go to next line after printing message
 
 STA_ADDR         DS.B        40
@@ -286,6 +316,8 @@ LF              EQU          $0A
 NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
+
+
 
 
 
