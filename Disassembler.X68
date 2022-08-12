@@ -268,7 +268,8 @@ DONE:
 
     INCLUDE         'Disassembler_OPCodes.x68'
     INCLUDE         'Disassembler_EA.x68'
-    INCLUDE         'Sample_Test.x68'
+    INCLUDE         'Disassembler_Msgs.x68'
+    *INCLUDE         'Sample_Test.x68'
     INCLUDE         'demo_test.x68'
 
 
@@ -316,6 +317,7 @@ LF              EQU          $0A
 NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
+
 
 
 

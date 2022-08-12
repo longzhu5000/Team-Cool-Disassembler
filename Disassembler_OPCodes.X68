@@ -553,47 +553,10 @@ OP_CODE_JSR:
         
         RTS
 
-NOT_MSG:        DC.B        'NOT',0
-BRA_MSG:        DC.B        'BRA',0
 
-MOVE_MSG:       DC.B        'MOVE',0
-MOVEM_MSG:      DC.B        'MOVEM',0
-MOVEA_MSG:      DC.B        'MOVEA',0
-LEA_MSG:        DC.B        'LEA',0
-
-ADD_MSG:        DC.B        'ADD',0
-ADDA_MSG:       DC.B        'ADDA',0
-ADDQ_MSG:       DC.B        'ADDQ',0
-SUB_MSG:        DC.B        'SUB',0
-RTS_MSG:        DC.B        'RTS',0
-NOP_MSG:        DC.B        'NOP',0
-
-MOVEQ_MSG:      DC.B        'MOVEQ',0
-AND_MSG:        DC.B        'AND',0
-OR_MSG:         DC.B        'OR',0
-JSR_MSG:        DC.B        'JSR',0
-
-WHITESPACE:     DC.B        ' ',0
-WHITESPACE_COM: DC.B        ', ',0
-
-DATA_REG:       DC.B        'D',0
-ADDR_REG:       DC.B        'A',0
-
-IMM_DATA:       DC.B        '#',0
-HEX:            DC.B        '$',0
-
-DOT_BYTE:       DC.B        '.B',0
-DOT_WORD:       DC.B        '.W',0
-DOT_LONG:       DC.B        '.L',0
-
-START_PAREN     DC.B        '(',0
-END_PAREN       DC.B        ')',0
-
-PLUS_SIGN       DC.B        '+',0
-MINUS_SIGN      DC.B        '-',0
-DIV_SIGN        DC.B        '/',0
 
 *DATA_MSG:   DC.B    'DATA',0
+
 
 
 
