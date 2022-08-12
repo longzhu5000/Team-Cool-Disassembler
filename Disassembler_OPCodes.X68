@@ -217,7 +217,7 @@ OP_CODE_MOVEA:
         MOVE.B      #14, D0
         TRAP        #15
         
-        JSR         DESTINATION_11_6s
+        JSR         DESTINATION_11_6
 
         MOVE.B      #1,      D6
 
@@ -594,6 +594,7 @@ MINUS_SIGN      DC.B        '-',0
 DIV_SIGN        DC.B        '/',0
 
 *DATA_MSG:   DC.B    'DATA',0
+
 
 
 

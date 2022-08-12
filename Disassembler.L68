@@ -1,6 +1,6 @@
 00001000 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 8/11/2022 6:06:10 PM
+Created On: 8/11/2022 6:14:42 PM
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      :Disassembler
@@ -476,7 +476,8 @@ Created On: 8/11/2022 6:06:10 PM
 00001374  103C 000E                472          MOVE.B      #14, D0
 00001378  4E4F                     473          TRAP        #15
 0000137A                           474          
-0000137A  4EB9 0000182C            475          JSR         DESTINATION_11_6
+Line 475 ERROR: Undefined symbol
+0000137A  4EB9 004DBD16            475          JSR         DESTINATION_11_6s
 00001380                           476  
 00001380  1C3C 0001                477          MOVE.B      #1,      D6
 00001384                           478  
@@ -2117,7 +2118,7 @@ Created On: 8/11/2022 6:06:10 PM
 0000224D                          2113  
 0000224D                          2114      END    START        ; last line of source
 
-No errors detected
+1 error detected
 No warnings generated
 
 
