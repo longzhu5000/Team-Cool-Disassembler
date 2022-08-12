@@ -25,7 +25,6 @@ INTRO_MSGS:
         CLR.L       D7
 
 
-
         LEA         INTRO_MSG,      A1
         MOVE.B      #14,            D0    
         TRAP        #15
@@ -115,6 +114,10 @@ PRINT_MEMORY_LOOP:
         
         * if equal to, or further than ending address jump to DONE
         * SIMHALT
+        
+        CMP.W       #$A,            A0
+        BEQ         PAUSE_SCAN
+        
         CMP.L       A3,             A4
         BLE         RESTART
         
@@ -162,6 +165,8 @@ PRINT_MEMORY_LOOP:
         LEA         NEW_LINE,       A1
         MOVE.B      #14,            D0    
         TRAP        #15
+        
+        ADD.W       #$1,            A0
 
         * branch to the start of this method
         BRA         PRINT_MEMORY_LOOP
@@ -202,6 +207,21 @@ PRINT_LOOP:
         TRAP         #15
         BRA          PRINT_LOOP
         NOT          D4
+
+PAUSE_SCAN:
+        LEA         PRESS_ENTER_MSG, A1
+        MOVE.B      #14,            D0
+        TRAP        #15
+        MOVE.B      #2,             D0
+        TRAP        #15
+        
+        CLR.L       D0
+        CLR.L       D1
+        CLR.L       D2
+        MOVE.W      #$0000,         A1
+
+        MOVE.W      #$0000,         A0
+        BRA         PRINT_MEMORY_LOOP
         
 PRINT_DONE:
         RTS
@@ -252,9 +272,10 @@ RESTART:
         MOVE.B      #2,             D0
         TRAP        #15
         
+        CMP.B       #$1,            D1
+        BEQ         DONE
 
-
-        BRA         DONE
+        BRA         INTRO_MSGS
 DONE:
 
         LEA         TY_MSG,         A1
@@ -273,50 +294,10 @@ DONE:
     INCLUDE         'demo_test.x68'
 
 
-* Put variables and constants here
 
-*INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
-*STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
-*ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
-*DONE_MSG:        DC.B       'Done Reading data',CR,LF,0
-*RESTART_MSG:     DC.B       'Press 1 to restart, and 2 to exit',CR,LF,0
-*TY_MSG:          DC.B       'Thank you for trying out this disassembler',CR,LF,0
-*
-** CR and LF for strings above because we want to go to next line after printing message
-*
-*STA_ADDR         DS.B        40
-*END_ADDR         DS.B        40
-*
-** no CR and LF for strings below because we want to print each number and letter
-*
-*SPACE_MSG:       DC.B        '  ',0
-*
-*ZERO_MSG:        DC.B        '0',0
-*ONE_MSG:         DC.B        '1',0
-*TWO_MSG:         DC.B        '2',0
-*THREE_MSG:       DC.B        '3',0
-*FOUR_MSG:        DC.B        '4',0
-*FIVE_MSG:        DC.B        '5',0
-*SIX_MSG:         DC.B        '6',0
-*SEVEN_MSG:       DC.B        '7',0
-*EIGHT_MSG:       DC.B        '8',0
-*NINE_MSG:        DC.B        '9',0
-*A_MSG:           DC.B        'A',0
-*B_MSG:           DC.B        'B',0
-*C_MSG:           DC.B        'C',0
-*D_MSG:           DC.B        'D',0
-*E_MSG:           DC.B        'E',0
-*F_MSG:           DC.B        'F',0 
-*
-*
-**-----Carriage Return
-*CR              EQU          $0D
-**-----------Line Feed
-*LF              EQU          $0A
-*
-*NEW_LINE:       DC.B         '',CR,LF,0
 
     END    START        ; last line of source
+
 
 
 

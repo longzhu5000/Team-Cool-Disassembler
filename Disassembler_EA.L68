@@ -1,0 +1,1870 @@
+00000000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 8/12/2022 12:58:23 AM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  
+00000000                             8  
+00000000                             9  *Prints out appropriate register number
+00000000                            10  *does not print 'D' or 'A'
+00000000                            11  REGISTER_11_9:
+00000000                            12          *make a copy
+00000000  3803                      13          MOVE.W      D3,     D4
+00000002                            14          
+00000002                            15          *isolate bits 11-9 on the right
+00000002  343C 0004                 16          MOVE.W      #4,     D2
+00000006  E56C                      17          LSL.W       D2,     D4
+00000008  343C 000D                 18          MOVE.W      #13,    D2
+0000000C  E46C                      19          LSR.W       D2,     D4
+0000000E                            20          
+0000000E                            21          *print out the register number
+0000000E  2204                      22          MOVE.L      D4,     D1
+00000010  103C 0003                 23          MOVE.B      #3,     D0
+00000014  4E4F                      24          TRAP        #15
+00000016                            25          
+00000016  4E75                      26          RTS
+00000018                            27  *Appends the size to the opcode (.B, .W, .L)
+00000018                            28  *Preps for rotating leftmost bit to see which form to use (<ea>, Dn -> Dn)/(Dn, <ea> -> <ea>)
+00000018                            29  OPMODE_8_6:
+00000018                            30          *append size to opcode
+00000018  3803                      31          MOVE.W      D3,     D4
+0000001A                            32          
+0000001A  343C 0007                 33          MOVE.W      #7,     D2
+0000001E  E56C                      34          LSL.W       D2,     D4
+00000020  343C 000D                 35          MOVE.W      #13,    D2
+00000024  E46C                      36          LSR.W       D2,     D4
+00000026                            37          
+00000026  B83C 0000                 38          CMP.B       #$0,    D4
+0000002A  6700 00A2                 39          BEQ         BYTE_SIZE
+0000002E                            40          
+0000002E  B83C 0004                 41          CMP.B       #$4,    D4
+00000032  6700 009A                 42          BEQ         BYTE_SIZE
+00000036                            43          
+00000036  B83C 0001                 44          CMP.B       #$1,    D4
+0000003A  6700 00A6                 45          BEQ         WORD_SIZE
+0000003E                            46          
+0000003E  B83C 0005                 47          CMP.B       #$5,    D4
+00000042  6700 009E                 48          BEQ         WORD_SIZE
+00000046                            49          
+00000046  B83C 0002                 50          CMP.B       #$2,    D4
+0000004A  6700 00AA                 51          BEQ         LONG_SIZE
+0000004E                            52          
+0000004E  B83C 0006                 53          CMP.B       #$6,    D4
+00000052  6700 00A2                 54          BEQ         LONG_SIZE
+00000056                            55             
+00000056                            56          *isolates bits 8-6 to D4 on the left side, so rotation can be done in higher level to corresponding output for opmode
+00000056                            57  PREP_FOR_ROT:
+00000056                            58          *MOVE.W      D3,     D4
+00000056                            59          
+00000056  343C 000D                 60          MOVE.W      #13,     D2
+0000005A  E56C                      61          LSL.W       D2,     D4
+0000005C                            62          *MOVE.W      #13,    D2
+0000005C                            63          *LSR.W       D2,     D4
+0000005C                            64          
+0000005C  4E75                      65          RTS
+0000005E                            66  
+0000005E                            67  *Appends the size to the opcode (.B, .W, .L)
+0000005E                            68  SIZE_13_12:
+0000005E  3803                      69          MOVE.W      D3,     D4
+00000060                            70          
+00000060  343C 0002                 71          MOVE.W      #2,     D2
+00000064  E56C                      72          LSL.W       D2,     D4
+00000066  343C 000E                 73          MOVE.W      #14,    D2
+0000006A  E46C                      74          LSR.W       D2,     D4
+0000006C                            75          
+0000006C  B83C 0001                 76          CMP.B       #$1,    D4
+00000070  6700 005C                 77          BEQ         BYTE_SIZE
+00000074                            78          
+00000074  B83C 0003                 79          CMP.B       #$3,    D4
+00000078  6700 0068                 80          BEQ         WORD_SIZE
+0000007C                            81          
+0000007C  B83C 0002                 82          CMP.B       #$2,    D4
+00000080  6700 0074                 83          BEQ         LONG_SIZE
+00000084                            84          
+00000084  4E75                      85          RTS
+00000086                            86          
+00000086                            87  *Appends the size to the opcode (.B, .W, .L)
+00000086                            88  SIZE_7_6:
+00000086  3803                      89          MOVE.W      D3,     D4
+00000088                            90          
+00000088  343C 0008                 91          MOVE.W      #8,     D2
+0000008C  E56C                      92          LSL.W       D2,     D4
+0000008E  343C 000E                 93          MOVE.W      #14,    D2
+00000092  E46C                      94          LSR.W       D2,     D4
+00000094                            95          
+00000094  B83C 0000                 96          CMP.B       #$0,    D4
+00000098  6700 0034                 97          BEQ         BYTE_SIZE
+0000009C                            98          
+0000009C  B83C 0001                 99          CMP.B       #$1,    D4
+000000A0  6700 0040                100          BEQ         WORD_SIZE
+000000A4                           101          
+000000A4  B83C 0002                102          CMP.B       #$2,    D4
+000000A8  6700 004C                103          BEQ         LONG_SIZE
+000000AC                           104          
+000000AC  4E75                     105          RTS
+000000AE                           106  
+000000AE                           107  *Appends the size to the opcode (.W, .L)
+000000AE                           108  SIZE_6:
+000000AE  3803                     109          MOVE.W      D3,     D4
+000000B0                           110          
+000000B0  343C 0009                111          MOVE.W      #9,     D2
+000000B4  E56C                     112          LSL.W       D2,     D4
+000000B6  343C 000F                113          MOVE.W      #15,    D2
+000000BA  E46C                     114          LSR.W       D2,     D4
+000000BC                           115  
+000000BC                           116          
+000000BC  B83C 0000                117          CMP.B       #$0,    D4
+000000C0  6700 0020                118          BEQ         WORD_SIZE
+000000C4                           119          
+000000C4  B83C 0001                120          CMP.B       #$1,    D4
+000000C8  6700 002C                121          BEQ         LONG_SIZE
+000000CC                           122          
+000000CC  4E75                     123          RTS
+000000CE                           124          
+000000CE                           125  *--------------------------------Start of opcode sizes        
+000000CE                           126  BYTE_SIZE:
+Line 127 ERROR: Undefined symbol
+000000CE  43F9 004DBD16            127          LEA         BYTE_MSG, A1
+000000D4  103C 000E                128          MOVE.B      #14, D0
+000000D8  4E4F                     129          TRAP        #15
+000000DA                           130  
+000000DA  1C3C 0000                131          MOVE.B      #$0,      D6
+000000DE                           132  
+000000DE  6000 FF76                133          BRA         PREP_FOR_ROT
+000000E2                           134  WORD_SIZE:
+Line 135 ERROR: Undefined symbol
+000000E2  43F9 004DBD16            135          LEA         WORD_MSG, A1
+000000E8  103C 000E                136          MOVE.B      #14, D0
+000000EC  4E4F                     137          TRAP        #15
+000000EE                           138          
+000000EE  1C3C 0001                139          MOVE.B      #$1,      D6
+000000F2                           140          
+000000F2  6000 FF62                141          BRA         PREP_FOR_ROT
+000000F6                           142  LONG_SIZE:
+Line 143 ERROR: Undefined symbol
+000000F6  43F9 004DBD16            143          LEA         LONG_MSG, A1
+000000FC  103C 000E                144          MOVE.B      #14, D0
+00000100  4E4F                     145          TRAP        #15
+00000102                           146          
+00000102  1C3C 0002                147          MOVE.B      #$2,      D6
+00000106                           148          
+00000106  6000 FF4E                149          BRA         PREP_FOR_ROT
+0000010A                           150  *Handles EA, prints out appropriate registers and numbers
+0000010A                           151  *immediate data may need editing
+0000010A                           152  EFFECTIVEADD_5_0:
+0000010A                           153          *isolate mode bits (5-3)
+0000010A                           154          *make a copy
+0000010A  FFFF FFFF                155          SIMHALT
+0000010E  3803                     156          MOVE.W      D3,     D4
+00000110                           157          
+00000110                           158          *isolate bits 5-3 on the right
+00000110  343C 000A                159          MOVE.W      #10,     D2
+00000114  E56C                     160          LSL.W       D2,     D4
+00000116  343C 000D                161          MOVE.W      #13,    D2
+0000011A  E46C                     162          LSR.W       D2,     D4
+0000011C                           163          
+0000011C  B83C 0000                164          CMP.B       #$0,    D4
+00000120  6700 0394                165          BEQ         DATAR_EA
+00000124                           166          
+00000124  B83C 0001                167          CMP.B       #$1,    D4
+00000128  6700 03B0                168          BEQ         ADDR_EA
+0000012C                           169          
+0000012C  B83C 0002                170          CMP.B       #$2,    D4
+00000130  6700 03CC                171          BEQ         ADDP_EA
+00000134                           172          
+00000134  B83C 0003                173          CMP.B       #$3,    D4
+00000138  6700 0400                174          BEQ         ADDPP_EA
+0000013C                           175          
+0000013C  B83C 0004                176          CMP.B       #$4,    D4
+00000140  6700 0440                177          BEQ         ADDPM_EA
+00000144                           178          
+00000144  B83C 0007                179          CMP.B       #$7,    D4
+00000148  6700 0480                180          BEQ         IDATA_EA
+0000014C                           181  
+0000014C  4E75                     182          RTS
+0000014E                           183          
+0000014E                           184          
+0000014E                           185  *----------------------------------------MOVE, MOVEA EA, and MOVEM       
+0000014E                           186  DESTINATION_11_6: 
+0000014E                           187         
+0000014E  3803                     188          MOVE.W      D3,     D4
+00000150                           189          *isolate bits 8-6 on the right
+00000150  343C 0007                190          MOVE.W      #7,     D2
+00000154  E56C                     191          LSL.W       D2,     D4
+00000156  343C 000D                192          MOVE.W      #13,    D2
+0000015A  E46C                     193          LSR.W       D2,     D4
+0000015C                           194          
+0000015C  B83C 0000                195          CMP.B       #$0,    D4
+00000160  6700 002C                196          BEQ         PRINT_DESTINATION_DATA
+00000164                           197          
+00000164  B83C 0001                198          CMP.B       #$1,    D4
+00000168  6700 0048                199          BEQ         DEST_A_EA
+0000016C                           200          
+0000016C  B83C 0002                201          CMP.B       #$2,    D4
+00000170  6700 0064                202          BEQ         DEST_P_EA
+00000174                           203          
+00000174  B83C 0003                204          CMP.B       #$3,    D4
+00000178  6700 0098                205          BEQ         DEST_PP_EA
+0000017C                           206          
+0000017C  B83C 0004                207          CMP.B       #$4,    D4
+00000180  6700 00D8                208          BEQ         DEST_PM_EA
+00000184                           209          
+00000184  B83C 0007                210          CMP.B       #$7,    D4
+00000188  6700 0440                211          BEQ         IDATA_EA
+0000018C                           212          
+0000018C  4E75                     213          RTS
+0000018E                           214  
+0000018E                           215  PRINT_DESTINATION_DATA:
+Line 216 ERROR: Undefined symbol
+0000018E  43F9 004DBD16            216          LEA         DATA_REG, A1
+00000194  103C 000E                217          MOVE.B      #14, D0
+00000198  4E4F                     218          TRAP        #15
+0000019A                           219          
+0000019A  3803                     220          MOVE.W      D3,     D4
+0000019C                           221          
+0000019C                           222          *print the reg num
+0000019C                           223          *isolate bits 11-9 on the right
+0000019C  343C 0004                224          MOVE.W      #4,     D2
+000001A0  E56C                     225          LSL.W       D2,     D4
+000001A2  343C 000D                226          MOVE.W      #13,    D2
+000001A6  E46C                     227          LSR.W       D2,     D4
+000001A8                           228          
+000001A8                           229          *print out the register number
+000001A8  2204                     230          MOVE.L      D4,     D1
+000001AA  103C 0003                231          MOVE.B      #3,     D0
+000001AE  4E4F                     232          TRAP        #15
+000001B0                           233  
+000001B0  4E75                     234          RTS
+000001B2                           235  DEST_A_EA:
+000001B2                           236          *print the 'A'
+Line 237 ERROR: Undefined symbol
+000001B2  43F9 004DBD16            237          LEA         ADDR_REG, A1
+000001B8  103C 000E                238          MOVE.B      #14, D0
+000001BC  4E4F                     239          TRAP        #15
+000001BE                           240          
+000001BE  3803                     241          MOVE.W      D3,     D4
+000001C0                           242          
+000001C0                           243          *print the reg num
+000001C0                           244          *isolate bits 11-9 on the right
+000001C0  343C 0004                245          MOVE.W      #4,     D2
+000001C4  E56C                     246          LSL.W       D2,     D4
+000001C6  343C 000D                247          MOVE.W      #13,    D2
+000001CA  E46C                     248          LSR.W       D2,     D4
+000001CC                           249          
+000001CC                           250          *print out the register number
+000001CC  2204                     251          MOVE.L      D4,     D1
+000001CE  103C 0003                252          MOVE.B      #3,     D0
+000001D2  4E4F                     253          TRAP        #15
+000001D4                           254  
+000001D4  4E75                     255          RTS
+000001D6                           256  DEST_P_EA:
+000001D6                           257          *print the '(A'
+Line 258 ERROR: Undefined symbol
+000001D6  43F9 004DBD16            258          LEA         OPEN_PARENTHESIS_MSG, A1
+000001DC  103C 000E                259          MOVE.B      #14, D0
+000001E0  4E4F                     260          TRAP        #15
+000001E2                           261          
+Line 262 ERROR: Undefined symbol
+000001E2  43F9 004DBD16            262          LEA         ADDR_REG, A1
+000001E8  103C 000E                263          MOVE.B      #14, D0
+000001EC  4E4F                     264          TRAP        #15
+000001EE                           265          
+000001EE  3803                     266          MOVE.W      D3,     D4
+000001F0                           267          
+000001F0                           268          *print the reg num
+000001F0                           269          *isolate bits 11-9 on the right
+000001F0  343C 0004                270          MOVE.W      #4,     D2
+000001F4  E56C                     271          LSL.W       D2,     D4
+000001F6  343C 000D                272          MOVE.W      #13,    D2
+000001FA  E46C                     273          LSR.W       D2,     D4
+000001FC                           274          
+000001FC                           275          *print out the register number
+000001FC  2204                     276          MOVE.L      D4,     D1
+000001FE  103C 0003                277          MOVE.B      #3,     D0
+00000202  4E4F                     278          TRAP        #15
+00000204                           279          
+Line 280 ERROR: Undefined symbol
+00000204  43F9 004DBD16            280          LEA         CLOSE_PARENTHESIS_MSG, A1
+0000020A  103C 000E                281          MOVE.B      #14, D0
+0000020E  4E4F                     282          TRAP        #15
+00000210  4E75                     283          RTS
+00000212                           284  DEST_PP_EA:
+00000212                           285          *print the '(A'
+Line 286 ERROR: Undefined symbol
+00000212  43F9 004DBD16            286          LEA         OPEN_PARENTHESIS_MSG, A1
+00000218  103C 000E                287          MOVE.B      #14, D0
+0000021C  4E4F                     288          TRAP        #15
+0000021E                           289          
+Line 290 ERROR: Undefined symbol
+0000021E  43F9 004DBD16            290          LEA         ADDR_REG, A1
+00000224  103C 000E                291          MOVE.B      #14, D0
+00000228  4E4F                     292          TRAP        #15
+0000022A                           293          
+0000022A  3803                     294          MOVE.W      D3,     D4
+0000022C                           295          
+0000022C                           296          *print the reg num
+0000022C                           297          *isolate bits 11-9 on the right
+0000022C  343C 0004                298          MOVE.W      #4,     D2
+00000230  E56C                     299          LSL.W       D2,     D4
+00000232  343C 000D                300          MOVE.W      #13,    D2
+00000236  E46C                     301          LSR.W       D2,     D4
+00000238                           302          
+00000238                           303          *print out the register number
+00000238  2204                     304          MOVE.L      D4,     D1
+0000023A  103C 0003                305          MOVE.B      #3,     D0
+0000023E  4E4F                     306          TRAP        #15
+00000240                           307          
+Line 308 ERROR: Undefined symbol
+00000240  43F9 004DBD16            308          LEA         CLOSE_PARENTHESIS_MSG, A1
+00000246  103C 000E                309          MOVE.B      #14, D0
+0000024A  4E4F                     310          TRAP        #15
+0000024C                           311          
+Line 312 ERROR: Undefined symbol
+0000024C  43F9 004DBD16            312          LEA         PLUS_MSG, A1
+00000252  103C 000E                313          MOVE.B      #14, D0
+00000256  4E4F                     314          TRAP        #15
+00000258                           315          
+00000258  4E75                     316          RTS
+0000025A                           317  DEST_PM_EA:
+0000025A                           318          *print the '-(A'
+Line 319 ERROR: Undefined symbol
+0000025A  43F9 004DBD16            319          LEA         MINUS_MSG, A1
+00000260  103C 000E                320          MOVE.B      #14, D0
+00000264  4E4F                     321          TRAP        #15
+00000266                           322          
+Line 323 ERROR: Undefined symbol
+00000266  43F9 004DBD16            323          LEA         OPEN_PARENTHESIS_MSG, A1
+0000026C  103C 000E                324          MOVE.B      #14, D0
+00000270  4E4F                     325          TRAP        #15
+00000272                           326          
+Line 327 ERROR: Undefined symbol
+00000272  43F9 004DBD16            327          LEA         ADDR_REG, A1
+00000278  103C 000E                328          MOVE.B      #14, D0
+0000027C  4E4F                     329          TRAP        #15
+0000027E                           330          
+0000027E  3803                     331          MOVE.W      D3,     D4
+00000280                           332          
+00000280                           333          *print the reg num
+00000280                           334          *isolate bits 2-0 on the right
+00000280  343C 0004                335          MOVE.W      #4,     D2
+00000284  E56C                     336          LSL.W       D2,     D4
+00000286  343C 000D                337          MOVE.W      #13,    D2
+0000028A  E46C                     338          LSR.W       D2,     D4
+0000028C                           339          
+0000028C                           340          *print out the register number
+0000028C  2204                     341          MOVE.L      D4,     D1
+0000028E  103C 0003                342          MOVE.B      #3,     D0
+00000292  4E4F                     343          TRAP        #15
+00000294                           344          
+Line 345 ERROR: Undefined symbol
+00000294  43F9 004DBD16            345          LEA         CLOSE_PARENTHESIS_MSG, A1
+0000029A  103C 000E                346          MOVE.B      #14, D0
+0000029E  4E4F                     347          TRAP        #15
+000002A0                           348          
+000002A0  4E75                     349          RTS
+000002A2                           350  DEST_DATA_EA:
+000002A2                           351          *(not doing this)check register to see if it's W or L addressinG
+000002A2                           352          *use (A3)+.W or .L to get the address data
+000002A2                           353          *print it out
+000002A2                           354          
+000002A2                           355          *->take the next long and spit it out
+000002A2                           356          *print out the data in hex form
+000002A2                           357          *NOTE that if register = 100 it means raw data, can be in decimal b/c not address
+000002A2                           358          
+000002A2  3803                     359          MOVE.W      D3,     D4
+000002A4                           360          
+000002A4                           361          *get reg num
+000002A4                           362          *isolate bits 8-6 on the right
+000002A4  343C 0007                363          MOVE.W      #7,     D2
+000002A8  E56C                     364          LSL.W       D2,     D4
+000002AA  343C 000D                365          MOVE.W      #13,    D2
+000002AE  E46C                     366          LSR.W       D2,     D4
+000002B0                           367          
+000002B0                           368          *raw data
+000002B0  B87C 0004                369          CMP         #$4,    D4
+000002B4  6700 0348                370          BEQ         IDATA
+000002B8                           371          
+000002B8                           372          *W addressing
+000002B8  B87C 0000                373          CMP         #$0,    D4
+000002BC  6700 038A                374          BEQ         WADDR
+000002C0                           375          
+Line 376 ERROR: Undefined symbol
+000002C0  43F9 004DBD16            376          LEA         DOLLAR_MSG, A1
+000002C6  103C 000E                377          MOVE.B      #14, D0
+000002CA  4E4F                     378          TRAP        #15
+000002CC                           379          
+000002CC                           380          *MOVE.B      #16,    D2          *base 16
+000002CC                           381          *MOVE.B      #15,    D0
+000002CC  281B                     382          MOVE.L      (A3)+,   D4
+000002CE  4EB9 00000DAA            383          JSR         PRINT_LONG_VALUE
+000002D4                           384          *TRAP        #15
+000002D4                           385          
+000002D4  4E75                     386          RTS
+000002D6                           387  
+000002D6                           388  
+000002D6                           389  PRE_DECR_MASK_FIELD:
+000002D6                           390  
+000002D6  B03C 000F                391          CMP.B       #$F,    D0
+000002DA  6E00 0034                392          BGT         EXIT_LOOP_DECR
+000002DE  E35C                     393          ROL         #1,     D4      
+000002E0  6500 0006                394          BCS         PRE_DECR_LOOP_TRACK
+000002E4  6400 0016                395          BCC         PRE_DECR_LOOP_UNTRACK
+000002E8                           396  
+000002E8                           397  PRE_DECR_LOOP_TRACK:
+000002E8                           398          *   D0  keeps track of num of bits
+000002E8                           399          *   D1  keeps track of first reg
+000002E8                           400          *   D2  keeps track of value for some other logic
+000002E8                           401          *   D3  keeps track of word data from memory
+000002E8                           402          *   D4  holds the rotating word
+000002E8                           403          *   D5  keeps track of space between reg, - if not set, and / if set
+000002E8                           404          *   D6  keeps track of second reg
+000002E8                           405  
+000002E8  B27C 00FF                406          CMP.W       #$FF,   D1
+000002EC  6600 0008                407          BNE         PRE_DECR_LOOP_TRACK_SECOND
+000002F0                           408          
+000002F0                           409          
+000002F0  1200                     410          MOVE.B      D0,     D1
+000002F2  5200                     411          ADD.B       #1,     D0
+000002F4  60E0                     412          BRA         PRE_DECR_MASK_FIELD
+000002F6                           413          
+000002F6                           414  PRE_DECR_LOOP_TRACK_SECOND:
+000002F6                           415  
+000002F6                           416  
+000002F6  1C00                     417          MOVE.B      D0,     D6
+000002F8  5200                     418          ADD.B       #1,     D0
+000002FA  60DA                     419          BRA         PRE_DECR_MASK_FIELD
+000002FC                           420          
+000002FC                           421  PRE_DECR_LOOP_UNTRACK:
+000002FC  5200                     422          ADD.B       #1,     D0
+000002FE  B23C 00FF                423          CMP.B       #$FF,   D1
+00000302  67D2                     424          BEQ         PRE_DECR_MASK_FIELD
+00000304                           425          
+00000304  BC3C 00FF                426          CMP.B       #$FF,    D6
+00000308  66CC                     427          BNE         PRE_DECR_MASK_FIELD
+0000030A  1A3C 0001                428          MOVE.B      #$1,    D5
+0000030E                           429  
+0000030E  60C6                     430          BRA         PRE_DECR_MASK_FIELD
+00000310                           431  
+00000310                           432  EXIT_LOOP_DECR:
+00000310                           433  
+00000310  4283                     434          CLR.L       D3
+00000312  1601                     435          MOVE.B      D1,     D3
+00000314  B23C 0007                436          CMP.B       #$7,    D1
+00000318  6E00 0008                437          BGT         DECR_1_A
+0000031C  6F00 000E                438          BLE         DECR_1_B
+00000320                           439  
+00000320  4E75                     440          RTS
+00000322                           441  DECR_1_A:
+00000322  4EB9 00000396            442          JSR         PRINT_A_DECR
+00000328  6000 000C                443          BRA         DECR_2
+0000032C                           444  DECR_1_B:
+0000032C  4EB9 00000376            445          JSR         PRINT_D_DECR
+00000332  6000 0002                446          BRA         DECR_2
+00000336                           447  
+00000336                           448  DECR_2:
+00000336  BA3C 0000                449          CMP.B       #$0,    D5
+0000033A  6700 0006                450          BEQ         DECR_2_A
+0000033E  6600 000C                451          BNE         DECR_2_B
+00000342                           452          
+00000342                           453  DECR_2_A:
+00000342  4EB9 0000049A            454          JSR         PRINT_MINUS
+00000348  6000 000C                455          BRA         DECR_3
+0000034C                           456          
+0000034C                           457  DECR_2_B:
+0000034C  4EB9 000004A8            458          JSR         PRINT_DIV
+00000352  6000 0002                459          BRA         DECR_3
+00000356                           460          
+00000356                           461  DECR_3:
+00000356  4283                     462          CLR.L       D3
+00000358  1606                     463          MOVE.B      D6,     D3
+0000035A  BC3C 0007                464          CMP.B       #$7,    D6
+0000035E  6E00 0006                465          BGT         DECR_3_A
+00000362  6F00 000A                466          BLE         DECR_3_B
+00000366                           467  
+00000366                           468  DECR_3_A:
+00000366  4EB9 00000396            469          JSR         PRINT_A_DECR
+0000036C  4E75                     470          RTS
+0000036E                           471  DECR_3_B:
+0000036E  4EB9 00000376            472          JSR         PRINT_D_DECR
+00000374  4E75                     473          RTS
+00000376                           474  
+00000376                           475  
+00000376                           476  PRINT_D_DECR:
+00000376                           477  
+Line 478 ERROR: Undefined symbol
+00000376  43F9 004DBD16            478          LEA         DATA_REG, A1
+0000037C  103C 000E                479          MOVE.B      #14, D0
+00000380  4E4F                     480          TRAP        #15
+00000382                           481          
+Line 482 ERROR: Undefined symbol
+00000382  43F9 004DBD16            482          LEA         ZERO_MSG, A1
+00000388  C6FC 0002                483          MULU        #2,       D3
+0000038C  D3C3                     484          ADDA.L      D3,       A1
+0000038E                           485          
+0000038E  103C 000E                486          MOVE.B      #14, D0
+00000392  4E4F                     487          TRAP        #15
+00000394                           488  
+00000394  4E75                     489          RTS 
+00000396                           490  PRINT_A_DECR:
+Line 491 ERROR: Undefined symbol
+00000396  43F9 004DBD16            491          LEA         ADDR_REG, A1
+0000039C  103C 000E                492          MOVE.B      #14, D0
+000003A0  4E4F                     493          TRAP        #15
+000003A2                           494          
+000003A2  5103                     495          SUB.B       #$8,      D3
+Line 496 ERROR: Undefined symbol
+000003A4  43F9 004DBD16            496          LEA         ZERO_MSG, A1
+000003AA  C6FC 0002                497          MULU        #2,       D3
+000003AE  D3C3                     498          ADDA.L      D3,       A1
+000003B0                           499          
+000003B0  103C 000E                500          MOVE.B      #14, D0
+000003B4  4E4F                     501          TRAP        #15
+000003B6                           502  
+000003B6  4E75                     503          RTS 
+000003B8                           504  
+000003B8                           505  
+000003B8                           506         
+000003B8                           507  POST_INCR_MASK_FIELD:
+000003B8  B03C 0000                508          CMP.B       #$0,    D0
+000003BC  6D00 0034                509          BLT         EXIT_LOOP_INCR
+000003C0  E35C                     510          ROL         #1,     D4      
+000003C2  6500 0006                511          BCS         POST_INCR_LOOP_TRACK
+000003C6  6400 0016                512          BCC         POST_INCR_LOOP_UNTRACK
+000003CA                           513  
+000003CA                           514  POST_INCR_LOOP_TRACK:
+000003CA                           515          *   D0  keeps track of num of bits
+000003CA                           516          *   D1  keeps track of first reg
+000003CA                           517          *   D2  keeps track of value for some other logic
+000003CA                           518          *   D3  keeps track of word data from memory
+000003CA                           519          *   D4  holds the rotating word
+000003CA                           520          *   D5  keeps track of space between reg, - if not set, and / if set
+000003CA                           521          *   D6  keeps track of second reg
+000003CA  B27C 00FF                522          CMP.W       #$FF,   D1
+000003CE  6600 0008                523          BNE         POST_INCR_LOOP_TRACK_SECOND
+000003D2                           524          
+000003D2                           525          
+000003D2  1200                     526          MOVE.B      D0,     D1
+000003D4  5300                     527          SUB.B       #1,     D0
+000003D6  60E0                     528          BRA         POST_INCR_MASK_FIELD
+000003D8                           529          
+000003D8                           530  POST_INCR_LOOP_TRACK_SECOND:
+000003D8                           531  
+000003D8                           532  
+000003D8  1C00                     533          MOVE.B      D0,     D6
+000003DA  5300                     534          SUB.B       #1,     D0
+000003DC  60DA                     535          BRA         POST_INCR_MASK_FIELD
+000003DE                           536          
+000003DE                           537  POST_INCR_LOOP_UNTRACK:
+000003DE  5300                     538          SUB.B       #1,     D0
+000003E0  B23C 00FF                539          CMP.B       #$FF,   D1
+000003E4  67D2                     540          BEQ         POST_INCR_MASK_FIELD
+000003E6                           541          
+000003E6  BC3C 00FF                542          CMP.B       #$FF,    D6
+000003EA  66CC                     543          BNE         POST_INCR_MASK_FIELD
+000003EC  1A3C 0001                544          MOVE.B      #$1,    D5
+000003F0                           545  
+000003F0  60C6                     546          BRA         POST_INCR_MASK_FIELD
+000003F2                           547  
+000003F2                           548  EXIT_LOOP_INCR:
+000003F2  4283                     549          CLR.L       D3
+000003F4  1601                     550          MOVE.B      D1,     D3
+000003F6  B23C 0007                551          CMP.B       #$7,    D1
+000003FA  6E00 0008                552          BGT         INCR_1_A
+000003FE  6F00 000E                553          BLE         INCR_1_B
+00000402                           554  
+00000402  4E75                     555          RTS
+00000404                           556  INCR_1_A:
+00000404  4EB9 00000478            557          JSR         PRINT_A_INCR
+0000040A  6000 000C                558          BRA         INCR_2
+0000040E                           559  INCR_1_B:
+0000040E  4EB9 00000458            560          JSR         PRINT_D_INCR
+00000414  6000 0002                561          BRA         INCR_2
+00000418                           562  
+00000418                           563  INCR_2:
+00000418  BA3C 0000                564          CMP.B       #$0,    D5
+0000041C  6700 0006                565          BEQ         INCR_2_A
+00000420  6600 000C                566          BNE         INCR_2_B
+00000424                           567          
+00000424                           568  INCR_2_A:
+00000424  4EB9 0000049A            569          JSR         PRINT_MINUS
+0000042A  6000 000C                570          BRA         INCR_3
+0000042E                           571          
+0000042E                           572  INCR_2_B:
+0000042E  4EB9 000004A8            573          JSR         PRINT_DIV
+00000434  6000 0002                574          BRA         INCR_3
+00000438                           575          
+00000438                           576  INCR_3:
+00000438  4283                     577          CLR.L       D3
+0000043A  1606                     578          MOVE.B      D6,     D3
+0000043C  BC3C 0007                579          CMP.B       #$7,    D6
+00000440  6E00 0006                580          BGT         INCR_3_A
+00000444  6F00 000A                581          BLE         INCR_3_B
+00000448                           582  
+00000448                           583  INCR_3_A:
+00000448  4EB9 00000478            584          JSR         PRINT_A_INCR
+0000044E  4E75                     585          RTS
+00000450                           586  INCR_3_B:
+00000450  4EB9 00000458            587          JSR         PRINT_D_INCR
+00000456  4E75                     588          RTS
+00000458                           589  
+00000458                           590  
+00000458                           591  PRINT_D_INCR:
+00000458                           592  
+Line 593 ERROR: Undefined symbol
+00000458  43F9 004DBD16            593          LEA         DATA_REG, A1
+0000045E  103C 000E                594          MOVE.B      #14, D0
+00000462  4E4F                     595          TRAP        #15
+00000464                           596          
+00000464                           597          
+Line 598 ERROR: Undefined symbol
+00000464  43F9 004DBD16            598          LEA         ZERO_MSG, A1
+0000046A  C6FC 0002                599          MULU        #2,       D3
+0000046E  D3C3                     600          ADDA.L      D3,       A1
+00000470                           601          
+00000470  103C 000E                602          MOVE.B      #14, D0
+00000474  4E4F                     603          TRAP        #15
+00000476                           604  
+00000476  4E75                     605          RTS 
+00000478                           606  PRINT_A_INCR:
+Line 607 ERROR: Undefined symbol
+00000478  43F9 004DBD16            607          LEA         ADDR_REG, A1
+0000047E  103C 000E                608          MOVE.B      #14, D0
+00000482  4E4F                     609          TRAP        #15
+00000484                           610          
+00000484  5103                     611          SUB.B       #$8,      D3
+Line 612 ERROR: Undefined symbol
+00000486  43F9 004DBD16            612          LEA         ZERO_MSG, A1
+0000048C  C6FC 0002                613          MULU        #2,       D3
+00000490  D3C3                     614          ADDA.L      D3,       A1
+00000492                           615          
+00000492  103C 000E                616          MOVE.B      #14, D0
+00000496  4E4F                     617          TRAP        #15
+00000498                           618  
+00000498  4E75                     619          RTS
+0000049A                           620  
+0000049A                           621  PRINT_MINUS:
+Line 622 ERROR: Undefined symbol
+0000049A  43F9 004DBD16            622          LEA         MINUS_MSG, A1
+000004A0  103C 000E                623          MOVE.B      #14, D0
+000004A4  4E4F                     624          TRAP        #15
+000004A6                           625  
+000004A6  4E75                     626          RTS
+000004A8                           627  
+000004A8                           628  PRINT_DIV:
+Line 629 ERROR: Undefined symbol
+000004A8  43F9 004DBD16            629          LEA         DIV_SIGN, A1
+000004AE  103C 000E                630          MOVE.B      #14, D0
+000004B2  4E4F                     631          TRAP        #15
+000004B4                           632  
+000004B4  4E75                     633          RTS       
+000004B6                           634  *----------------------------------------Start of EA branches
+000004B6                           635  DATAR_EA:
+000004B6                           636          *print the 'D'
+Line 637 ERROR: Undefined symbol
+000004B6  43F9 004DBD16            637          LEA         DATA_REG, A1
+000004BC  103C 000E                638          MOVE.B      #14, D0
+000004C0  4E4F                     639          TRAP        #15
+000004C2                           640          
+000004C2  3803                     641          MOVE.W      D3,     D4
+000004C4                           642          
+000004C4                           643          *print the reg num
+000004C4                           644          *isolate bits 2-0 on the right
+000004C4  343C 000D                645          MOVE.W      #13,     D2
+000004C8  E56C                     646          LSL.W       D2,     D4
+000004CA  343C 000D                647          MOVE.W      #13,    D2
+000004CE  E46C                     648          LSR.W       D2,     D4
+000004D0                           649          
+000004D0                           650          *print out the register number
+000004D0  2204                     651          MOVE.L      D4,     D1
+000004D2  103C 0003                652          MOVE.B      #3,     D0
+000004D6  4E4F                     653          TRAP        #15
+000004D8                           654  
+000004D8  4E75                     655          RTS
+000004DA                           656  ADDR_EA:
+000004DA                           657          *print the 'A'
+Line 658 ERROR: Undefined symbol
+000004DA  43F9 004DBD16            658          LEA         ADDR_REG, A1
+000004E0  103C 000E                659          MOVE.B      #14, D0
+000004E4  4E4F                     660          TRAP        #15
+000004E6                           661          
+000004E6  3803                     662          MOVE.W      D3,     D4
+000004E8                           663          
+000004E8                           664          *print the reg num
+000004E8                           665          *isolate bits 2-0 on the right
+000004E8  343C 000D                666          MOVE.W      #13,     D2
+000004EC  E56C                     667          LSL.W       D2,     D4
+000004EE  343C 000D                668          MOVE.W      #13,    D2
+000004F2  E46C                     669          LSR.W       D2,     D4
+000004F4                           670          
+000004F4                           671          *print out the register number
+000004F4  2204                     672          MOVE.L      D4,     D1
+000004F6  103C 0003                673          MOVE.B      #3,     D0
+000004FA  4E4F                     674          TRAP        #15
+000004FC                           675  
+000004FC  4E75                     676          RTS
+000004FE                           677  ADDP_EA:
+000004FE                           678          *print the '(A'
+Line 679 ERROR: Undefined symbol
+000004FE  43F9 004DBD16            679          LEA         OPEN_PARENTHESIS_MSG, A1
+00000504  103C 000E                680          MOVE.B      #14, D0
+00000508  4E4F                     681          TRAP        #15
+0000050A                           682          
+Line 683 ERROR: Undefined symbol
+0000050A  43F9 004DBD16            683          LEA         ADDR_REG, A1
+00000510  103C 000E                684          MOVE.B      #14, D0
+00000514  4E4F                     685          TRAP        #15
+00000516                           686          
+00000516  3803                     687          MOVE.W      D3,     D4
+00000518                           688          
+00000518                           689          *print the reg num
+00000518                           690          *isolate bits 2-0 on the right
+00000518  343C 000D                691          MOVE.W      #13,     D2
+0000051C  E56C                     692          LSL.W       D2,     D4
+0000051E  343C 000D                693          MOVE.W      #13,    D2
+00000522  E46C                     694          LSR.W       D2,     D4
+00000524                           695          
+00000524                           696          *print out the register number
+00000524  2204                     697          MOVE.L      D4,     D1
+00000526  103C 0003                698          MOVE.B      #3,     D0
+0000052A  4E4F                     699          TRAP        #15
+0000052C                           700          
+Line 701 ERROR: Undefined symbol
+0000052C  43F9 004DBD16            701          LEA         CLOSE_PARENTHESIS_MSG, A1
+00000532  103C 000E                702          MOVE.B      #14, D0
+00000536  4E4F                     703          TRAP        #15
+00000538  4E75                     704          RTS
+0000053A                           705  ADDPP_EA:
+0000053A                           706          *print the '(A'
+Line 707 ERROR: Undefined symbol
+0000053A  43F9 004DBD16            707          LEA         OPEN_PARENTHESIS_MSG, A1
+00000540  103C 000E                708          MOVE.B      #14, D0
+00000544  4E4F                     709          TRAP        #15
+00000546                           710          
+Line 711 ERROR: Undefined symbol
+00000546  43F9 004DBD16            711          LEA         ADDR_REG, A1
+0000054C  103C 000E                712          MOVE.B      #14, D0
+00000550  4E4F                     713          TRAP        #15
+00000552                           714          
+00000552  3803                     715          MOVE.W      D3,     D4
+00000554                           716          
+00000554                           717          *print the reg num
+00000554                           718          *isolate bits 2-0 on the right
+00000554  343C 000D                719          MOVE.W      #13,     D2
+00000558  E56C                     720          LSL.W       D2,     D4
+0000055A  343C 000D                721          MOVE.W      #13,    D2
+0000055E  E46C                     722          LSR.W       D2,     D4
+00000560                           723          
+00000560                           724          *print out the register number
+00000560  2204                     725          MOVE.L      D4,     D1
+00000562  103C 0003                726          MOVE.B      #3,     D0
+00000566  4E4F                     727          TRAP        #15
+00000568                           728          
+Line 729 ERROR: Undefined symbol
+00000568  43F9 004DBD16            729          LEA         CLOSE_PARENTHESIS_MSG, A1
+0000056E  103C 000E                730          MOVE.B      #14, D0
+00000572  4E4F                     731          TRAP        #15
+00000574                           732          
+Line 733 ERROR: Undefined symbol
+00000574  43F9 004DBD16            733          LEA         PLUS_MSG, A1
+0000057A  103C 000E                734          MOVE.B      #14, D0
+0000057E  4E4F                     735          TRAP        #15
+00000580                           736          
+00000580  4E75                     737          RTS
+00000582                           738  ADDPM_EA:
+00000582                           739          *print the '-(A'
+Line 740 ERROR: Undefined symbol
+00000582  43F9 004DBD16            740          LEA         MINUS_MSG, A1
+00000588  103C 000E                741          MOVE.B      #14, D0
+0000058C  4E4F                     742          TRAP        #15
+0000058E                           743          
+Line 744 ERROR: Undefined symbol
+0000058E  43F9 004DBD16            744          LEA         OPEN_PARENTHESIS_MSG, A1
+00000594  103C 000E                745          MOVE.B      #14, D0
+00000598  4E4F                     746          TRAP        #15
+0000059A                           747          
+Line 748 ERROR: Undefined symbol
+0000059A  43F9 004DBD16            748          LEA         ADDR_REG, A1
+000005A0  103C 000E                749          MOVE.B      #14, D0
+000005A4  4E4F                     750          TRAP        #15
+000005A6                           751          
+000005A6  3803                     752          MOVE.W      D3,     D4
+000005A8                           753          
+000005A8                           754          *print the reg num
+000005A8                           755          *isolate bits 2-0 on the right
+000005A8  343C 000D                756          MOVE.W      #13,     D2
+000005AC  E56C                     757          LSL.W       D2,     D4
+000005AE  343C 000D                758          MOVE.W      #13,    D2
+000005B2  E46C                     759          LSR.W       D2,     D4
+000005B4                           760          
+000005B4                           761          *print out the register number
+000005B4  2204                     762          MOVE.L      D4,     D1
+000005B6  103C 0003                763          MOVE.B      #3,     D0
+000005BA  4E4F                     764          TRAP        #15
+000005BC                           765          
+Line 766 ERROR: Undefined symbol
+000005BC  43F9 004DBD16            766          LEA         CLOSE_PARENTHESIS_MSG, A1
+000005C2  103C 000E                767          MOVE.B      #14, D0
+000005C6  4E4F                     768          TRAP        #15
+000005C8                           769          
+000005C8  4E75                     770          RTS
+000005CA                           771  IDATA_EA:
+000005CA                           772          *(not doing this)check register to see if it's W or L addressinG
+000005CA                           773          *use (A3)+.W or .L to get the address data
+000005CA                           774          *print it out
+000005CA                           775          
+000005CA                           776          *->take the next long and spit it out
+000005CA                           777          *print out the data in hex form
+000005CA                           778          *NOTE that if register = 100 it means raw data, can be in decimal b/c not address
+000005CA                           779          
+000005CA  3803                     780          MOVE.W      D3,     D4
+000005CC                           781          
+000005CC                           782          *get reg num
+000005CC                           783          *isolate bits 2-0 on the right
+000005CC  343C 000D                784          MOVE.W      #13,     D2
+000005D0  E56C                     785          LSL.W       D2,     D4
+000005D2  343C 000D                786          MOVE.W      #13,    D2
+000005D6  E46C                     787          LSR.W       D2,     D4
+000005D8                           788          
+000005D8                           789          *raw data
+000005D8  B87C 0004                790          CMP         #$4,    D4
+000005DC  6700 0020                791          BEQ         IDATA
+000005E0                           792          
+000005E0                           793          *W addressing
+000005E0  B87C 0000                794          CMP         #$0,    D4
+000005E4  6700 0062                795          BEQ         WADDR
+000005E8                           796          
+Line 797 ERROR: Undefined symbol
+000005E8  43F9 004DBD16            797          LEA         DOLLAR_MSG, A1
+000005EE  103C 000E                798          MOVE.B      #14, D0
+000005F2  4E4F                     799          TRAP        #15
+000005F4                           800          
+000005F4                           801          *MOVE.B      #16,    D2          *base 16
+000005F4                           802          *MOVE.B      #15,    D0
+000005F4  281B                     803          MOVE.L      (A3)+,   D4
+000005F6  4EB9 00000DAA            804          JSR         PRINT_LONG_VALUE
+000005FC                           805          *TRAP        #15
+000005FC                           806          
+000005FC  4E75                     807          RTS
+000005FE                           808  *immediate data, print as hex or binary?
+000005FE                           809  IDATA:
+000005FE  FFFF FFFF                810          SIMHALT
+Line 811 ERROR: Undefined symbol
+00000602  43F9 004DBD16            811          LEA         HASH_MSG, A1
+00000608  103C 000E                812          MOVE.B      #14, D0
+0000060C  4E4F                     813          TRAP        #15
+0000060E                           814          
+Line 815 ERROR: Undefined symbol
+0000060E  43F9 004DBD16            815          LEA         DOLLAR_MSG, A1
+00000614  103C 000E                816          MOVE.B      #14, D0
+00000618  4E4F                     817          TRAP        #15
+0000061A                           818          
+0000061A                           819          *MOVE.W      (A3)+,     D1
+0000061A                           820          *MOVE.B      #3,     D0
+0000061A                           821          *TRAP        #15
+0000061A                           822          
+0000061A                           823          *MOVE.B      #16,    D2          *base 16
+0000061A                           824          *MOVE.B      #15,    D0
+0000061A  BC3C 0000                825          CMP.B       #$0,     D6
+0000061E  6700 0014                826          BEQ         IDATA_BYTE
+00000622  BC3C 0001                827          CMP.B       #$1,     D6
+00000626  6700 0016                828          BEQ         IDATA_WORD
+0000062A                           829          
+0000062A  281B                     830          MOVE.L      (A3)+,   D4
+0000062C  4EB9 00000DAA            831          JSR         PRINT_LONG_VALUE
+00000632                           832          *TRAP        #15
+00000632                           833  
+00000632  4E75                     834          RTS
+00000634                           835  
+00000634                           836  
+00000634                           837  IDATA_BYTE:
+00000634  381B                     838          MOVE.W      (A3)+,   D4
+00000636  4EB9 00000D7C            839          JSR         PRINT_WORD_VALUE
+0000063C                           840  
+0000063C  4E75                     841          RTS
+0000063E                           842          
+0000063E                           843  IDATA_WORD:
+0000063E  381B                     844          MOVE.W      (A3)+,   D4
+00000640  4EB9 00000D7C            845          JSR         PRINT_WORD_VALUE
+00000646                           846  
+00000646  4E75                     847          RTS
+00000648                           848  
+00000648                           849          
+00000648                           850  WADDR:
+Line 851 ERROR: Undefined symbol
+00000648  43F9 004DBD16            851          LEA         DOLLAR_MSG, A1
+0000064E  103C 000E                852          MOVE.B      #14, D0
+00000652  4E4F                     853          TRAP        #15
+00000654                           854          
+00000654                           855          *MOVE.B      #16,    D2          *base 16
+00000654                           856          *MOVE.B      #15,    D0
+00000654  381B                     857          MOVE.W      (A3)+,   D4
+00000656  4EB9 00000D7C            858          JSR         PRINT_WORD_VALUE
+0000065C                           859          *TRAP        #15
+0000065C                           860          
+0000065C  4E75                     861          RTS
+0000065E                           862  
+0000065E                           863          
+0000065E                           864  *Prints out hex data
+0000065E                           865  *immediate data, print as hex or binary?
+0000065E                           866  DATA_7_0:
+0000065E                           867          *make a copy
+0000065E  3803                     868          MOVE.W      D3,     D4
+00000660                           869          
+00000660                           870          *isolate bits 7-0 on the right
+00000660  343C 0008                871          MOVE.W      #8,     D2
+00000664  E56C                     872          LSL.W       D2,     D4
+00000666  343C 0008                873          MOVE.W      #8,     D2
+0000066A  E46C                     874          LSR.W       D2,     D4
+0000066C                           875          
+0000066C                           876           *print out the data in hex form
+0000066C                           877          *MOVE.B      #16,    D2          *base 16
+0000066C                           878          *MOVE.B      #15,    D0
+0000066C                           879          *MOVE.W      D4,     D1
+0000066C  4EB9 00000D7C            880          JSR         PRINT_WORD_VALUE
+00000672                           881          *TRAP        #15
+00000672                           882  
+00000672                           883  
+00000672  4E75                     884          RTS
+00000674                           885  
+00000674                           886  *-----------------------------------------------------------
+00000674                           887  * Title      :
+00000674                           888  * Written by :
+00000674                           889  * Date       :
+00000674                           890  * Description:
+00000674                           891  *-----------------------------------------------------------
+00000674                           892  
+00000674                           893  
+00000674                           894  *------Use D3 to store original data
+00000674                           895  *------Use D4 to copy and modify D3 data
+00000674                           896  *------A3 points to current address in memory
+00000674                           897  
+00000674                           898  ******************************Start of shift/rotate EA functions***********************
+00000674                           899  
+00000674                           900  SHIFT_ROTATE_EA_SIZE
+00000674  48E7 0600                901      MOVEM.L    D5-D6, -(A7)
+00000678  7A06                     902      MOVE.L     #6, D5
+0000067A  7C07                     903      MOVE.L     #7, D6
+Line 904 ERROR: Undefined symbol
+0000067C  4EB9 004DBD16            904      JSR        GET_BIT
+00000682  4CDF 0060                905      MOVEM.L    (A7)+, D5-D6
+Line 906 ERROR: Undefined symbol
+00000686  43F9 004DBD16            906      LEA        BYTE_MSG, A1
+0000068C  C8FC 0003                907      MULU       #3, D4
+00000690  D3C4                     908      ADDA.L       D4,  A1
+00000692  103C 000E                909      MOVE.B      #14, D0
+00000696  4E4F                     910      TRAP        #15
+Line 911 ERROR: Undefined symbol
+00000698  43F9 004DBD16            911      LEA         SPACE_MSG,      A1
+0000069E  103C 000E                912      MOVE.B      #14,            D0    
+000006A2  4E4F                     913      TRAP        #15
+000006A4  4E75                     914      RTS
+000006A6                           915  
+000006A6                           916  
+000006A6                           917  
+000006A6                           918  
+000006A6                           919  SHIFT_ROTATE_EA_REGISTER
+000006A6  48E7 0600                920      MOVEM.L    D5-D6, -(A7)
+000006AA  7A05                     921      MOVE.L     #5, D5
+000006AC  7C05                     922      MOVE.L     #5, D6
+Line 923 ERROR: Undefined symbol
+000006AE  4EB9 004DBD16            923      JSR        GET_BIT
+000006B4  4CDF 0060                924      MOVEM.L    (A7)+, D5-D6
+000006B8  B8BC 00000001            925      CMP.L      #1,  D4
+000006BE  6600 0074                926      BNE        SHIFT_ROTATE_IMM_SOURCE
+000006C2                           927  
+000006C2                           928  SHIFT_ROTATE_REGISTER_SOURCE
+Line 929 ERROR: Undefined symbol
+000006C2  43F9 004DBD16            929      LEA        D_MSG, A1
+000006C8  103C 000E                930      MOVE.B      #14,   D0    
+000006CC  4E4F                     931      TRAP        #15
+000006CE  48E7 0600                932      MOVEM.L    D5-D6, -(A7)
+000006D2  7A09                     933      MOVE.L     #9, D5
+000006D4  7C0B                     934      MOVE.L     #11, D6
+Line 935 ERROR: Undefined symbol
+000006D6  4EB9 004DBD16            935      JSR        GET_BIT
+000006DC  4CDF 0060                936      MOVEM.L    (A7)+, D5-D6
+Line 937 ERROR: Undefined symbol
+000006E0  43F9 004DBD16            937      LEA       ZERO_MSG, A1
+000006E6  C8FC 0002                938      MULU      #2, D4    
+000006EA  D3C4                     939      ADDA.L    D4, A1
+000006EC  103C 000E                940      MOVE.B      #14,   D0    
+000006F0  4E4F                     941      TRAP        #15
+000006F2  6000 0002                942      BRA       SHIFT_ROTATE_REGISTER_DEST
+000006F6                           943  
+000006F6                           944  SHIFT_ROTATE_REGISTER_DEST
+Line 945 ERROR: Undefined symbol
+000006F6  43F9 004DBD16            945      LEA        COMMA_MSG, A1    
+000006FC  103C 000E                946      MOVE.B      #14,   D0    
+00000700  4E4F                     947      TRAP        #15
+Line 948 ERROR: Undefined symbol
+00000702  43F9 004DBD16            948      LEA        D_MSG, A1
+00000708  103C 000E                949      MOVE.B      #14,   D0    
+0000070C  4E4F                     950      TRAP        #15
+0000070E  48E7 0600                951      MOVEM.L    D5-D6, -(A7)
+00000712  7A00                     952      MOVE.L     #0, D5
+00000714  7C02                     953      MOVE.L     #2, D6
+Line 954 ERROR: Undefined symbol
+00000716  4EB9 004DBD16            954      JSR        GET_BIT
+0000071C  4CDF 0060                955      MOVEM.L    (A7)+, D5-D6
+Line 956 ERROR: Undefined symbol
+00000720  43F9 004DBD16            956      LEA       ZERO_MSG, A1
+00000726  C8FC 0002                957      MULU      #2, D4    
+0000072A  D3C4                     958      ADDA.L    D4, A1
+0000072C  103C 000E                959      MOVE.B      #14,   D0    
+00000730  4E4F                     960      TRAP        #15
+00000732  4E75                     961      RTS
+00000734                           962  
+00000734                           963  SHIFT_ROTATE_IMM_SOURCE
+Line 964 ERROR: Undefined symbol
+00000734  43F9 004DBD16            964      LEA        HASH_MSG, A1
+0000073A  103C 000E                965      MOVE.B      #14,   D0    
+0000073E  4E4F                     966      TRAP        #15
+Line 967 ERROR: Undefined symbol
+00000740  43F9 004DBD16            967      LEA        DOLLAR_MSG, A1
+00000746  103C 000E                968      MOVE.B      #14,   D0    
+0000074A  4E4F                     969      TRAP        #15
+0000074C  48E7 0600                970      MOVEM.L    D5-D6, -(A7)
+00000750  7A09                     971      MOVE.L     #9, D5
+00000752  7C0B                     972      MOVE.L     #11, D6
+Line 973 ERROR: Undefined symbol
+00000754  4EB9 004DBD16            973      JSR        GET_BIT
+0000075A  4CDF 0060                974      MOVEM.L    (A7)+, D5-D6
+0000075E  B8BC 00000000            975      CMP.L      #0, D4
+00000764  6700 001C                976      BEQ       SHIFT_ROTATE_COUNT_8
+00000768  6000 0002                977      BRA       SHIFT_ROTATE_COUNT_1_7
+0000076C                           978   
+0000076C                           979  SHIFT_ROTATE_COUNT_1_7
+Line 980 ERROR: Undefined symbol
+0000076C  43F9 004DBD16            980      LEA       ZERO_MSG, A1
+00000772  C8FC 0002                981      MULU      #2, D4    
+00000776  D3C4                     982      ADDA.L    D4, A1
+00000778  103C 000E                983      MOVE.B      #14,   D0    
+0000077C  4E4F                     984      TRAP        #15
+0000077E  6000 FF76                985      BRA       SHIFT_ROTATE_REGISTER_DEST
+00000782                           986  
+00000782                           987  SHIFT_ROTATE_COUNT_8
+Line 988 ERROR: Undefined symbol
+00000782  43F9 004DBD16            988      LEA       EIGHT_MSG, A1
+00000788  103C 000E                989      MOVE.B      #14,   D0    
+0000078C  4E4F                     990      TRAP        #15
+0000078E  6000 FF66                991      BRA       SHIFT_ROTATE_REGISTER_DEST
+00000792                           992  
+00000792                           993  
+00000792                           994  
+00000792                           995  
+00000792                           996  
+00000792                           997  SHIFT_ROTATE_EA_MEMORY
+00000792  48E7 0600                998      MOVEM.L    D5-D6, -(A7)
+00000796  7A00                     999      MOVE.L     #0, D5
+00000798  7C05                    1000      MOVE.L     #5, D6
+Line 1001 ERROR: Undefined symbol
+0000079A  4EB9 004DBD16           1001      JSR        GET_BIT
+000007A0  4CDF 0060               1002      MOVEM.L    (A7)+, D5-D6
+000007A4  48E7 1600               1003      MOVEM.L    D3/D5-D6, -(A7)
+000007A8  2604                    1004      MOVE.L     D4, D3
+000007AA  4EB9 00000B94           1005      JSR        GET_EA
+000007B0  4CDF 0068               1006      MOVEM.L    (A7)+, D3/D5-D6
+000007B4  4E75                    1007      RTS
+000007B6                          1008  
+000007B6                          1009  ********************************End of shift/rotate EA functions**************************
+000007B6                          1010  
+000007B6                          1011  
+000007B6                          1012  ********************************Start of BR/BCC EA functions****************************
+000007B6                          1013  BR_EA_SIZE_AND_DISPLACEMENT
+000007B6  48E7 0600               1014      MOVEM.L    D5-D6, -(A7)
+000007BA  7A00                    1015      MOVE.L     #0, D5
+000007BC  7C07                    1016      MOVE.L     #7, D6
+Line 1017 ERROR: Undefined symbol
+000007BE  4EB9 004DBD16           1017      JSR        GET_BIT
+000007C4  4CDF 0060               1018      MOVEM.L    (A7)+, D5-D6
+000007C8  B8BC 00000000           1019      CMP.L      #0, D4
+000007CE  6700 0050               1020      BEQ        BR_WORD_DISPLACEMENT
+000007D2                          1021  BR_BYTE_DISPLACEMENT
+Line 1022 ERROR: Undefined symbol
+000007D2  43F9 004DBD16           1022      LEA         BYTE_MSG, A1
+000007D8  103C 000E               1023      MOVE.B      #14, D0
+000007DC  4E4F                    1024      TRAP        #15
+Line 1025 ERROR: Undefined symbol
+000007DE  43F9 004DBD16           1025      LEA         SPACE_MSG,   A1
+000007E4  103C 000E               1026      MOVE.B      #14,   D0    
+000007E8  4E4F                    1027      TRAP        #15
+000007EA  48E7 0400               1028      MOVEM.L     D5, -(A7)
+000007EE  2A04                    1029      MOVE.L      D4, D5
+000007F0  E31D                    1030      ROL.B       #1, D5
+000007F2  0285 00000001           1031      ANDI.L      #1, D5
+000007F8  BA3C 0001               1032      CMP.B       #1, D5
+000007FC  6700 0010               1033      BEQ         NEG_BYTE_DISPLACEMENT
+00000800  4CDF 0020               1034      MOVEM.L    (A7)+, D5
+00000804  D88B                    1035      ADD.L       A3, D4
+00000806  4EB9 00000DAA           1036      JSR         PRINT_LONG_VALUE
+0000080C  4E75                    1037      RTS
+0000080E                          1038  NEG_BYTE_DISPLACEMENT
+0000080E  4CDF 0020               1039      MOVEM.L    (A7)+, D5
+00000812  4404                    1040      NEG.B       D4
+00000814  988B                    1041      SUB.L       A3, D4
+00000816  4484                    1042      NEG.L       D4
+00000818  4EB9 00000DAA           1043      JSR         PRINT_LONG_VALUE
+0000081E  4E75                    1044      RTS
+00000820                          1045  BR_WORD_DISPLACEMENT
+Line 1046 ERROR: Undefined symbol
+00000820  43F9 004DBD16           1046      LEA         WORD_MSG, A1
+00000826  103C 000E               1047      MOVE.B      #14, D0
+0000082A  4E4F                    1048      TRAP        #15
+Line 1049 ERROR: Undefined symbol
+0000082C  43F9 004DBD16           1049      LEA         SPACE_MSG,   A1
+00000832  103C 000E               1050      MOVE.B      #14,   D0    
+00000836  4E4F                    1051      TRAP        #15 
+00000838  4284                    1052      CLR.L       D4
+0000083A  381B                    1053      MOVE.W      (A3)+, D4
+0000083C  48E7 0400               1054      MOVEM.L     D5, -(A7)
+00000840  2A04                    1055      MOVE.L      D4, D5
+00000842  E35D                    1056      ROL.W       #1, D5
+00000844  0285 00000001           1057      ANDI.L      #1, D5
+0000084A  BA3C 0001               1058      CMP.B       #1, D5
+0000084E  6700 0012               1059      BEQ         NEG_WORD_DISPLACEMENT
+00000852  4CDF 0020               1060      MOVEM.L    (A7)+, D5
+00000856  D88B                    1061      ADD.L       A3, D4
+00000858  5584                    1062      SUB.L       #2, D4
+0000085A  4EB9 00000DAA           1063      JSR         PRINT_LONG_VALUE
+00000860  4E75                    1064      RTS
+00000862                          1065  NEG_WORD_DISPLACEMENT
+00000862  4CDF 0020               1066      MOVEM.L    (A7)+, D5
+00000866  4444                    1067      NEG.W       D4
+00000868  988B                    1068      SUB.L       A3, D4
+0000086A  4484                    1069      NEG.L       D4
+0000086C  5584                    1070      SUB.L       #2, D4
+0000086E  4EB9 00000DAA           1071      JSR         PRINT_LONG_VALUE
+00000874  4E75                    1072      RTS
+00000876                          1073  
+00000876                          1074  
+00000876                          1075  ********************************End of BR/BCC EA functions****************************
+00000876                          1076  
+00000876                          1077  ********************************Start of LEA EA functions*****************************
+00000876                          1078  
+00000876                          1079  
+00000876                          1080  LEA_EA
+00000876                          1081      *Prints the source operand
+00000876  48E7 0600               1082      MOVEM.L    D5-D6, -(A7)
+0000087A  7A00                    1083      MOVE.L     #0, D5
+0000087C  7C05                    1084      MOVE.L     #5, D6
+Line 1085 ERROR: Undefined symbol
+0000087E  4EB9 004DBD16           1085      JSR        GET_BIT
+00000884  4CDF 0060               1086      MOVEM.L    (A7)+, D5-D6
+00000888  48E7 1600               1087      MOVEM.L    D3/D5-D6, -(A7)
+0000088C  2604                    1088      MOVE.L     D4, D3
+0000088E  4EB9 00000B94           1089      JSR        GET_EA
+00000894  4CDF 0068               1090      MOVEM.L    (A7)+, D3/D5-D6
+00000898                          1091  
+Line 1092 ERROR: Undefined symbol
+00000898  43F9 004DBD16           1092      LEA        COMMA_MSG, A1
+0000089E  103C 000E               1093      MOVE.B      #14,   D0    
+000008A2  4E4F                    1094      TRAP        #15
+000008A4                          1095  
+000008A4                          1096      *Prints the dest operand
+Line 1097 ERROR: Undefined symbol
+000008A4  43F9 004DBD16           1097      LEA        A_MSG, A1
+000008AA  103C 000E               1098      MOVE.B      #14,   D0    
+000008AE  4E4F                    1099      TRAP        #15
+000008B0  48E7 0600               1100      MOVEM.L    D5-D6, -(A7)
+000008B4  7A09                    1101      MOVE.L     #9, D5
+000008B6  7C0B                    1102      MOVE.L     #11, D6
+Line 1103 ERROR: Undefined symbol
+000008B8  4EB9 004DBD16           1103      JSR        GET_BIT
+000008BE  4CDF 0060               1104      MOVEM.L    (A7)+, D5-D6
+Line 1105 ERROR: Undefined symbol
+000008C2  43F9 004DBD16           1105      LEA       ZERO_MSG, A1
+000008C8  C8FC 0002               1106      MULU      #2, D4    
+000008CC  D3C4                    1107      ADDA.L    D4, A1
+000008CE  103C 000E               1108      MOVE.B      #14,   D0    
+000008D2  4E4F                    1109      TRAP        #15
+000008D4  4E75                    1110      RTS
+000008D6                          1111  
+000008D6                          1112  
+000008D6                          1113  ********************************End of LEA EA functions*******************************
+000008D6                          1114  
+000008D6                          1115  
+000008D6                          1116  *********************************Start of ADDA EA functions**************************
+000008D6                          1117  ADDA_EA_SIZE_AND_EA 
+000008D6  48E7 0600               1118      MOVEM.L    D5-D6, -(A7)
+000008DA  7A08                    1119      MOVE.L     #8, D5
+000008DC  7C08                    1120      MOVE.L     #8, D6
+Line 1121 ERROR: Undefined symbol
+000008DE  4EB9 004DBD16           1121      JSR        GET_BIT
+000008E4  4CDF 0060               1122      MOVEM.L    (A7)+, D5-D6
+Line 1123 ERROR: Undefined symbol
+000008E8  43F9 004DBD16           1123      LEA        WORD_MSG, A1
+000008EE  C8FC 0003               1124      MULU       #3, D4
+000008F2  D3C4                    1125      ADDA.L     D4, A1
+000008F4  103C 000E               1126      MOVE.B      #14, D0
+000008F8  4E4F                    1127      TRAP        #15
+000008FA                          1128  
+Line 1129 ERROR: Undefined symbol
+000008FA  43F9 004DBD16           1129      LEA         SPACE_MSG,   A1
+00000900  103C 000E               1130      MOVE.B      #14,   D0    
+00000904  4E4F                    1131      TRAP        #15
+00000906                          1132  
+00000906  48E7 0600               1133      MOVEM.L    D5-D6, -(A7)
+0000090A  7A00                    1134      MOVE.L     #0, D5
+0000090C  7C05                    1135      MOVE.L     #5, D6
+Line 1136 ERROR: Undefined symbol
+0000090E  4EB9 004DBD16           1136      JSR        GET_BIT
+00000914  4CDF 0060               1137      MOVEM.L    (A7)+, D5-D6
+00000918  B8BC 0000003C           1138      CMP.L      #%111100, D4
+0000091E  6700 0022               1139      BEQ        ADDA_EA_IMM_SOURCE
+00000922                          1140  ADDA_EA_NON_IMM_SOURCE
+00000922  48E7 1600               1141      MOVEM.L    D3/D5-D6, -(A7)
+00000926  2604                    1142      MOVE.L     D4, D3     
+00000928  4EB9 00000B94           1143      JSR        GET_EA
+Line 1144 ERROR: Undefined symbol
+0000092E  43F9 004DBD16           1144      LEA         COMMA_MSG,   A1
+00000934  103C 000E               1145      MOVE.B      #14,   D0    
+00000938  4E4F                    1146      TRAP        #15
+0000093A  4CDF 0068               1147      MOVEM.L    (A7)+, D3/D5-D6
+0000093E  6000 0066               1148      BRA        ADDA_EA_DEST
+00000942                          1149  ADDA_EA_IMM_SOURCE
+Line 1150 ERROR: Undefined symbol
+00000942  43F9 004DBD16           1150      LEA        HASH_MSG, A1
+00000948  103C 000E               1151      MOVE.B      #14,   D0    
+0000094C  4E4F                    1152      TRAP        #15
+Line 1153 ERROR: Undefined symbol
+0000094E  43F9 004DBD16           1153      LEA        DOLLAR_MSG, A1
+00000954  103C 000E               1154      MOVE.B      #14,   D0    
+00000958  4E4F                    1155      TRAP        #15
+0000095A  48E7 0600               1156      MOVEM.L    D5-D6, -(A7)
+0000095E  7A06                    1157      MOVE.L     #6, D5
+00000960  7C08                    1158      MOVE.L     #8, D6
+Line 1159 ERROR: Undefined symbol
+00000962  4EB9 004DBD16           1159      JSR        GET_BIT
+00000968  4CDF 0060               1160      MOVEM.L    (A7)+, D5-D6
+0000096C  B8BC 00000003           1161      CMP.L      #%011, D4
+00000972  6700 001A               1162      BEQ        ADDA_EA_IMM_WORD
+00000976                          1163  ADDA_EA_IMM_LONG
+00000976  281B                    1164      MOVE.L     (A3)+, D4
+00000978  4EB9 00000DAA           1165      JSR        PRINT_LONG_VALUE
+0000097E                          1166  
+Line 1167 ERROR: Undefined symbol
+0000097E  43F9 004DBD16           1167      LEA         COMMA_MSG,   A1
+00000984  103C 000E               1168      MOVE.B      #14,   D0    
+00000988  4E4F                    1169      TRAP        #15
+0000098A  6000 001A               1170      BRA         ADDA_EA_DEST
+0000098E                          1171  ADDA_EA_IMM_WORD
+0000098E  381B                    1172      MOVE.W     (A3)+, D4
+00000990  4EB9 00000D7C           1173      JSR        PRINT_WORD_VALUE
+00000996                          1174  
+Line 1175 ERROR: Undefined symbol
+00000996  43F9 004DBD16           1175      LEA         COMMA_MSG,   A1
+0000099C  103C 000E               1176      MOVE.B      #14,   D0    
+000009A0  4E4F                    1177      TRAP        #15
+000009A2  6000 0002               1178      BRA         ADDA_EA_DEST
+000009A6                          1179  
+000009A6                          1180  ADDA_EA_DEST   
+000009A6  48E7 0600               1181      MOVEM.L    D5-D6, -(A7)
+000009AA  7A09                    1182      MOVE.L     #9, D5
+000009AC  7C0B                    1183      MOVE.L     #11, D6
+Line 1184 ERROR: Undefined symbol
+000009AE  4EB9 004DBD16           1184      JSR        GET_BIT
+000009B4  4CDF 0060               1185      MOVEM.L    (A7)+, D5-D6
+Line 1186 ERROR: Undefined symbol
+000009B8  43F9 004DBD16           1186      LEA   A_MSG, A1
+000009BE  103C 000E               1187      MOVE.B   #14,  D0    
+000009C2  4E4F                    1188      TRAP     #15
+Line 1189 ERROR: Undefined symbol
+000009C4  43F9 004DBD16           1189      LEA    ZERO_MSG, A1
+000009CA  C8FC 0002               1190      MULU       #2, D4
+000009CE  D3C4                    1191      ADDA.L     D4, A1
+000009D0  103C 000E               1192      MOVE.B   #14,  D0    
+000009D4  4E4F                    1193      TRAP     #15
+000009D6  4E75                    1194      RTS
+000009D8                          1195  
+000009D8                          1196  
+000009D8                          1197  *********************************End of ADDA EA functions***************************
+000009D8                          1198  
+000009D8                          1199  
+000009D8                          1200  ********************************Start of ADDQ EA functions***************************
+000009D8                          1201  ADDQ_EA_SIZE_AND_EA
+000009D8  48E7 0600               1202      MOVEM.L    D5-D6, -(A7)
+000009DC  7A06                    1203      MOVE.L     #6, D5
+000009DE  7C07                    1204      MOVE.L     #7, D6
+Line 1205 ERROR: Undefined symbol
+000009E0  4EB9 004DBD16           1205      JSR        GET_BIT
+000009E6  4CDF 0060               1206      MOVEM.L    (A7)+, D5-D6
+Line 1207 ERROR: Undefined symbol
+000009EA  43F9 004DBD16           1207      LEA        BYTE_MSG, A1
+000009F0  C8FC 0003               1208      MULU       #3, D4
+000009F4  D3C4                    1209      ADDA.L       D4,  A1
+000009F6  103C 000E               1210      MOVE.B      #14, D0
+000009FA  4E4F                    1211      TRAP        #15
+Line 1212 ERROR: Undefined symbol
+000009FC  43F9 004DBD16           1212      LEA         SPACE_MSG,      A1
+00000A02  103C 000E               1213      MOVE.B      #14,            D0    
+00000A06  4E4F                    1214      TRAP        #15
+00000A08                          1215  
+00000A08  48E7 0600               1216      MOVEM.L    D5-D6, -(A7)
+00000A0C  7A09                    1217      MOVE.L     #9, D5
+00000A0E  7C0B                    1218      MOVE.L     #11, D6
+Line 1219 ERROR: Undefined symbol
+00000A10  4EB9 004DBD16           1219      JSR        GET_BIT
+00000A16  4CDF 0060               1220      MOVEM.L    (A7)+, D5-D6
+Line 1221 ERROR: Undefined symbol
+00000A1A  43F9 004DBD16           1221      LEA        HASH_MSG, A1
+00000A20  103C 000E               1222      MOVE.B      #14,   D0    
+00000A24  4E4F                    1223      TRAP        #15
+Line 1224 ERROR: Undefined symbol
+00000A26  43F9 004DBD16           1224      LEA        DOLLAR_MSG, A1
+00000A2C  103C 000E               1225      MOVE.B      #14,   D0    
+00000A30  4E4F                    1226      TRAP        #15
+00000A32  B8BC 00000000           1227      CMP.L      #0, D4
+00000A38  6700 0044               1228      BEQ       ADDQ_ADD_COUNT_8
+00000A3C                          1229  
+00000A3C                          1230  ADDQ_ADD_COUNT_1_7
+Line 1231 ERROR: Undefined symbol
+00000A3C  43F9 004DBD16           1231      LEA       ZERO_MSG, A1
+00000A42  C8FC 0002               1232      MULU      #2, D4    
+00000A46  D3C4                    1233      ADDA.L    D4, A1
+00000A48  103C 000E               1234      MOVE.B      #14,   D0    
+00000A4C  4E4F                    1235      TRAP        #15
+Line 1236 ERROR: Undefined symbol
+00000A4E  43F9 004DBD16           1236      LEA         COMMA_MSG,   A1
+00000A54  103C 000E               1237      MOVE.B      #14,   D0    
+00000A58  4E4F                    1238      TRAP        #15
+00000A5A  48E7 0600               1239      MOVEM.L    D5-D6, -(A7)
+00000A5E  7A00                    1240      MOVE.L     #0, D5
+00000A60  7C05                    1241      MOVE.L     #5, D6
+Line 1242 ERROR: Undefined symbol
+00000A62  4EB9 004DBD16           1242      JSR        GET_BIT
+00000A68  4CDF 0060               1243      MOVEM.L    (A7)+, D5-D6
+00000A6C  48E7 1600               1244      MOVEM.L    D3/D5-D6, -(A7)
+00000A70  2604                    1245      MOVE.L     D4, D3
+00000A72  4EB9 00000B94           1246      JSR        GET_EA
+00000A78  4CDF 0068               1247      MOVEM.L    (A7)+, D3/D5-D6
+00000A7C  4E75                    1248      RTS
+00000A7E                          1249  
+00000A7E                          1250  ADDQ_ADD_COUNT_8
+Line 1251 ERROR: Undefined symbol
+00000A7E  43F9 004DBD16           1251      LEA       EIGHT_MSG, A1
+00000A84  103C 000E               1252      MOVE.B      #14,   D0    
+00000A88  4E4F                    1253      TRAP        #15
+Line 1254 ERROR: Undefined symbol
+00000A8A  43F9 004DBD16           1254      LEA         COMMA_MSG,   A1
+00000A90  103C 000E               1255      MOVE.B      #14,   D0    
+00000A94  4E4F                    1256      TRAP        #15
+00000A96  48E7 0600               1257      MOVEM.L    D5-D6, -(A7)
+00000A9A  7A00                    1258      MOVE.L     #0, D5
+00000A9C  7C05                    1259      MOVE.L     #5, D6
+Line 1260 ERROR: Undefined symbol
+00000A9E  4EB9 004DBD16           1260      JSR        GET_BIT
+00000AA4  4CDF 0060               1261      MOVEM.L    (A7)+, D5-D6
+00000AA8  48E7 1600               1262      MOVEM.L    D3/D5-D6, -(A7)
+00000AAC  2604                    1263      MOVE.L     D4, D3   
+00000AAE  4EB9 00000B94           1264      JSR        GET_EA
+00000AB4  4CDF 0068               1265      MOVEM.L    (A7)+, D3/D5-D6
+00000AB8  4E75                    1266      RTS
+00000ABA                          1267  
+00000ABA                          1268  
+00000ABA                          1269  
+00000ABA                          1270  
+00000ABA                          1271  ********************************End of ADDQ EA functions*****************************
+00000ABA                          1272  
+00000ABA                          1273  ********************************Start of ADD EA functions****************************
+00000ABA                          1274  
+00000ABA                          1275  ADD_SUB_EA_SIZE
+00000ABA  48E7 0600               1276      MOVEM.L    D5-D6, -(A7)
+00000ABE  7A06                    1277      MOVE.L     #6, D5
+00000AC0  7C08                    1278      MOVE.L     #8, D6
+Line 1279 ERROR: Undefined symbol
+00000AC2  4EB9 004DBD16           1279      JSR        GET_BIT
+00000AC8  4CDF 0060               1280      MOVEM.L    (A7)+, D5-D6
+00000ACC  0284 00000003           1281      ANDI.L     #%011, D4
+Line 1282 ERROR: Undefined symbol
+00000AD2  43F9 004DBD16           1282      LEA        BYTE_MSG, A1
+00000AD8  C8FC 0003               1283      MULU       #3, D4
+00000ADC  D3C4                    1284      ADDA.L       D4,  A1
+00000ADE  103C 000E               1285      MOVE.B      #14, D0
+00000AE2  4E4F                    1286      TRAP        #15
+00000AE4  4E75                    1287      RTS
+00000AE6                          1288  
+00000AE6                          1289  ADD_SUB_EA_REG
+Line 1290 ERROR: Undefined symbol
+00000AE6  43F9 004DBD16           1290      LEA        D_MSG, A1
+00000AEC  103C 000E               1291      MOVE.B      #14,   D0    
+00000AF0  4E4F                    1292      TRAP        #15
+00000AF2  48E7 0600               1293      MOVEM.L    D5-D6, -(A7)
+00000AF6  7A09                    1294      MOVE.L     #9, D5
+00000AF8  7C0B                    1295      MOVE.L     #11, D6
+Line 1296 ERROR: Undefined symbol
+00000AFA  4EB9 004DBD16           1296      JSR        GET_BIT
+00000B00  4CDF 0060               1297      MOVEM.L    (A7)+, D5-D6
+Line 1298 ERROR: Undefined symbol
+00000B04  43F9 004DBD16           1298      LEA       ZERO_MSG, A1
+00000B0A  C8FC 0002               1299      MULU      #2, D4    
+00000B0E  D3C4                    1300      ADDA.L    D4, A1
+00000B10  103C 000E               1301      MOVE.B      #14,   D0    
+00000B14  4E4F                    1302      TRAP        #15
+00000B16  4E75                    1303      RTS
+00000B18                          1304  
+00000B18                          1305  
+00000B18                          1306  ADD_SUB_EA_EA
+00000B18  48E7 0600               1307      MOVEM.L    D5-D6, -(A7)
+00000B1C  7A00                    1308      MOVE.L     #0, D5
+00000B1E  7C05                    1309      MOVE.L     #5, D6
+Line 1310 ERROR: Undefined symbol
+00000B20  4EB9 004DBD16           1310      JSR        GET_BIT
+00000B26  4CDF 0060               1311      MOVEM.L    (A7)+, D5-D6
+00000B2A  B8BC 0000003C           1312      CMP.L      #%111100, D4
+00000B30  6700 0014               1313      BEQ        ADD_SUB_EA_EA_IMM
+00000B34  48E7 1600               1314      MOVEM.L    D3/D5-D6, -(A7)
+00000B38  2604                    1315      MOVE.L     D4, D3   
+00000B3A  4EB9 00000B94           1316      JSR        GET_EA
+00000B40  4CDF 0068               1317      MOVEM.L    (A7)+, D3/D5-D6
+00000B44  4E75                    1318      RTS
+00000B46                          1319  
+00000B46                          1320  ADD_SUB_EA_EA_IMM
+Line 1321 ERROR: Undefined symbol
+00000B46  43F9 004DBD16           1321      LEA        HASH_MSG, A1
+00000B4C  103C 000E               1322      MOVE.B      #14,   D0    
+00000B50  4E4F                    1323      TRAP        #15
+Line 1324 ERROR: Undefined symbol
+00000B52  43F9 004DBD16           1324      LEA        DOLLAR_MSG, A1
+00000B58  103C 000E               1325      MOVE.B      #14,   D0    
+00000B5C  4E4F                    1326      TRAP        #15
+00000B5E  48E7 0600               1327      MOVEM.L    D5-D6, -(A7)
+00000B62  7A06                    1328      MOVE.L     #6, D5
+00000B64  7C08                    1329      MOVE.L     #8, D6
+Line 1330 ERROR: Undefined symbol
+00000B66  4EB9 004DBD16           1330      JSR        GET_BIT
+00000B6C  4CDF 0060               1331      MOVEM.L    (A7)+, D5-D6
+00000B70  0284 00000003           1332      ANDI.L     #%011, D4
+00000B76  B8BC 00000002           1333      CMP.L      #%010, D4
+00000B7C  6600 000C               1334      BNE        ADD_SUB_EA_EA_IMM_WORD
+00000B80                          1335  ADD_SUB_EA_EA_IMM_LONG
+00000B80  281B                    1336      MOVE.L     (A3)+, D4
+00000B82  4EB9 00000DAA           1337      JSR         PRINT_LONG_VALUE
+00000B88  4E75                    1338      RTS
+00000B8A                          1339  ADD_SUB_EA_EA_IMM_WORD
+00000B8A  381B                    1340      MOVE.W     (A3)+, D4
+00000B8C  4EB9 00000D7C           1341      JSR        PRINT_WORD_VALUE
+00000B92  4E75                    1342      RTS
+00000B94                          1343  
+00000B94                          1344  
+00000B94                          1345  ********************************End of ADD EA functions*****************************
+00000B94                          1346  
+00000B94                          1347  
+00000B94                          1348  
+00000B94                          1349  
+00000B94                          1350  
+00000B94                          1351  
+00000B94                          1352  
+00000B94                          1353  
+00000B94                          1354  
+00000B94                          1355  
+00000B94                          1356  
+00000B94                          1357  
+00000B94                          1358  
+00000B94                          1359  
+00000B94                          1360  
+00000B94                          1361  
+00000B94                          1362  
+00000B94                          1363  
+00000B94                          1364  *D3 holds the mode+register bits
+00000B94                          1365  *A3 points to current address in memory which is being scanned
+00000B94                          1366  *D5, D6, D4 can be used as temporary storage registers
+00000B94                          1367  GET_EA
+00000B94  7A03                    1368      MOVE.L     #3, D5
+00000B96  7C05                    1369      MOVE.L     #5, D6
+Line 1370 ERROR: Undefined symbol
+00000B98  4EB9 004DBD16           1370      JSR        GET_BIT
+00000B9E  B8BC 00000000           1371      CMP.L      #0, D4
+00000BA4  6700 004A               1372      BEQ        EA_DATA_REGISTER
+00000BA8  B8BC 00000001           1373      CMP.L      #1, D4
+00000BAE  6700 006A               1374      BEQ        EA_ADDR_REGISTER
+00000BB2  B8BC 00000002           1375      CMP.L      #2, D4
+00000BB8  6700 008A               1376      BEQ        EA_INDIRECT
+00000BBC  B8BC 00000003           1377      CMP.L      #3, D4
+00000BC2  6700 00C2               1378      BEQ        EA_INDIRECT_INCREMENT
+00000BC6  B8BC 00000004           1379      CMP.L      #4, D4
+00000BCC  6700 0106               1380      BEQ        EA_INDIRECT_DECREMENT
+00000BD0                          1381      *101, and 110 mode bits should be detected in disassembler_OPCodes 
+00000BD0  7A00                    1382      MOVE.L     #0, D5
+00000BD2  7C02                    1383      MOVE.L     #2, D6
+Line 1384 ERROR: Undefined symbol
+00000BD4  4EB9 004DBD16           1384      JSR        GET_BIT
+00000BDA  B8BC 00000000           1385      CMP.L      #0, D4
+00000BE0  6700 0140               1386      BEQ        EA_ABS_WORD
+00000BE4  B8BC 00000001           1387      CMP.L      #1, D4
+00000BEA  6700 014E               1388      BEQ        EA_ABS_LONG
+00000BEE                          1389      *Unreachable
+00000BEE  4E75                    1390      RTS
+00000BF0                          1391      
+00000BF0                          1392  
+00000BF0                          1393  *D3 holds the mode+register bits
+00000BF0                          1394  *A3 points to current address in memory which is being scanned
+00000BF0                          1395  *D5, D6, D4 can be used as temporary storage registers
+00000BF0                          1396  EA_DATA_REGISTER
+Line 1397 ERROR: Undefined symbol
+00000BF0  43F9 004DBD16           1397      LEA   D_MSG, A1
+00000BF6  103C 000E               1398      MOVE.B   #14,  D0    
+00000BFA  4E4F                    1399      TRAP     #15
+Line 1400 ERROR: Undefined symbol
+00000BFC  43F9 004DBD16           1400      LEA    ZERO_MSG, A1
+00000C02  7A00                    1401      MOVE.L     #0, D5
+00000C04  7C02                    1402      MOVE.L     #2, D6
+Line 1403 ERROR: Undefined symbol
+00000C06  4EB9 004DBD16           1403      JSR        GET_BIT
+00000C0C  C8FC 0002               1404      MULU       #2, D4
+00000C10  D3C4                    1405      ADDA.L     D4, A1
+00000C12  103C 000E               1406      MOVE.B   #14,  D0    
+00000C16  4E4F                    1407      TRAP     #15
+00000C18  4E75                    1408      RTS
+00000C1A                          1409  
+00000C1A                          1410  
+00000C1A                          1411  EA_ADDR_REGISTER
+Line 1412 ERROR: Undefined symbol
+00000C1A  43F9 004DBD16           1412      LEA   A_MSG, A1
+00000C20  103C 000E               1413      MOVE.B   #14,  D0    
+00000C24  4E4F                    1414      TRAP     #15
+Line 1415 ERROR: Undefined symbol
+00000C26  43F9 004DBD16           1415      LEA    ZERO_MSG, A1
+00000C2C  7A00                    1416      MOVE.L     #0, D5
+00000C2E  7C02                    1417      MOVE.L     #2, D6
+Line 1418 ERROR: Undefined symbol
+00000C30  4EB9 004DBD16           1418      JSR        GET_BIT
+00000C36  C8FC 0002               1419      MULU       #2, D4
+00000C3A  D3C4                    1420      ADDA.L     D4, A1
+00000C3C  103C 000E               1421      MOVE.B   #14,  D0    
+00000C40  4E4F                    1422      TRAP     #15
+00000C42  4E75                    1423      RTS
+00000C44                          1424  
+00000C44                          1425  
+00000C44                          1426  EA_INDIRECT
+Line 1427 ERROR: Undefined symbol
+00000C44  43F9 004DBD16           1427      LEA   OPEN_PARENTHESIS_MSG, A1
+00000C4A  103C 000E               1428      MOVE.B   #14,  D0    
+00000C4E  4E4F                    1429      TRAP     #15
+Line 1430 ERROR: Undefined symbol
+00000C50  43F9 004DBD16           1430      LEA   A_MSG, A1
+00000C56  103C 000E               1431      MOVE.B   #14,  D0    
+00000C5A  4E4F                    1432      TRAP     #15
+Line 1433 ERROR: Undefined symbol
+00000C5C  43F9 004DBD16           1433      LEA    ZERO_MSG, A1
+00000C62  7A00                    1434      MOVE.L     #0, D5
+00000C64  7C02                    1435      MOVE.L     #2, D6
+Line 1436 ERROR: Undefined symbol
+00000C66  4EB9 004DBD16           1436      JSR        GET_BIT
+00000C6C  C8FC 0002               1437      MULU       #2, D4
+00000C70  D3C4                    1438      ADDA.L     D4, A1
+00000C72  103C 000E               1439      MOVE.B   #14,  D0    
+00000C76  4E4F                    1440      TRAP     #15
+Line 1441 ERROR: Undefined symbol
+00000C78  43F9 004DBD16           1441      LEA   CLOSE_PARENTHESIS_MSG, A1
+00000C7E  103C 000E               1442      MOVE.B   #14,  D0    
+00000C82  4E4F                    1443      TRAP     #15
+00000C84  4E75                    1444      RTS
+00000C86                          1445  
+00000C86                          1446  
+00000C86                          1447  
+00000C86                          1448  EA_INDIRECT_INCREMENT
+Line 1449 ERROR: Undefined symbol
+00000C86  43F9 004DBD16           1449      LEA   OPEN_PARENTHESIS_MSG, A1
+00000C8C  103C 000E               1450      MOVE.B   #14,  D0    
+00000C90  4E4F                    1451      TRAP     #15
+Line 1452 ERROR: Undefined symbol
+00000C92  43F9 004DBD16           1452      LEA   A_MSG, A1
+00000C98  103C 000E               1453      MOVE.B   #14,  D0    
+00000C9C  4E4F                    1454      TRAP     #15
+Line 1455 ERROR: Undefined symbol
+00000C9E  43F9 004DBD16           1455      LEA    ZERO_MSG, A1
+00000CA4  7A00                    1456      MOVE.L     #0, D5
+00000CA6  7C02                    1457      MOVE.L     #2, D6
+Line 1458 ERROR: Undefined symbol
+00000CA8  4EB9 004DBD16           1458      JSR        GET_BIT
+00000CAE  C8FC 0002               1459      MULU       #2, D4
+00000CB2  D3C4                    1460      ADDA.L     D4, A1
+00000CB4  103C 000E               1461      MOVE.B   #14,  D0    
+00000CB8  4E4F                    1462      TRAP     #15
+Line 1463 ERROR: Undefined symbol
+00000CBA  43F9 004DBD16           1463      LEA   CLOSE_PARENTHESIS_MSG, A1
+00000CC0  103C 000E               1464      MOVE.B   #14,  D0    
+00000CC4  4E4F                    1465      TRAP     #15
+Line 1466 ERROR: Undefined symbol
+00000CC6  43F9 004DBD16           1466      LEA   PLUS_MSG, A1
+00000CCC  103C 000E               1467      MOVE.B   #14,  D0    
+00000CD0  4E4F                    1468      TRAP     #15
+00000CD2  4E75                    1469      RTS
+00000CD4                          1470  
+00000CD4                          1471  
+00000CD4                          1472  EA_INDIRECT_DECREMENT
+Line 1473 ERROR: Undefined symbol
+00000CD4  43F9 004DBD16           1473      LEA   MINUS_MSG, A1
+00000CDA  103C 000E               1474      MOVE.B   #14,  D0    
+00000CDE  4E4F                    1475      TRAP     #15
+Line 1476 ERROR: Undefined symbol
+00000CE0  43F9 004DBD16           1476      LEA   OPEN_PARENTHESIS_MSG, A1
+00000CE6  103C 000E               1477      MOVE.B   #14,  D0    
+00000CEA  4E4F                    1478      TRAP     #15
+Line 1479 ERROR: Undefined symbol
+00000CEC  43F9 004DBD16           1479      LEA   A_MSG, A1
+00000CF2  103C 000E               1480      MOVE.B   #14,  D0    
+00000CF6  4E4F                    1481      TRAP     #15
+Line 1482 ERROR: Undefined symbol
+00000CF8  43F9 004DBD16           1482      LEA    ZERO_MSG, A1
+00000CFE  7A00                    1483      MOVE.L     #0, D5
+00000D00  7C02                    1484      MOVE.L     #2, D6
+Line 1485 ERROR: Undefined symbol
+00000D02  4EB9 004DBD16           1485      JSR        GET_BIT
+00000D08  C8FC 0002               1486      MULU       #2, D4
+00000D0C  D3C4                    1487      ADDA.L     D4, A1
+00000D0E  103C 000E               1488      MOVE.B   #14,  D0    
+00000D12  4E4F                    1489      TRAP     #15
+Line 1490 ERROR: Undefined symbol
+00000D14  43F9 004DBD16           1490      LEA   CLOSE_PARENTHESIS_MSG, A1
+00000D1A  103C 000E               1491      MOVE.B   #14,  D0    
+00000D1E  4E4F                    1492      TRAP     #15
+00000D20  4E75                    1493      RTS
+00000D22                          1494  
+00000D22                          1495  
+00000D22                          1496  
+00000D22                          1497  EA_ABS_WORD
+00000D22  4284                    1498      CLR.L      D4
+00000D24  381B                    1499      MOVE.W     (A3)+, D4
+Line 1500 ERROR: Undefined symbol
+00000D26  43F9 004DBD16           1500      LEA        DOLLAR_MSG,       A1
+00000D2C  103C 000E               1501      MOVE.B      #14,            D0    
+00000D30  4E4F                    1502      TRAP        #15
+00000D32  4EB9 00000D7C           1503      JSR        PRINT_WORD_VALUE
+00000D38  4E75                    1504      RTS
+00000D3A                          1505  
+00000D3A                          1506  EA_ABS_LONG
+00000D3A  281B                    1507      MOVE.L    (A3)+, D4
+Line 1508 ERROR: Undefined symbol
+00000D3C  43F9 004DBD16           1508      LEA        DOLLAR_MSG,       A1
+00000D42  103C 000E               1509      MOVE.B      #14,            D0    
+00000D46  4E4F                    1510      TRAP        #15
+00000D48  4EB9 00000DAA           1511      JSR        PRINT_LONG_VALUE
+00000D4E  4E75                    1512      RTS
+00000D50                          1513  
+00000D50                          1514  
+00000D50                          1515  
+00000D50                          1516  
+00000D50                          1517  *Prints the byte size value.
+00000D50                          1518  *The value is in D4
+00000D50                          1519  PRINT_BYTE_VALUE
+00000D50  48E7 0600               1520          MOVEM.L    D5-D6, -(A7)
+00000D54  7C02                    1521          MOVE.L     #2, D6
+00000D56                          1522  PRINT_BYTE_VALUE_LOOP
+00000D56                          1523          *Gets the most significant bit basically
+00000D56                          1524          *Could use GET_BIT subroutine but it is 
+00000D56                          1525          *costly in terms of registers used
+00000D56  1A04                    1526          MOVE.B     D4, D5
+00000D58  E80D                    1527          LSR.B      #4, D5
+00000D5A  E90C                    1528          LSL.B      #4, D4
+Line 1529 ERROR: Undefined symbol
+00000D5C  43F9 004DBD16           1529          LEA        ZERO_MSG,      A1
+00000D62                          1530          * load the address of Zero_msg
+00000D62                          1531          * because all of the msgs are stored next to each other in order
+00000D62                          1532          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+00000D62                          1533          * and then add it to the address starting at zero_msg
+00000D62  CAFC 0002               1534          MULU         #2,            D5
+00000D66  D3C5                    1535          ADDA.L       D5,            A1
+00000D68  103C 000E               1536          MOVE.B      #14, D0
+00000D6C  4E4F                    1537          TRAP        #15
+00000D6E  5386                    1538          SUBI.L      #1, D6
+00000D70  BC3C 0000               1539          CMP.B       #0, D6
+00000D74  66E0                    1540          BNE         PRINT_BYTE_VALUE_LOOP
+00000D76  4CDF 0060               1541          MOVEM.L    (A7)+, D5-D6
+00000D7A  4E75                    1542          RTS
+00000D7C                          1543  
+00000D7C                          1544  
+00000D7C                          1545  
+00000D7C                          1546  *Prints the word size value.
+00000D7C                          1547  *The value is in D4
+00000D7C                          1548  PRINT_WORD_VALUE
+00000D7C  48E7 0600               1549          MOVEM.L    D5-D6, -(A7)
+00000D80  7C04                    1550          MOVE.L     #4, D6
+00000D82                          1551  PRINT_WORD_VALUE_LOOP
+00000D82                          1552          *Gets the most significant bit basically
+00000D82                          1553          *Could use GET_BIT subroutine but it is 
+00000D82                          1554          *costly in terms of registers used
+00000D82  3A04                    1555          MOVE.W     D4, D5
+00000D84  EC4D                    1556          LSR.W      #6, D5
+00000D86  EC4D                    1557          LSR.W      #6, D5
+00000D88  E94C                    1558          LSL.W      #4, D4
+Line 1559 ERROR: Undefined symbol
+00000D8A  43F9 004DBD16           1559          LEA        ZERO_MSG,      A1
+00000D90                          1560          * load the address of Zero_msg
+00000D90                          1561          * because all of the msgs are stored next to each other in order
+00000D90                          1562          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+00000D90                          1563          * and then add it to the address starting at zero_msg
+00000D90  CAFC 0002               1564          MULU         #2,            D5
+00000D94  D3C5                    1565          ADDA.L       D5,            A1
+00000D96  103C 000E               1566          MOVE.B      #14, D0
+00000D9A  4E4F                    1567          TRAP        #15
+00000D9C  5386                    1568          SUBI.L      #1, D6
+00000D9E  BC3C 0000               1569          CMP.B       #0, D6
+00000DA2  66DE                    1570          BNE         PRINT_WORD_VALUE_LOOP
+00000DA4  4CDF 0060               1571          MOVEM.L    (A7)+, D5-D6
+00000DA8  4E75                    1572          RTS
+00000DAA                          1573  
+00000DAA                          1574  
+00000DAA                          1575  *Prints the long size value.
+00000DAA                          1576  *The value is in D4
+00000DAA                          1577  PRINT_LONG_VALUE
+00000DAA  48E7 0600               1578          MOVEM.L    D5-D6, -(A7)
+00000DAE  7C08                    1579          MOVE.L     #8, D6
+00000DB0                          1580  PRINT_LONG_VALUE_LOOP
+00000DB0                          1581          *Gets the most significant bit basically
+00000DB0                          1582          *Could use GET_BIT subroutine but it is 
+00000DB0                          1583          *costly in terms of registers used
+00000DB0  2A04                    1584          MOVE.L     D4, D5
+00000DB2  E08D                    1585          LSR.L      #8, D5
+00000DB4  E08D                    1586          LSR.L      #8, D5
+00000DB6  E08D                    1587          LSR.L      #8, D5
+00000DB8  E88D                    1588          LSR.L      #4, D5
+00000DBA  E98C                    1589          LSL.L      #4, D4
+Line 1590 ERROR: Undefined symbol
+00000DBC  43F9 004DBD16           1590          LEA        ZERO_MSG,      A1
+00000DC2                          1591          * load the address of Zero_msg
+00000DC2                          1592          * because all of the msgs are stored next to each other in order
+00000DC2                          1593          * we can simply take the value isolated from the number, multiply it by 2 (msg's take up 2 bytes)
+00000DC2                          1594          * and then add it to the address starting at zero_msg
+00000DC2  CAFC 0002               1595          MULU         #2,            D5
+00000DC6  D3C5                    1596          ADDA.L       D5,            A1
+00000DC8  103C 000E               1597          MOVE.B      #14, D0
+00000DCC  4E4F                    1598          TRAP        #15
+00000DCE  5386                    1599          SUBI.L      #1, D6
+00000DD0  BC3C 0000               1600          CMP.B       #0, D6
+00000DD4  66DA                    1601          BNE         PRINT_LONG_VALUE_LOOP
+00000DD6  4CDF 0060               1602          MOVEM.L    (A7)+, D5-D6
+00000DDA  4E75                    1603          RTS
+00000DDC                          1604  
+00000DDC                          1605  
+00000DDC                          1606   
+00000DDC                          1607  
+00000DDC                          1608  
+00000DDC                          1609  
+00000DDC                          1610  
+00000DDC                          1611  
+00000DDC                          1612  *~Font name~Courier New~
+00000DDC                          1613  *~Font size~10~
+00000DDC                          1614  *~Tab type~1~
+00000DDC                          1615  *~Tab size~4~
+00000DDC                          1616  
+00000DDC                          1617  
+00000DDC                          1618  
+00000DDC                          1619  
+Line 1620 WARNING: END directive missing, starting address not set
+
+135 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ADDA_EA_DEST        9A6
+ADDA_EA_IMM_LONG    976
+ADDA_EA_IMM_SOURCE  942
+ADDA_EA_IMM_WORD    98E
+ADDA_EA_NON_IMM_SOURCE  922
+ADDA_EA_SIZE_AND_EA  8D6
+ADDPM_EA            582
+ADDPP_EA            53A
+ADDP_EA             4FE
+ADDQ_ADD_COUNT_1_7  A3C
+ADDQ_ADD_COUNT_8    A7E
+ADDQ_EA_SIZE_AND_EA  9D8
+ADDR_EA             4DA
+ADD_SUB_EA_EA       B18
+ADD_SUB_EA_EA_IMM   B46
+ADD_SUB_EA_EA_IMM_LONG  B80
+ADD_SUB_EA_EA_IMM_WORD  B8A
+ADD_SUB_EA_REG      AE6
+ADD_SUB_EA_SIZE     ABA
+BR_BYTE_DISPLACEMENT  7D2
+BR_EA_SIZE_AND_DISPLACEMENT  7B6
+BR_WORD_DISPLACEMENT  820
+BYTE_SIZE           CE
+DATAR_EA            4B6
+DATA_7_0            65E
+DECR_1_A            322
+DECR_1_B            32C
+DECR_2              336
+DECR_2_A            342
+DECR_2_B            34C
+DECR_3              356
+DECR_3_A            366
+DECR_3_B            36E
+DESTINATION_11_6    14E
+DEST_A_EA           1B2
+DEST_DATA_EA        2A2
+DEST_PM_EA          25A
+DEST_PP_EA          212
+DEST_P_EA           1D6
+EA_ABS_LONG         D3A
+EA_ABS_WORD         D22
+EA_ADDR_REGISTER    C1A
+EA_DATA_REGISTER    BF0
+EA_INDIRECT         C44
+EA_INDIRECT_DECREMENT  CD4
+EA_INDIRECT_INCREMENT  C86
+EFFECTIVEADD_5_0    10A
+EXIT_LOOP_DECR      310
+EXIT_LOOP_INCR      3F2
+GET_EA              B94
+IDATA               5FE
+IDATA_BYTE          634
+IDATA_EA            5CA
+IDATA_WORD          63E
+INCR_1_A            404
+INCR_1_B            40E
+INCR_2              418
+INCR_2_A            424
+INCR_2_B            42E
+INCR_3              438
+INCR_3_A            448
+INCR_3_B            450
+LEA_EA              876
+LONG_SIZE           F6
+NEG_BYTE_DISPLACEMENT  80E
+NEG_WORD_DISPLACEMENT  862
+OPMODE_8_6          18
+POST_INCR_LOOP_TRACK  3CA
+POST_INCR_LOOP_TRACK_SECOND  3D8
+POST_INCR_LOOP_UNTRACK  3DE
+POST_INCR_MASK_FIELD  3B8
+PREP_FOR_ROT        56
+PRE_DECR_LOOP_TRACK  2E8
+PRE_DECR_LOOP_TRACK_SECOND  2F6
+PRE_DECR_LOOP_UNTRACK  2FC
+PRE_DECR_MASK_FIELD  2D6
+PRINT_A_DECR        396
+PRINT_A_INCR        478
+PRINT_BYTE_VALUE    D50
+PRINT_BYTE_VALUE_LOOP  D56
+PRINT_DESTINATION_DATA  18E
+PRINT_DIV           4A8
+PRINT_D_DECR        376
+PRINT_D_INCR        458
+PRINT_LONG_VALUE    DAA
+PRINT_LONG_VALUE_LOOP  DB0
+PRINT_MINUS         49A
+PRINT_WORD_VALUE    D7C
+PRINT_WORD_VALUE_LOOP  D82
+REGISTER_11_9       0
+SHIFT_ROTATE_COUNT_1_7  76C
+SHIFT_ROTATE_COUNT_8  782
+SHIFT_ROTATE_EA_MEMORY  792
+SHIFT_ROTATE_EA_REGISTER  6A6
+SHIFT_ROTATE_EA_SIZE  674
+SHIFT_ROTATE_IMM_SOURCE  734
+SHIFT_ROTATE_REGISTER_DEST  6F6
+SHIFT_ROTATE_REGISTER_SOURCE  6C2
+SIZE_13_12          5E
+SIZE_6              AE
+SIZE_7_6            86
+WADDR               648
+WORD_SIZE           E2

@@ -128,17 +128,23 @@ BYTE_SIZE:
         MOVE.B      #14, D0
         TRAP        #15
 
+        MOVE.B      #$0,      D6
+
         BRA         PREP_FOR_ROT
 WORD_SIZE:
         LEA         WORD_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
         
+        MOVE.B      #$1,      D6
+        
         BRA         PREP_FOR_ROT
 LONG_SIZE:
         LEA         LONG_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
+        
+        MOVE.B      #$2,      D6
         
         BRA         PREP_FOR_ROT
 *Handles EA, prints out appropriate registers and numbers
@@ -325,7 +331,7 @@ DEST_PM_EA:
         
         *print the reg num
         *isolate bits 2-0 on the right
-        MOVE.W      #13,     D2
+        MOVE.W      #4,     D2
         LSL.W       D2,     D4
         MOVE.W      #13,    D2
         LSR.W       D2,     D4
@@ -338,6 +344,43 @@ DEST_PM_EA:
         LEA         CLOSE_PARENTHESIS_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
+        
+        RTS
+DEST_DATA_EA:
+        *(not doing this)check register to see if it's W or L addressinG
+        *use (A3)+.W or .L to get the address data
+        *print it out
+        
+        *->take the next long and spit it out
+        *print out the data in hex form
+        *NOTE that if register = 100 it means raw data, can be in decimal b/c not address
+        
+        MOVE.W      D3,     D4
+        
+        *get reg num
+        *isolate bits 8-6 on the right
+        MOVE.W      #7,     D2
+        LSL.W       D2,     D4
+        MOVE.W      #13,    D2
+        LSR.W       D2,     D4
+        
+        *raw data
+        CMP         #$4,    D4
+        BEQ         IDATA
+        
+        *W addressing
+        CMP         #$0,    D4
+        BEQ         WADDR
+        
+        LEA         DOLLAR_MSG, A1
+        MOVE.B      #14, D0
+        TRAP        #15
+        
+        *MOVE.B      #16,    D2          *base 16
+        *MOVE.B      #15,    D0
+        MOVE.L      (A3)+,   D4
+        JSR         PRINT_LONG_VALUE
+        *TRAP        #15
         
         RTS
 
@@ -387,6 +430,9 @@ PRE_DECR_LOOP_UNTRACK:
 
 EXIT_LOOP_DECR:
 
+        CMP.B       #$0,    D5
+        BEQ         DECR_SWAP
+
         CLR.L       D3
         MOVE.B      D1,     D3
         CMP.B       #$7,    D1
@@ -394,6 +440,14 @@ EXIT_LOOP_DECR:
         BLE         DECR_1_B
 
         RTS
+DECR_SWAP:
+        EXG         D1,     D6
+        CLR.L       D3
+        MOVE.B      D1,     D3
+        CMP.B       #$7,    D1
+        BGT         DECR_1_A
+        BLE         DECR_1_B
+        
 DECR_1_A:
         JSR         PRINT_A_DECR
         BRA         DECR_2
@@ -502,6 +556,9 @@ POST_INCR_LOOP_UNTRACK:
         BRA         POST_INCR_MASK_FIELD
 
 EXIT_LOOP_INCR:
+        CMP.B       #$0,    D5
+        BEQ         INCR_SWAP
+
         CLR.L       D3
         MOVE.B      D1,     D3
         CMP.B       #$7,    D1
@@ -509,6 +566,15 @@ EXIT_LOOP_INCR:
         BLE         INCR_1_B
 
         RTS
+
+INCR_SWAP:
+        EXG         D1,     D6
+        CLR.L       D3
+        MOVE.B      D1,     D3
+        CMP.B       #$7,    D1
+        BGT         INCR_1_A
+        BLE         INCR_1_B        
+        
 INCR_1_A:
         JSR         PRINT_A_INCR
         BRA         INCR_2
@@ -763,6 +829,7 @@ IDATA_EA:
         RTS
 *immediate data, print as hex or binary?
 IDATA:
+
         LEA         HASH_MSG, A1
         MOVE.B      #14, D0
         TRAP        #15
@@ -777,11 +844,30 @@ IDATA:
         
         *MOVE.B      #16,    D2          *base 16
         *MOVE.B      #15,    D0
-        MOVE.W      (A3)+,   D4
-        JSR         PRINT_WORD_VALUE
+        CMP.B       #$0,     D6
+        BEQ         IDATA_BYTE
+        CMP.B       #$1,     D6
+        BEQ         IDATA_WORD
+        
+        MOVE.L      (A3)+,   D4
+        JSR         PRINT_LONG_VALUE
         *TRAP        #15
 
         RTS
+
+
+IDATA_BYTE:
+        MOVE.W      (A3)+,   D4
+        JSR         PRINT_WORD_VALUE
+
+        RTS
+        
+IDATA_WORD:
+        MOVE.W      (A3)+,   D4
+        JSR         PRINT_WORD_VALUE
+
+        RTS
+
         
 WADDR:
         LEA         DOLLAR_MSG, A1
@@ -1549,6 +1635,9 @@ PRINT_LONG_VALUE_LOOP
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
+
+
+
 
 
 *~Font name~Courier New~

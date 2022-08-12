@@ -10,8 +10,9 @@ INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
 STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
 ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
 DONE_MSG:        DC.B       'Done Reading data',CR,LF,0
-RESTART_MSG:     DC.B       'Press 1 to restart, and 2 to exit',CR,LF,0
+RESTART_MSG:     DC.B       'Press Enter to restart, and 1 to exit',CR,LF,0
 TY_MSG:          DC.B       'Thank you for trying out this disassembler',CR,LF,0
+PRESS_ENTER_MSG: DC.B       'Press Enter to continue Scanning',CR,LF,0
 
 * CR and LF for strings above because we want to go to next line after printing message
 
@@ -47,10 +48,11 @@ MOVEM_MSG:      DC.B        'MOVEM',0
 MOVEA_MSG:      DC.B        'MOVEA',0
 
 
-ADD_MSG:        DC.B        'ADD',0
+
 ADDA_MSG:       DC.B        'ADDA',0
 ADDQ_MSG:       DC.B        'ADDQ',0
 SUB_MSG:        DC.B        'SUB',0
+ADD_MSG:        DC.B        'ADD',0
 RTS_MSG:        DC.B        'RTS',0
 NOP_MSG:        DC.B        'NOP',0
 
@@ -118,6 +120,8 @@ CR              EQU          $0D
 LF              EQU          $0A
 
 NEW_LINE:       DC.B         '',CR,LF,0
+
+
 
 
 *~Font name~Courier New~

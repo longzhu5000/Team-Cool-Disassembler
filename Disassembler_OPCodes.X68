@@ -28,11 +28,11 @@ CHECK_OPCODES:
         CMP.B   #$1,    D6
         BEQ     RETURN
         
-        JSR     ISOLATE_15_11
+        JSR     ISOLATE_15_12
         CMP.B   #$1,    D6
         BEQ     RETURN
         
-        JSR     ISOLATE_15_12
+        JSR     ISOLATE_15_11
         CMP.B   #$1,    D6
         BEQ     RETURN
         
@@ -64,9 +64,10 @@ ISOLATE_15_12:
         JSR         OP_CODE_SHIFT_ROTATE
         JSR         OP_CODE_ADDA
         JSR         OP_CODE_ADDQ
+        JSR         OP_CODE_LEA
         JSR         OP_CODE_ADD
         JSR         OP_CODE_SUB
-        JSR         OP_CODE_LEA
+        
 
         RTS
         
@@ -256,12 +257,13 @@ RTM_2:
         LEA         WHITESPACE_COM, A1
         MOVE.B      #14,    D0
         TRAP        #15
-
-        SUB.W       #4,     A5
-        MOVE.W      (A5)+,  D3
+        SUB.W       #$2,     A3
+        MOVE.W      (A3)+,   D3
+  
+        ADD.W       #$2,     A3
         JSR         EFFECTIVEADD_5_0
         CLR.L       D6
-        MOVE.W      (A3)+,  D3
+
         MOVE.B      #1,     D6
         RTS
     
@@ -273,7 +275,14 @@ MEM_TO_REG:
         MOVE.B      #14, D0
         TRAP        #15
         
+        MOVEA.W     A3,     A5
+        ADD.W       #$2,    A3
+        
         JSR         EFFECTIVEADD_5_0
+        MOVEA.W     A3,     A6
+        MOVEA.W     A5,     A3
+        MOVEA.W     A6,     A5
+        MOVE.L      #$00000000, A6
         
         LEA         WHITESPACE_COM, A1
         MOVE.B      #14, D0
@@ -300,17 +309,19 @@ MEM_TO_REG:
         
 
 
-MTR_1_A: 
+MTR_1_A:
         MOVE.W      (A3)+,  D4   
         JSR         POST_INCR_MASK_FIELD
         CLR.L       D6
         MOVE.B      #1,     D6
+        MOVEA.W     A5,     A3
         RTS
 MTR_1_B:
         MOVE.W      (A3)+,  D4    
         JSR         PRE_DECR_MASK_FIELD
         CLR.L       D6
         MOVE.B      #1,     D6
+        MOVEA.W     A5,     A3
         RTS
 
 *------------------------
@@ -1036,6 +1047,9 @@ TOTAL_DECODE_FAILURE
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
+
+
+
 
 
 *~Font name~Courier New~
