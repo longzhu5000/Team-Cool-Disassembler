@@ -8,11 +8,14 @@
 
 INTRO_MSG:       DC.B       'Welcome to Team Cools Disassembler!',CR,LF,0
 STARTING_MSG:    DC.B       'Please enter the Starting Address',CR,LF,0
+FORMAT_MSG:      DC.B       '(Needs to be even address, Characters need to be CAPS)',CR,LF,0
 ENDING_MSG:      DC.B       'Please enter the Ending Address',CR,LF,0
 DONE_MSG:        DC.B       'Done Reading data',CR,LF,0
 RESTART_MSG:     DC.B       'Press Enter to restart, and 1 to exit',CR,LF,0
 TY_MSG:          DC.B       'Thank you for trying out this disassembler',CR,LF,0
 PRESS_ENTER_MSG: DC.B       'Press Enter to continue Scanning',CR,LF,0
+INVALID_INPUT_MSG:  DC.B    'Invalid address, try again',CR,LF,CR,LF,0
+
 
 * CR and LF for strings above because we want to go to next line after printing message
 
@@ -120,6 +123,10 @@ CR              EQU          $0D
 LF              EQU          $0A
 
 NEW_LINE:       DC.B         '',CR,LF,0
+
+
+
+
 
 
 

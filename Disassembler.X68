@@ -33,6 +33,11 @@ INTRO_MSGS:
         MOVE.B      #14,            D0   
         TRAP        #15
         
+        LEA         FORMAT_MSG,     A1
+        MOVE.B      #14,            D0   
+        TRAP        #15
+
+        
 *----------------- 
 *       Running trap command 15 while the number 2 is in D0 
 *       Will ask the user to enter input
@@ -49,6 +54,15 @@ INTRO_MSGS:
         
         * A3 now has our Starting Address
         MOVEA.L     D7,             A3
+        *Test user input
+        MOVE.L      D7,             D4
+        MOVE.B      #31,            D3
+        LSL.L       D3,             D4
+        LSR.L       D3,             D4
+        CMP.B       #$1,            D4
+        BEQ         INVALID_INPUT
+        CLR.L       D4
+        CLR.L       D3
         
         CLR.L       D2
         CLR.L       D7
@@ -143,6 +157,7 @@ PRINT_MEMORY_LOOP:
         
         CLR.L       D1
         CLR.L       D2
+        CLR.L       D3
         MOVE.B      #$8,            D1
         MOVE.W      (A3)+,          D3
         *JSR         REVERSE_START
@@ -228,6 +243,11 @@ PRINT_DONE:
         
     *   Reversing the address
 *---------------------------------------
+INVALID_INPUT:
+        LEA         INVALID_INPUT_MSG,  A1
+        MOVE.B      #14,                D0
+        TRAP        #15
+        BRA         START
 
 REVERSE_START:        
         CLR.L       D1
@@ -297,6 +317,9 @@ DONE:
 
 
     END    START        ; last line of source
+
+
+
 
 
 
